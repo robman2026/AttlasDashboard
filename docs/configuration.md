@@ -278,6 +278,7 @@ strategy:
       name: Bathroom
       floor: first
       icon: humidity
+      image: bathroom.jpg
       devices:
         - entity: binary_sensor.bathroom_door
           name: Door
@@ -346,6 +347,18 @@ strategy:
           name: Doorbell person
         - entity: binary_sensor.entrance_motion
           name: Motion
+    - id: guest_wc
+      name: Guest WC
+      floor: ground
+      icon: humidity
+      image: guest-wc.jpg
+      devices:
+        - entity: binary_sensor.guest_wc_door
+          name: Door
+        - entity: binary_sensor.guest_wc_motion
+          name: Motion
+        - entity: light.guest_wc_mirror
+          name: Mirror light
     - id: garage
       name: Garage
       floor: ground

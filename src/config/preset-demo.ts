@@ -89,7 +89,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       ],
     },
     {
-      id: "bathroom", name: "Bathroom", floor: "first", icon: "humidity",
+      id: "bathroom", name: "Bathroom", floor: "first", icon: "humidity", image: "bathroom.jpg",
       devices: [
         { entity: "binary_sensor.bathroom_door", name: "Door" },
         { entity: "binary_sensor.bathroom_motion", name: "Motion" },
@@ -130,6 +130,14 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
         { entity: "binary_sensor.mailbox", name: "Mailbox" },
         { entity: "binary_sensor.doorbell_person", name: "Doorbell person" },
         { entity: "binary_sensor.entrance_motion", name: "Motion" },
+      ],
+    },
+    {
+      id: "guest_wc", name: "Guest WC", floor: "ground", icon: "humidity", image: "guest-wc.jpg",
+      devices: [
+        { entity: "binary_sensor.guest_wc_door", name: "Door" },
+        { entity: "binary_sensor.guest_wc_motion", name: "Motion" },
+        { entity: "light.guest_wc_mirror", name: "Mirror light" },
       ],
     },
     {

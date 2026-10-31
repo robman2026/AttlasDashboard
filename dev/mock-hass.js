@@ -49,6 +49,7 @@ motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_
 add("light.kitchen_cabinet_left", "on", { brightness: 255 }); add("light.kitchen_cabinet_right", "on", { brightness: 255 });
 motion("binary_sensor.kitchen_presence", false, "presence"); contact("binary_sensor.kitchen_window", false, "window");
 add("sensor.oven_temperature", 59, { unit_of_measurement: "°C" }); add("select.dishwasher_program", "unknown");
+contact("binary_sensor.guest_wc_door", false); motion("binary_sensor.guest_wc_motion"); add("light.guest_wc_mirror", "on", { brightness: 160 });
 cam("camera.doorbell", "Doorbell", "entrance.jpg");
 contact("binary_sensor.front_door", false); contact("binary_sensor.mailbox", true, "opening");
 motion("binary_sensor.doorbell_person", false, "occupancy"); na("binary_sensor.entrance_motion");

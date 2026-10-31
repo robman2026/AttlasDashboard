@@ -5,6 +5,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Room images `bathroom.jpg` (large bathroom) and `guest-wc.jpg` (small WC), conceptual like the others. Demo house: Bathroom on the first floor uses `bathroom.jpg`; new ground floor room Guest WC uses `guest-wc.jpg`.
 - Documentation set: `docs/README.md` index, `docs/configuration.md` (generated), `docs/alerts.md`, `docs/architecture.md`, `docs/development.md`, screenshots in `docs/screenshots/`.
 - `src/config/fields.ts`: one definition per option (label, help, type, default, selector). The editor and `docs/configuration.md` are both built from it.
 - `npm run docs` (part of `npm run build`) and `npm run screenshots`.
