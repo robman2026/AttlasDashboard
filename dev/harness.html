@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ATLAS harness</title>
+<style>html,body{margin:0;background:#111}atlas-view{--header-height:0px}</style>
+</head>
+<body>
+<div id="host"></div>
+<script type="module">
+  // Simulates hui-root: generates views via the strategy, renders the one matching ?view=.
+  import "../dist/atlas-home.js";
+  import { mockHass } from "./mock-hass.js";
+  const Strategy = customElements.get("ll-strategy-dashboard-atlas-home");
+  // Load the preset through the real editor code path ("Load demo house" button).
+  const ed = document.createElement("atlas-home-strategy-editor");
+  let cfg;
+  ed.addEventListener("config-changed", (e) => (cfg = e.detail.config));
+  ed.setConfig({ type: "custom:atlas-home" });
+  ed._loadPreset();
+  window.atlasConfig = cfg;
+  const dash = await Strategy.generate(cfg, mockHass);
+  const show = (path) => {
+    const v = dash.views.find((x) => x.path === path) ?? dash.views[0];
+    const el = document.createElement("atlas-view");
+    el.setConfig(v.cards[0]);
+    el.hass = mockHass;
+    document.getElementById("host").replaceChildren(el);
+    document.title = `ATLAS ${v.path}`;
+  };
+  window.addEventListener("location-changed", () => show(location.pathname.split("/").pop()));
+  show(new URLSearchParams(location.search).get("view") ?? "home");
+</script>
+</body>
+</html>

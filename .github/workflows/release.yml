@@ -1,0 +1,27 @@
+name: Release
+
+# Push a semantic version tag (e.g. v0.1.0) to publish a GitHub Release.
+# HACS reads the version from the latest release.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - name: Check tag matches package.json version
+        run: test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/atlas-home.js
+          generate_release_notes: true

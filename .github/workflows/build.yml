@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+      - name: Generated files must be committed (dist/ for HACS, icons, docs/configuration.md)
+        run: git diff --exit-code -- dist src/ui/icons.generated.ts docs/configuration.md
+
+  docs:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Changes to src/ must add a CHANGELOG entry
+        run: |
+          base="origin/${{ github.base_ref }}"
+          changed=$(git diff --name-only "$base"...HEAD)
+          echo "$changed"
+          if echo "$changed" | grep -q '^src/' && ! echo "$changed" | grep -qx 'CHANGELOG.md'; then
+            echo "::error::src/ changed but CHANGELOG.md was not updated (add a line under Unreleased)."
+            exit 1
+          fi
