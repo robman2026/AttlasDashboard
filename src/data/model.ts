@@ -1,8 +1,16 @@
 // Read helpers over the strategy config (rooms, floors, entity lookup).
-import type { AtlasConfig, FloorConfig, RoomConfig } from "../config/types";
+import type { AtlasConfig, EnergyMeter, FloorConfig, RoomConfig } from "../config/types";
 import { DEFAULT_ACCENT, DEFAULT_IMAGE_PATH } from "../config/constants";
 
 export const rooms = (c: AtlasConfig): RoomConfig[] => c.rooms ?? [];
+export const energyMeters = (c: AtlasConfig): EnergyMeter[] => (c.energy_meters ?? []).filter((m) => m?.power);
+
+const METER_KEYS = ["power", "energy", "current", "power_factor", "voltage", "frequency", "power_a", "power_b", "power_c",
+  "current_a", "current_b", "current_c", "voltage_a", "voltage_b", "voltage_c"] as const;
+
+/** Every sensor used by the Energy view (re-render triggers only; not part of the data-quality alert). */
+export const meterEntities = (c: AtlasConfig): string[] =>
+  energyMeters(c).flatMap((m) => METER_KEYS.map((k) => m[k]).filter((x): x is string => !!x));
 export const floors = (c: AtlasConfig): FloorConfig[] => c.floors ?? [];
 export const roomById = (c: AtlasConfig, id?: string) => rooms(c).find((r) => r.id === id);
 export const floorById = (c: AtlasConfig, id?: string) => floors(c).find((f) => f.id === id);

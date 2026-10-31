@@ -83,6 +83,28 @@ export interface LayoutConfig {
   security_tiles?: string[];
 }
 
+/** One power meter or metered circuit on the Energy view. */
+export interface EnergyMeter {
+  name: string;
+  power: string; // instantaneous power sensor (W or kW)
+  energy?: string; // total energy sensor (kWh)
+  current?: string; // A
+  power_factor?: string; // % (0-100) or 0-1
+  voltage?: string; // V
+  frequency?: string; // Hz
+  max_power?: number; // W, full scale of the gauge (default 3000)
+  main?: boolean; // shown large at the top (whole house meter)
+  power_a?: string;
+  power_b?: string;
+  power_c?: string;
+  current_a?: string;
+  current_b?: string;
+  current_c?: string;
+  voltage_a?: string;
+  voltage_b?: string;
+  voltage_c?: string;
+}
+
 export interface AtlasConfig {
   type: string;
   appearance?: AppearanceConfig;
@@ -91,12 +113,13 @@ export interface AtlasConfig {
   floors?: FloorConfig[];
   rooms?: RoomConfig[];
   layout?: LayoutConfig;
+  energy_meters?: EnergyMeter[];
 }
 
 /** Config passed to every generated custom:atlas-view card. */
 export interface AtlasViewCardConfig {
   type: string;
-  view: "home" | "alerts" | "rooms" | "room";
+  view: "home" | "alerts" | "rooms" | "room" | "energy";
   room?: string;
   floor?: string;
   atlas: AtlasConfig;

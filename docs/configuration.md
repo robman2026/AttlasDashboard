@@ -113,7 +113,7 @@ A list; each item has:
 | `camera` | entity (camera) |  | Camera (live stream). Enables the camera slot (16:9) with Live, Snapshot, Recordings. |
 | `camera_hq` | entity (camera) |  | Camera high quality stream. Optional, reserved for a quality switch. |
 | `camera_snapshot` | entity (camera) |  | Snapshot camera. Optional. Snapshot uses this entity's picture, else the live camera's. |
-| `camera_private` | boolean | false | Private camera. Stream hidden until the user taps Reveal. |
+| `camera_private` | boolean | false | Private camera. Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens. |
 | `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. |
 
 Items of `devices`:
@@ -132,7 +132,34 @@ Editor tab: **Layout**. Which rooms appear where. Lists of room ids, in order.
 | --- | --- | --- | --- |
 | `home_tiles` | list of room id | first 8 rooms | Home room tiles. 8 tiles use the 3 / 2 / 3 design grid. |
 | `top_tabs` | list of room id |  | Top bar room tabs |
-| `security_tiles` | list of room id |  | Security camera tiles. Tiles on the Home Security card; they open the room view. |
+| `security_tiles` | list of room id |  | Security camera tiles. Live camera stills (16:9, refreshed every 10 s) on the Home Security card; tap opens the room view. |
+
+## Energy meters (`energy_meters`)
+
+Editor tab: **Energy**. Power meters and metered circuits for the Energy view (sidebar > Energy). Mark the whole-house meter as main to show it large with its phases. Without meters, Energy opens the built-in HA Energy dashboard.
+
+A list; each item has:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | text |  | Name |
+| `power` (required) | entity (sensor, W or kW) |  | Power sensor |
+| `main` | boolean | false | Main meter. Shown large at the top with phases. Use for the whole-house meter. |
+| `max_power` | number | 3000 | Gauge full scale (W). Power at which the gauge ring is full. |
+| `energy` | entity (sensor, kWh) |  | Total energy sensor |
+| `current` | entity (sensor, A) |  | Current sensor |
+| `power_factor` | entity (sensor) |  | Power factor sensor. Percent (0-100) or 0-1; shown as %. |
+| `voltage` | entity (sensor, V) |  | Voltage sensor |
+| `frequency` | entity (sensor, Hz) |  | Frequency sensor |
+| `power_a` | entity (sensor) |  | Phase A power. Phase sensors are optional; with any of them set the meter shows a phase table. |
+| `power_b` | entity (sensor) |  | Phase B power |
+| `power_c` | entity (sensor) |  | Phase C power |
+| `current_a` | entity (sensor) |  | Phase A current |
+| `current_b` | entity (sensor) |  | Phase B current |
+| `current_c` | entity (sensor) |  | Phase C current |
+| `voltage_a` | entity (sensor) |  | Phase A voltage |
+| `voltage_b` | entity (sensor) |  | Phase B voltage |
+| `voltage_c` | entity (sensor) |  | Phase C voltage |
 
 ## Demo house
 
@@ -475,4 +502,78 @@ strategy:
     security_tiles:
       - entrance
       - garage
+  energy_meters:
+    - name: Whole house
+      main: true
+      max_power: 11000
+      power: sensor.main_meter_power
+      energy: sensor.main_meter_energy
+      current: sensor.main_meter_current
+      power_factor: sensor.main_meter_power_factor
+      frequency: sensor.main_meter_frequency
+      power_a: sensor.main_meter_power_a
+      power_b: sensor.main_meter_power_b
+      power_c: sensor.main_meter_power_c
+      current_a: sensor.main_meter_current_a
+      current_b: sensor.main_meter_current_b
+      current_c: sensor.main_meter_current_c
+      voltage_a: sensor.main_meter_voltage_a
+      voltage_b: sensor.main_meter_voltage_b
+      voltage_c: sensor.main_meter_voltage_c
+    - name: Kitchen
+      power: sensor.circuit_kitchen_power
+      energy: sensor.circuit_kitchen_energy
+      current: sensor.circuit_kitchen_current
+      power_factor: sensor.circuit_kitchen_power_factor
+      voltage: sensor.circuit_kitchen_voltage
+      frequency: sensor.circuit_kitchen_frequency
+      max_power: 3000
+    - name: Living & hallway
+      power: sensor.circuit_living_power
+      energy: sensor.circuit_living_energy
+      current: sensor.circuit_living_current
+      power_factor: sensor.circuit_living_power_factor
+      voltage: sensor.circuit_living_voltage
+      frequency: sensor.circuit_living_frequency
+      max_power: 2500
+    - name: Office
+      power: sensor.circuit_office_power
+      energy: sensor.circuit_office_energy
+      current: sensor.circuit_office_current
+      power_factor: sensor.circuit_office_power_factor
+      voltage: sensor.circuit_office_voltage
+      frequency: sensor.circuit_office_frequency
+      max_power: 2000
+    - name: Server rack
+      power: sensor.circuit_server_power
+      energy: sensor.circuit_server_energy
+      current: sensor.circuit_server_current
+      power_factor: sensor.circuit_server_power_factor
+      voltage: sensor.circuit_server_voltage
+      frequency: sensor.circuit_server_frequency
+      max_power: 500
+    - name: Laundry
+      power: sensor.circuit_laundry_power
+      energy: sensor.circuit_laundry_energy
+      current: sensor.circuit_laundry_current
+      power_factor: sensor.circuit_laundry_power_factor
+      voltage: sensor.circuit_laundry_voltage
+      frequency: sensor.circuit_laundry_frequency
+      max_power: 3000
+    - name: Heating pump
+      power: sensor.circuit_heating_power
+      energy: sensor.circuit_heating_energy
+      current: sensor.circuit_heating_current
+      power_factor: sensor.circuit_heating_power_factor
+      voltage: sensor.circuit_heating_voltage
+      frequency: sensor.circuit_heating_frequency
+      max_power: 2000
+    - name: Attic
+      power: sensor.circuit_attic_power
+      energy: sensor.circuit_attic_energy
+      current: sensor.circuit_attic_current
+      power_factor: sensor.circuit_attic_power_factor
+      voltage: sensor.circuit_attic_voltage
+      frequency: sensor.circuit_attic_frequency
+      max_power: 500
 ```

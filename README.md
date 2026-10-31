@@ -7,15 +7,17 @@ Attention-first Home Assistant dashboard. It shows what needs attention first, t
 | Room view | Phone |
 | --- | --- |
 | ![Room view](docs/screenshots/room-office-desktop.jpg) | ![Phone](docs/screenshots/home-phone.jpg) |
+| ![Energy](docs/screenshots/energy-desktop.jpg) | ![Energy on phone](docs/screenshots/energy-phone.jpg) |
 
 Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with mocked states, not a real home.
 
 ## Features
 
-- **Home:** time-aware greeting with heat pump reading and alarm state, attention banner (critical / warning / info), 8 photo room tiles, quick actions (Arm away, Garage, Lights off with confirmation, Wake PC), climate ring, energy flow, security.
+- **Home:** time-aware greeting with heat pump reading and alarm state, attention banner (critical / warning / info), 8 photo room tiles, quick actions (Arm away, Garage, Lights off with confirmation, Wake PC), climate ring, energy flow, security with live 16:9 camera stills.
 - **Alerts:** grouped by severity. Rules for temperature limits with hysteresis, doors, unavailable devices, incident report, mailbox, updates. Unknown or unavailable is never treated as clear. Details: [docs/alerts.md](docs/alerts.md).
 - **Rooms:** floors (+2 to -1) with room count, typical temperature and alert count; room tiles per floor.
-- **Room:** climate, camera slot (16:9, Live, Snapshot, Recordings; private camera hidden until Reveal), device tiles (tap toggles, hold opens details), room image, previous / next room.
+- **Room:** climate, camera that starts live (muted) when the room opens (16:9, Live, Snapshot, Recordings; private camera hidden until Reveal), device tiles on the room image (tap toggles, hold opens details), previous / next room.
+- **Energy:** whole-house meter with phases A/B/C, a "right now" summary with top consumers, and a gauge card per metered circuit (W, status, kWh, A, PF, V, Hz). Set up in Edit dashboard > Energy (`energy_meters`).
 - **Fully configurable in the UI:** every entity, room, floor, device, alert rule and layout list in Edit dashboard. Reference: [docs/configuration.md](docs/configuration.md).
 - **Styles:** Warm glass, Glass, Quiet (no blur, for the wall tablet), 5 ambiences, adjustable accent; per-device override with the gear icon.
 - **Own URL per screen:** browser back and deep links work.

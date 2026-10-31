@@ -21,6 +21,7 @@ All `customElements.define` calls are guarded against double registration (`src/
 | `rooms` | Rooms, first floor selected | subview |
 | `floor-<floor id>` | Rooms, that floor selected | subview |
 | `room-<room id>` | Room | subview |
+| `energy` | Energy (only generated when `energy_meters` has entries) | subview |
 
 Each screen is a real HA view, so the browser back button and deep links work (e.g. `/atlas-home/room-office`). Navigation uses the same pattern as the HA frontend: `history.pushState` then a `location-changed` event on `window`.
 
@@ -46,7 +47,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/data/model.ts` | Config lookups (rooms, floors, images, mapped entities, room lights, `cameraOf` which respects `show_camera`) |
 | `src/data/alerts.ts` | Attention engine ([alerts.md](alerts.md)) |
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
-| `src/ui/views/*.ts` | Home, Alerts, Rooms, Room renderers |
+| `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
 | `src/ui/devices.ts` | Device tile icon, state kind, text |
 | `src/ui/styles.ts` | Design tokens and all CSS, responsive breakpoints |
 | `src/ui/icons.ts`, `icons.generated.ts` | ATLAS line icons (generated from `assets/icons`) and device glyphs |
@@ -79,7 +80,8 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `location-changed` navigation | View switching | frontend `src/common/navigate.ts` |
 | `hass-more-info` event | Device details | frontend `src/panels/lovelace/common/handle-action.ts` |
 | `ha-form` selectors incl. `object` with `fields` + `multiple` | Editor | frontend `src/data/selector.ts`, `ha-selector-object.ts` |
-| `ha-camera-stream` (`hass`, `stateObj`, `controls`, `muted`) | Live camera | frontend `src/components/ha-camera-stream.ts` |
+| `ha-camera-stream` (`stateObj`, `fitMode`, `controls`, `muted`; HA context, `hass` still passed for older frontends) | Live camera, autoplays: HLS and WebRTC players render `<video autoplay playsinline>`; MJPEG fallback when the camera has no stream support | frontend `src/components/ha-camera-stream.ts`, tag `20260930.5` (HA 2026.10) and dev branch 2026-10-31 |
+| `/api/camera_proxy/<id>?token=..&width=W&height=H` (entity `entity_picture`) | Home security stills, refreshed every 10 s like `hui-image` (`UPDATE_INTERVAL = 10000`). Backend reads only `token`, `width`, `height`; the extra `t` cache buster is ignored | frontend `src/panels/lovelace/components/hui-image.ts`, `src/data/camera.ts`; core `homeassistant/components/camera/__init__.py` (`CameraView`, `CameraImageView`) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
 The frontend source was read from the `dev` branch on 2026-10-31 and targets HA 2026.10.

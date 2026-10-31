@@ -24,7 +24,7 @@ export interface FieldDef {
 }
 
 export interface SectionDef {
-  key: "appearance" | "entities" | "alerts" | "floors" | "rooms" | "layout";
+  key: "appearance" | "entities" | "alerts" | "floors" | "rooms" | "layout" | "energy_meters";
   tab: string;
   title: string;
   intro: string;
@@ -141,7 +141,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "camera", label: "Camera (live stream)", type: "entity (camera)", help: "Enables the camera slot (16:9) with Live, Snapshot, Recordings.", selector: ent("camera"), group: "Camera" },
       { name: "camera_hq", label: "Camera high quality stream", type: "entity (camera)", help: "Optional, reserved for a quality switch.", selector: ent("camera"), group: "Camera" },
       { name: "camera_snapshot", label: "Snapshot camera", type: "entity (camera)", help: "Optional. Snapshot uses this entity's picture, else the live camera's.", selector: ent("camera"), group: "Camera" },
-      { name: "camera_private", label: "Private camera", type: "boolean", default: "false", help: "Stream hidden until the user taps Reveal.", selector: bool, group: "Camera" },
+      { name: "camera_private", label: "Private camera", type: "boolean", default: "false", help: "Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens.", selector: bool, group: "Camera" },
       { name: "devices", label: "Devices", type: "list", help: "Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info.", selector: { object: {} }, fields: DEVICE_FIELDS },
     ],
   },
@@ -154,7 +154,34 @@ export const SECTIONS: SectionDef[] = [
     fields: [
       { name: "home_tiles", label: "Home room tiles", type: "list of room id", default: "first 8 rooms", help: "8 tiles use the 3 / 2 / 3 design grid.", selector: { select: { multiple: true, reorder: true, options: "$rooms" } } },
       { name: "top_tabs", label: "Top bar room tabs", type: "list of room id", selector: { select: { multiple: true, reorder: true, options: "$rooms" } } },
-      { name: "security_tiles", label: "Security camera tiles", type: "list of room id", help: "Tiles on the Home Security card; they open the room view.", selector: { select: { multiple: true, reorder: true, options: "$rooms" } } },
+      { name: "security_tiles", label: "Security camera tiles", type: "list of room id", help: "Live camera stills (16:9, refreshed every 10 s) on the Home Security card; tap opens the room view.", selector: { select: { multiple: true, reorder: true, options: "$rooms" } } },
+    ],
+  },
+  {
+    key: "energy_meters",
+    tab: "Energy",
+    title: "Energy meters (`energy_meters`)",
+    intro: "Power meters and metered circuits for the Energy view (sidebar > Energy). Mark the whole-house meter as main to show it large with its phases. Without meters, Energy opens the built-in HA Energy dashboard.",
+    shape: "list",
+    fields: [
+      { name: "name", label: "Name", type: "text", required: true, selector: text },
+      { name: "power", label: "Power sensor", type: "entity (sensor, W or kW)", required: true, selector: ent("sensor") },
+      { name: "main", label: "Main meter", type: "boolean", default: "false", help: "Shown large at the top with phases. Use for the whole-house meter.", selector: bool },
+      { name: "max_power", label: "Gauge full scale (W)", type: "number", default: "3000", help: "Power at which the gauge ring is full.", selector: { number: { min: 1, mode: "box", unit_of_measurement: "W" } } },
+      { name: "energy", label: "Total energy sensor", type: "entity (sensor, kWh)", selector: ent("sensor") },
+      { name: "current", label: "Current sensor", type: "entity (sensor, A)", selector: ent("sensor") },
+      { name: "power_factor", label: "Power factor sensor", type: "entity (sensor)", help: "Percent (0-100) or 0-1; shown as %.", selector: ent("sensor") },
+      { name: "voltage", label: "Voltage sensor", type: "entity (sensor, V)", selector: ent("sensor") },
+      { name: "frequency", label: "Frequency sensor", type: "entity (sensor, Hz)", selector: ent("sensor") },
+      { name: "power_a", label: "Phase A power", type: "entity (sensor)", help: "Phase sensors are optional; with any of them set the meter shows a phase table.", selector: ent("sensor") },
+      { name: "power_b", label: "Phase B power", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "power_c", label: "Phase C power", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "current_a", label: "Phase A current", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "current_b", label: "Phase B current", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "current_c", label: "Phase C current", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "voltage_a", label: "Phase A voltage", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "voltage_b", label: "Phase B voltage", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "voltage_c", label: "Phase C voltage", type: "entity (sensor)", selector: ent("sensor") },
     ],
   },
 ];
