@@ -5,6 +5,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Energy view (`energy` path): whole-house meter with ring gauge, phase A/B/C power, current and voltage, total energy, power factor, current and frequency; a "Right now" summary (whole house, metered circuits, not metered, top consumers, offline count); one gauge card per circuit (W, Consuming / Standby / Offline, kWh, A, PF, V, Hz). Configured with the new `energy_meters` list (Edit dashboard > Energy). Sidebar and phone nav **Energy** open it when meters are set, otherwise the HA Energy dashboard as before. The Home "Energy flow" card links to it. Unavailable sensors show "–", never 0.
 - Room option `show_camera` (Edit dashboard > Rooms > Camera > **Show camera section**, default on). Off removes the room's camera section completely: no Camera card, no stream loading, camera not counted in the data-quality alert, no "open camera" label on its Home security tile. Demo house: Bedroom has it off.
 - Room images `bathroom.jpg` (large bathroom) and `guest-wc.jpg` (small WC), conceptual like the others. Demo house: Bathroom on the first floor uses `bathroom.jpg`; new ground floor room Guest WC uses `guest-wc.jpg`.
 - Documentation set: `docs/README.md` index, `docs/configuration.md` (generated), `docs/alerts.md`, `docs/architecture.md`, `docs/development.md`, screenshots in `docs/screenshots/`.
@@ -14,6 +15,9 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Pull request template with a documentation checklist; `CLAUDE.md` with the same rules for AI sessions.
 
 ### Changed
+- Room camera starts the live stream (muted) as soon as the room opens; no tap needed. A still frame is shown while the stream element loads. `camera_private` still hides it behind Reveal.
+- Room image is now only the backdrop of the Devices card (darkened, tiles on frosted glass); the separate picture block is gone.
+- Home Security card: camera tiles are 16:9 live still frames from the camera (scaled server side, refreshed every 10 s) instead of room photos; unavailable cameras show a dashed tile. Tap opens the room with the live stream.
 - Privacy: the repository no longer contains any real house data. The house-specific preset, entity map, design handoff and prototype were removed; a fictional English demo house (`src/config/preset-demo.ts`) is used for the editor's **Load demo house** button, the harness, the docs and the screenshots. Room images and icons renamed to English (`office`, `kids-room`, `bedroom`, `hallway`, `attic`, `garage`, `basement`, `shelter`, `utility`). Real configs belong in `*.private.yaml` (git-ignored). Existing dashboards that use old image file names or icon keys need them updated.
 - Device type detection uses the entity's `device_class` first and only English name keywords as fallback (window, door, skylight, mailbox, motion, ...). Contacts without a device class may need one set in HA.
 - `docs/design.md` replaces the private handoff with an anonymised design brief and milestone status.

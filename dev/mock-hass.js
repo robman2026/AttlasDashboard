@@ -67,6 +67,21 @@ add("light.3d_printer_chamber", "on"); motion("binary_sensor.workshop_presence",
 contact("binary_sensor.utility_room_door", false);
 add("sensor.washer_power", 0, { unit_of_measurement: "W" }); add("sensor.dryer_power", 0, { unit_of_measurement: "W" });
 
+// Energy meters (fictional three-phase house meter and circuits)
+const W = { unit_of_measurement: "W", device_class: "power" };
+add("sensor.main_meter_power", 1486, W); add("sensor.main_meter_energy", 4812.6, { unit_of_measurement: "kWh" });
+add("sensor.main_meter_current", 6.71, { unit_of_measurement: "A" }); add("sensor.main_meter_power_factor", 91, { unit_of_measurement: "%" });
+add("sensor.main_meter_frequency", 50.01, { unit_of_measurement: "Hz" });
+[["a", 812, 3.62, 231.4], ["b", 402, 1.88, 230.2], ["c", 272, 1.21, 232.0]].forEach(([p, w, a, v]) => {
+  add(`sensor.main_meter_power_${p}`, w, W); add(`sensor.main_meter_current_${p}`, a, { unit_of_measurement: "A" }); add(`sensor.main_meter_voltage_${p}`, v, { unit_of_measurement: "V" });
+});
+[["kitchen", 640, 412.3], ["living", 188, 233.9], ["office", 214, 301.4], ["server", 96, 702.8], ["laundry", 0.4, 158.1], ["heating", 61, 389.2]].forEach(([k, w, e]) => {
+  add(`sensor.circuit_${k}_power`, w, W); add(`sensor.circuit_${k}_energy`, e, { unit_of_measurement: "kWh" });
+  add(`sensor.circuit_${k}_current`, (w / 230).toFixed(2), { unit_of_measurement: "A" }); add(`sensor.circuit_${k}_power_factor`, w > 1 ? 88 : 0, { unit_of_measurement: "%" });
+  add(`sensor.circuit_${k}_voltage`, 230.6, { unit_of_measurement: "V" }); add(`sensor.circuit_${k}_frequency`, 50.0, { unit_of_measurement: "Hz" });
+});
+["power", "energy", "current", "power_factor", "voltage", "frequency"].forEach((k) => na(`sensor.circuit_attic_${k}`));
+
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const fmt = (s) => {
   if (s.state === "unavailable") return "Unavailable";

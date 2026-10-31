@@ -41,6 +41,10 @@ const SHOTS = [
   ["floor-first", 1600, 1000, "rooms-desktop"],
   ["room-office", 1600, 1000, "room-office-desktop"],
   ["room-kids_room", 1600, 1000, "room-kids-room-desktop"],
+  ["room-living", 1600, 1000, "room-living-desktop"],
+  ["energy", 1600, 1000, "energy-desktop"],
+  ["energy", 1280, 800, "energy-tablet"],
+  ["energy", 390, 844, "energy-phone"],
   ["home", 1280, 800, "home-tablet"],
   ["home", 390, 844, "home-phone"],
 ];

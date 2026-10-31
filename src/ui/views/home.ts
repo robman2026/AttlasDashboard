@@ -1,7 +1,7 @@
 import { html, nothing, svg } from "lit";
 import type { Ctx } from "../context";
 import { formatState, isInvalid, num, powerKw, stateObj, domainOf } from "../../data/hass";
-import { cameraOf, imageUrl, roomById, roomLights, rooms } from "../../data/model";
+import { cameraOf, energyMeters, roomById, roomLights, rooms } from "../../data/model";
 import { icon } from "../icons";
 import { isContact } from "../devices";
 import { fmtTemp, roomTile } from "./common";
@@ -95,8 +95,12 @@ const energyCard = (ctx: Ctx) => {
   const exp = powerKw(ctx.hass, e.grid_export);
   const exporting = (exp ?? 0) > (imp ?? 0);
   const gridVal = exporting ? exp : imp;
+  const atlasEnergy = energyMeters(ctx.config).length > 0;
   return html`<section class="glass card" style="gap:10px">
-    <h2>Energy flow</h2>
+    <div class="row">
+      <h2>Energy flow</h2>
+      ${atlasEnergy ? html`<button class="t2 more" @click=${() => ctx.go("energy")}>Circuits ${icon("chevron", 14)}</button>` : nothing}
+    </div>
     <div class="flow">
       <button class="node" @click=${() => e.solar_power && ctx.moreInfo(e.solar_power)}><span class="c">${icon("solar", 22)}</span><b class="n">${kw(solar)}</b><span>Solar</span></button>
       <span class="link ${(solar ?? 0) > 0.01 ? "act r" : ""}"></span>
@@ -114,24 +118,28 @@ const securityCard = (ctx: Ctx) => {
   const valid = contacts.filter((s) => !isInvalid(s));
   const open = valid.filter((s) => s.state === "on" || s.state === "open").length;
   const tiles = (ctx.config.layout?.security_tiles ?? []).map((id) => roomById(ctx.config, id)).filter(Boolean);
-  return html`<section class="glass card" style="flex:1">
+  return html`<section class="glass card">
     <div class="row">
       <h2>${icon("security", 20)}Security</h2>
       <button class="n t2" style="font-size:12px" @click=${() => e.alarm && ctx.moreInfo(e.alarm)}>
         ${alarm ? (isInvalid(alarm) ? "Alarm unavailable" : formatState(ctx.hass, alarm)) : ""} · ${open} / ${valid.length} open${valid.length < contacts.length ? ` · ${contacts.length - valid.length} n/a` : ""}
       </button>
     </div>
-    <div class="cams">
-      ${tiles.map((r) => {
-        const camera = cameraOf(r);
-        const camOk = camera ? !isInvalid(stateObj(ctx.hass, camera)) : false;
-        const img = imageUrl(ctx.config, r);
-        return html`<button class="cam" @click=${() => ctx.openRoom(r!)}>
-          ${img ? html`<img src=${img} alt="" loading="lazy" />` : nothing}
-          <span>${camera ? html`<i class="dotst ${camOk ? "" : "na"}"></i>${r!.name} · open camera` : r!.name}</span>
-        </button>`;
-      })}
-    </div>
+    ${tiles.length
+      ? html`<div class="cams">
+          ${tiles.map((r) => {
+            const camera = cameraOf(r);
+            const cam = stateObj(ctx.hass, camera);
+            const ok = !!cam && !isInvalid(cam) && !!cam.attributes.entity_picture;
+            // Still frame from /api/camera_proxy (width/height scale it server side), refreshed with the 10 s tick.
+            const src = ok ? `${cam!.attributes.entity_picture}&width=640&height=360&t=${Math.floor(ctx.tick / 10_000)}` : undefined;
+            return html`<button class="cam ${ok ? "" : "na"}" aria-label="${r!.name} camera" @click=${() => ctx.openRoom(r!)}>
+              ${src ? html`<img src=${src} alt="" />` : html`<span class="camna">${icon("camera", 22)}${camera ? "Camera unavailable" : "No camera"}</span>`}
+              <span class="lbl"><i class="dotst ${ok ? "" : "na"}"></i>${r!.name}</span>
+            </button>`;
+          })}
+        </div>`
+      : nothing}
   </section>`;
 };
 

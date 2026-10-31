@@ -57,7 +57,8 @@ const cameraCard = (ctx: Ctx, r: RoomConfig) => {
     </section>`;
   }
   const key = `cam:${r.id}`;
-  const mode = (ctx.ui[key] as string) ?? "idle";
+  // Live by default: ha-camera-stream renders its HLS / WebRTC player with autoplay + playsinline, muted here.
+  const mode = (ctx.ui[key] as string) ?? "live";
   const revealed = !r.camera_private || ctx.ui[`reveal:${r.id}`] === true;
   const cam = stateObj(ctx.hass, r.camera);
   const snapEnt = stateObj(ctx.hass, r.camera_snapshot) ?? cam;
@@ -65,6 +66,7 @@ const cameraCard = (ctx: Ctx, r: RoomConfig) => {
     ctx.ui[key] = m;
     ctx.refresh();
   };
+  const streamReady = !!customElements.get("ha-camera-stream");
   let slot;
   if (!revealed) {
     slot = html`<div class="camslot private"><span class="camico">${glyph("camera", 24)}</span>
@@ -72,21 +74,31 @@ const cameraCard = (ctx: Ctx, r: RoomConfig) => {
       <button class="ctl" @click=${() => { ctx.ui[`reveal:${r.id}`] = true; ctx.refresh(); }}>Reveal</button></div>`;
   } else if (isInvalid(cam)) {
     slot = html`<div class="camslot"><span class="camico">${glyph("camera", 24)}</span><b style="font-size:14px">Camera unavailable</b><span class="t2" style="font-size:12px">${r.camera}</span></div>`;
-  } else if (mode === "live" && customElements.get("ha-camera-stream")) {
-    slot = html`<div class="camslot"><ha-camera-stream .hass=${ctx.hass} .stateObj=${cam} controls muted></ha-camera-stream></div>`;
+  } else if (mode === "live" && streamReady) {
+    slot = html`<div class="camslot live"><ha-camera-stream .hass=${ctx.hass} .stateObj=${cam} .fitMode=${"cover"} controls muted></ha-camera-stream></div>`;
   } else if (mode === "snapshot" && snapEnt?.attributes.entity_picture) {
-    slot = html`<div class="camslot"><img src=${`${snapEnt.attributes.entity_picture}&t=${ctx.ui[`${key}:t`] ?? 0}`} alt="${r.name} snapshot" /></div>`;
+    slot = html`<div class="camslot live"><img src=${`${snapEnt.attributes.entity_picture}&t=${ctx.ui[`${key}:t`] ?? 0}`} alt="${r.name} snapshot" /></div>`;
   } else {
-    slot = html`<div class="camslot"><span class="camico">${glyph("camera", 24)}</span><b style="font-size:14px">${String(cam!.attributes.friendly_name ?? r.camera)}</b><span class="t2" style="font-size:12px">Live stream slot · loads on tap</span></div>`;
+    // Stream element still loading: show the current still frame meanwhile.
+    const still = cam?.attributes.entity_picture;
+    slot = html`<div class="camslot live">${still ? html`<img src=${`${still}&width=1280&height=720`} alt="" />` : nothing}
+      <span class="camwait">Starting live stream…</span></div>`;
   }
+  const btn = (label: string, on: boolean, fn: () => void) =>
+    html`<button class="sq ${on ? "on" : ""}" style="color:var(--atlas-text)" @click=${fn}>${label}</button>`;
   return html`<section class="glass card">
-    <div class="row"><h2>Camera</h2>${r.camera_private && revealed ? html`<button class="t2" style="font-size:12px" @click=${() => { ctx.ui[`reveal:${r.id}`] = false; set("idle"); }}>Hide</button>` : nothing}</div>
+    <div class="row"><h2>Camera</h2>
+      <span style="display:flex;gap:10px;align-items:center">
+        ${revealed && !isInvalid(cam) && mode === "live" ? html`<span class="livetag"><i></i>Live</span>` : nothing}
+        ${r.camera_private && revealed ? html`<button class="t2" style="font-size:12px" @click=${() => { ctx.ui[`reveal:${r.id}`] = false; set("live"); }}>Hide</button>` : nothing}
+      </span>
+    </div>
     ${slot}
     ${revealed && !isInvalid(cam)
       ? html`<div class="btn3" style="margin-top:0">
-          <button class="sq" style="color:var(--atlas-text)" @click=${() => (customElements.get("ha-camera-stream") ? set("live") : ctx.moreInfo(r.camera!))}>Live</button>
-          <button class="sq" style="color:var(--atlas-text)" @click=${() => { ctx.ui[`${key}:t`] = Date.now(); set("snapshot"); }}>Snapshot</button>
-          <button class="sq" style="color:var(--atlas-text)" @click=${() => ctx.href("/media-browser/browser")}>Recordings</button>
+          ${btn("Live", mode === "live", () => (streamReady ? set("live") : ctx.moreInfo(r.camera!)))}
+          ${btn("Snapshot", mode === "snapshot", () => { ctx.ui[`${key}:t`] = Date.now(); set("snapshot"); })}
+          ${btn("Recordings", false, () => ctx.href("/media-browser/browser"))}
         </div>`
       : nothing}
   </section>`;
@@ -148,13 +160,10 @@ export const renderRoom = (ctx: Ctx) => {
         ${cameraCard(ctx, r)}
       </div>
       <div class="col">
-        <section class="glass card" style="flex:1;padding:18px">
+        <section class="glass card devcard ${img ? "has-img" : ""}" style="flex:1;padding:18px">
+          ${img ? html`<img class="devbg" src=${img} alt="" /><span class="devshade" aria-hidden="true"></span>` : nothing}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
           ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
-          <div class="roomimg">
-            ${img ? html`<img src=${img} alt="" loading="lazy" /><span class="shade"></span>` : nothing}
-            <span>${img ? `${r.name} · conceptual room image` : `No room image yet for ${r.name}`}</span>
-          </div>
         </section>
         ${peers.length > 1
           ? html`<section class="glass card" style="padding:14px 16px;gap:10px">

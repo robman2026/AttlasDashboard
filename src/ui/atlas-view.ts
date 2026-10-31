@@ -6,7 +6,7 @@ import { ACCENT_PRESETS } from "../config/constants";
 import type { HomeAssistant } from "../data/hass";
 import { isInvalid, num, stateObj, formatState } from "../data/hass";
 import { evaluateAlerts, roomBadges, type AtlasAlert } from "../data/alerts";
-import { accentOf, cameraOf, imageUrl, mappedEntities, roomById, rooms } from "../data/model";
+import { accentOf, cameraOf, energyMeters, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
 import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
 import { icon, weatherIcon } from "./icons";
@@ -15,6 +15,7 @@ import { renderHome } from "./views/home";
 import { renderAlerts } from "./views/alerts";
 import { renderRooms } from "./views/rooms";
 import { renderRoom } from "./views/room";
+import { renderEnergy } from "./views/energy";
 
 const MOODS: Record<string, { base: string[]; g: string[]; light: string; tile: string; dark: string }> = {
   graphite: { base: ["#1A1D22", "#14171C", "#0E1014"], g: ["rgba(150,160,180,0.14)", "rgba(130,140,160,0.12)", "rgba(170,180,200,0.16)", "rgba(50,54,62,0.5)"], light: "rgba(220,228,240,0.4)", tile: "120,130,150", dark: "20,23,28" },
@@ -89,6 +90,7 @@ export class AtlasView extends LitElement {
       ...(c.alerts?.critical ?? []),
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
+      ...meterEntities(c),
     ]);
     if (config.view === "room") this._prepareCamera(roomById(c, config.room));
   }
@@ -99,7 +101,9 @@ export class AtlasView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this._timer = window.setInterval(() => (this._tick = Date.now()), 30_000);
+    // Home refreshes camera stills every 10 s (same interval as HA's picture cards); other views only need the clock.
+    const every = this._config?.view === "home" ? 10_000 : 30_000;
+    this._timer = window.setInterval(() => (this._tick = Date.now()), every);
     this._mq = window.matchMedia("(max-width: 760px)");
     this._narrow = this._mq.matches;
     this._mq.addEventListener("change", this._onMq);
@@ -156,6 +160,7 @@ export class AtlasView extends LitElement {
       floorId: c.floor,
       roomId: c.room,
       narrow: this._narrow,
+      tick: this._tick,
       go: (p) => goView(p),
       href: (p) => navigate(p),
       openRoom: (r) => goView(`room-${typeof r === "string" ? r : r.id}`),
@@ -201,6 +206,7 @@ export class AtlasView extends LitElement {
     if (view === "home") body = renderHome(ctx);
     else if (view === "alerts") body = renderAlerts(ctx);
     else if (view === "rooms") body = renderRooms(ctx);
+    else if (view === "energy") body = renderEnergy(ctx);
     else body = renderRoom(ctx);
 
     return html`<div class="root v-${variant}" style=${style}>
@@ -232,10 +238,11 @@ export class AtlasView extends LitElement {
   private _sidebar(ctx: Ctx) {
     const v = this._config!.view;
     const e = ctx.config.entities ?? {};
+    const energyNav = this._energyNav(ctx);
     const items: [string, string, boolean, () => void][] = [
       ["Home", "home", v === "home" || v === "alerts", () => ctx.go("home")],
       ["Rooms", "rooms", v === "rooms" || v === "room", () => ctx.go("rooms")],
-      ["Energy", "energy", false, () => ctx.href("/energy")],
+      ["Energy", "energy", v === "energy", energyNav],
       ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
       ["Security", "security", false, () => (e.alarm ? ctx.moreInfo(e.alarm) : undefined)],
       ["Automations", "automations", false, () => ctx.href("/config/automation/dashboard")],
@@ -287,13 +294,19 @@ export class AtlasView extends LitElement {
     </header>`;
   }
 
+  /** ATLAS Energy view when meters are configured, else the built-in HA Energy dashboard. */
+  private _energyNav(ctx: Ctx) {
+    return () => (energyMeters(ctx.config).length ? ctx.go("energy") : ctx.href("/energy"));
+  }
+
   private _bottomNav(ctx: Ctx) {
     const v = this._config!.view;
     const e = ctx.config.entities ?? {};
+    const energyNav = this._energyNav(ctx);
     const items: [string, string, boolean, () => void][] = [
       ["Home", "home", v === "home", () => ctx.go("home")],
       ["Rooms", "rooms", v === "rooms" || v === "room", () => ctx.go("rooms")],
-      ["Energy", "energy", false, () => ctx.href("/energy")],
+      ["Energy", "energy", v === "energy", energyNav],
       ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
       ["Alerts", "alert", v === "alerts", () => ctx.go("alerts")],
     ];
