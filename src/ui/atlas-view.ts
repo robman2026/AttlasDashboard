@@ -6,7 +6,7 @@ import { ACCENT_PRESETS } from "../config/constants";
 import type { HomeAssistant } from "../data/hass";
 import { isInvalid, num, stateObj, formatState } from "../data/hass";
 import { evaluateAlerts, roomBadges, type AtlasAlert } from "../data/alerts";
-import { accentOf, imageUrl, mappedEntities, roomById, rooms } from "../data/model";
+import { accentOf, cameraOf, imageUrl, mappedEntities, roomById, rooms } from "../data/model";
 import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
 import { icon, weatherIcon } from "./icons";
@@ -124,10 +124,11 @@ export class AtlasView extends LitElement {
 
   // HA lazy-loads ha-camera-stream. Creating a picture-glance card imports it.
   private async _prepareCamera(room?: RoomConfig) {
-    if (!room?.camera || customElements.get("ha-camera-stream")) return;
+    const camera = cameraOf(room);
+    if (!camera || customElements.get("ha-camera-stream")) return;
     try {
       const helpers = await (window as any).loadCardHelpers?.();
-      helpers?.createCardElement({ type: "picture-glance", entities: [], camera_image: room.camera });
+      helpers?.createCardElement({ type: "picture-glance", entities: [], camera_image: camera });
       await customElements.whenDefined("ha-camera-stream");
       this.requestUpdate();
     } catch {

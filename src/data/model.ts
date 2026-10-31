@@ -8,13 +8,17 @@ export const roomById = (c: AtlasConfig, id?: string) => rooms(c).find((r) => r.
 export const floorById = (c: AtlasConfig, id?: string) => floors(c).find((f) => f.id === id);
 export const roomsOnFloor = (c: AtlasConfig, floorId?: string) => rooms(c).filter((r) => r.floor === floorId);
 
+/** Camera entity of a room, or undefined when the room has no camera or its camera section is switched off. */
+export const cameraOf = (room?: RoomConfig): string | undefined =>
+  room && room.show_camera !== false ? room.camera || undefined : undefined;
+
 /** Room that maps an entity (climate sensors, camera or device list). */
 export const roomOfEntity = (c: AtlasConfig, entityId: string): RoomConfig | undefined =>
   rooms(c).find(
     (r) =>
       r.temperature === entityId ||
       r.humidity === entityId ||
-      r.camera === entityId ||
+      cameraOf(r) === entityId ||
       (r.devices ?? []).some((d) => d.entity === entityId)
   );
 
@@ -51,7 +55,7 @@ export const mappedEntities = (c: AtlasConfig): string[] => {
   for (const r of rooms(c)) {
     add(r.temperature);
     add(r.humidity);
-    add(r.camera);
+    add(cameraOf(r));
     (r.devices ?? []).forEach((d) => add(d.entity));
   }
   return [...ids];

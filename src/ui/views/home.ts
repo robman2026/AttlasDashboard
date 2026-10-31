@@ -1,7 +1,7 @@
 import { html, nothing, svg } from "lit";
 import type { Ctx } from "../context";
 import { formatState, isInvalid, num, powerKw, stateObj, domainOf } from "../../data/hass";
-import { imageUrl, roomById, roomLights, rooms } from "../../data/model";
+import { cameraOf, imageUrl, roomById, roomLights, rooms } from "../../data/model";
 import { icon } from "../icons";
 import { isContact } from "../devices";
 import { fmtTemp, roomTile } from "./common";
@@ -123,11 +123,12 @@ const securityCard = (ctx: Ctx) => {
     </div>
     <div class="cams">
       ${tiles.map((r) => {
-        const camOk = r!.camera ? !isInvalid(stateObj(ctx.hass, r!.camera)) : false;
+        const camera = cameraOf(r);
+        const camOk = camera ? !isInvalid(stateObj(ctx.hass, camera)) : false;
         const img = imageUrl(ctx.config, r);
         return html`<button class="cam" @click=${() => ctx.openRoom(r!)}>
           ${img ? html`<img src=${img} alt="" loading="lazy" />` : nothing}
-          <span><i class="dotst ${camOk ? "" : "na"}"></i>${r!.name} · open camera</span>
+          <span>${camera ? html`<i class="dotst ${camOk ? "" : "na"}"></i>${r!.name} · open camera` : r!.name}</span>
         </button>`;
       })}
     </div>

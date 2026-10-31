@@ -109,6 +109,7 @@ A list; each item has:
 | `image` | file name or URL |  | Image. File under the image base URL (e.g. office.jpg, backup/shelter.jpg) or a full URL. Empty: no photo. |
 | `temperature` | entity (sensor) |  | Temperature sensor |
 | `humidity` | entity (sensor) |  | Humidity sensor |
+| `show_camera` | boolean | true | Show camera section. Off: the room has no camera section at all (no Camera card, no stream, not counted as unavailable), even if a camera entity is set. On without a camera entity: a compact "No camera" card. |
 | `camera` | entity (camera) |  | Camera (live stream). Enables the camera slot (16:9) with Live, Snapshot, Recordings. |
 | `camera_hq` | entity (camera) |  | Camera high quality stream. Optional, reserved for a quality switch. |
 | `camera_snapshot` | entity (camera) |  | Snapshot camera. Optional. Snapshot uses this entity's picture, else the live camera's. |
@@ -253,6 +254,7 @@ strategy:
       floor: first
       icon: bedroom
       image: bedroom.jpg
+      show_camera: false
       temperature: sensor.bedroom_temperature
       humidity: sensor.bedroom_humidity
       devices:

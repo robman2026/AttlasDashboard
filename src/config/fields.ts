@@ -137,6 +137,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "image", label: "Image", type: "file name or URL", help: "File under the image base URL (e.g. office.jpg, backup/shelter.jpg) or a full URL. Empty: no photo.", selector: text },
       { name: "temperature", label: "Temperature sensor", type: "entity (sensor)", selector: ent("sensor") },
       { name: "humidity", label: "Humidity sensor", type: "entity (sensor)", selector: ent("sensor") },
+      { name: "show_camera", label: "Show camera section", type: "boolean", default: "true", help: "Off: the room has no camera section at all (no Camera card, no stream, not counted as unavailable), even if a camera entity is set. On without a camera entity: a compact \"No camera\" card.", selector: bool, group: "Camera" },
       { name: "camera", label: "Camera (live stream)", type: "entity (camera)", help: "Enables the camera slot (16:9) with Live, Snapshot, Recordings.", selector: ent("camera"), group: "Camera" },
       { name: "camera_hq", label: "Camera high quality stream", type: "entity (camera)", help: "Optional, reserved for a quality switch.", selector: ent("camera"), group: "Camera" },
       { name: "camera_snapshot", label: "Snapshot camera", type: "entity (camera)", help: "Optional. Snapshot uses this entity's picture, else the live camera's.", selector: ent("camera"), group: "Camera" },

@@ -43,7 +43,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/config/constants.ts` | Tags, version (from package.json), defaults |
 | `src/editor/strategy-editor.ts` | Editor built from `fields.ts` with HA `ha-form` |
 | `src/data/hass.ts` | Minimal `hass` types and state helpers (invalid, numeric, power in kW) |
-| `src/data/model.ts` | Config lookups (rooms, floors, images, mapped entities, room lights) |
+| `src/data/model.ts` | Config lookups (rooms, floors, images, mapped entities, room lights, `cameraOf` which respects `show_camera`) |
 | `src/data/alerts.ts` | Attention engine ([alerts.md](alerts.md)) |
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room renderers |
