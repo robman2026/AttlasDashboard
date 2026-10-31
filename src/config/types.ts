@@ -69,6 +69,7 @@ export interface RoomConfig {
   image?: string; // file name under image_path, or a full URL
   temperature?: string;
   humidity?: string;
+  show_camera?: boolean; // default true; false hides the whole camera section
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;

@@ -72,7 +72,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       ],
     },
     {
-      id: "bedroom", name: "Bedroom", floor: "first", icon: "bedroom", image: "bedroom.jpg",
+      id: "bedroom", name: "Bedroom", floor: "first", icon: "bedroom", image: "bedroom.jpg", show_camera: false,
       temperature: "sensor.bedroom_temperature", humidity: "sensor.bedroom_humidity",
       devices: [
         { entity: "light.bedroom_canopy", name: "Canopy LEDs" },

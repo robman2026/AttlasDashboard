@@ -50,6 +50,7 @@ const deviceTile = (ctx: Ctx, d: NonNullable<RoomConfig["devices"]>[number]) => 
 };
 
 const cameraCard = (ctx: Ctx, r: RoomConfig) => {
+  if (r.show_camera === false) return nothing; // camera section switched off for this room
   if (!r.camera) {
     return html`<section class="glass card"><h2>Camera</h2>
       <div class="camslot none"><span class="camico">${glyph("camera", 24)}</span><span class="t2" style="font-size:12px">This room has no camera</span></div>
