@@ -568,6 +568,21 @@ strategy:
       voltage: sensor.circuit_heating_voltage
       frequency: sensor.circuit_heating_frequency
       max_power: 2000
+    - name: Oven & cooktop
+      power: sensor.circuit_cooking_power
+      energy: sensor.circuit_cooking_energy
+      power_factor: sensor.circuit_cooking_power_factor
+      frequency: sensor.circuit_cooking_frequency
+      max_power: 7000
+      power_a: sensor.circuit_cooking_power_a
+      power_b: sensor.circuit_cooking_power_b
+      power_c: sensor.circuit_cooking_power_c
+      current_a: sensor.circuit_cooking_current_a
+      current_b: sensor.circuit_cooking_current_b
+      current_c: sensor.circuit_cooking_current_c
+      voltage_a: sensor.circuit_cooking_voltage_a
+      voltage_b: sensor.circuit_cooking_voltage_b
+      voltage_c: sensor.circuit_cooking_voltage_c
     - name: Attic
       power: sensor.circuit_attic_power
       energy: sensor.circuit_attic_energy

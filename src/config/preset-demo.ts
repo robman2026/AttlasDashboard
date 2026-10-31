@@ -220,6 +220,13 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     { name: "Server rack", power: "sensor.circuit_server_power", energy: "sensor.circuit_server_energy", current: "sensor.circuit_server_current", power_factor: "sensor.circuit_server_power_factor", voltage: "sensor.circuit_server_voltage", frequency: "sensor.circuit_server_frequency", max_power: 500 },
     { name: "Laundry", power: "sensor.circuit_laundry_power", energy: "sensor.circuit_laundry_energy", current: "sensor.circuit_laundry_current", power_factor: "sensor.circuit_laundry_power_factor", voltage: "sensor.circuit_laundry_voltage", frequency: "sensor.circuit_laundry_frequency", max_power: 3000 },
     { name: "Heating pump", power: "sensor.circuit_heating_power", energy: "sensor.circuit_heating_energy", current: "sensor.circuit_heating_current", power_factor: "sensor.circuit_heating_power_factor", voltage: "sensor.circuit_heating_voltage", frequency: "sensor.circuit_heating_frequency", max_power: 2000 },
+    {
+      name: "Oven & cooktop", power: "sensor.circuit_cooking_power", energy: "sensor.circuit_cooking_energy",
+      power_factor: "sensor.circuit_cooking_power_factor", frequency: "sensor.circuit_cooking_frequency", max_power: 7000,
+      power_a: "sensor.circuit_cooking_power_a", power_b: "sensor.circuit_cooking_power_b", power_c: "sensor.circuit_cooking_power_c",
+      current_a: "sensor.circuit_cooking_current_a", current_b: "sensor.circuit_cooking_current_b", current_c: "sensor.circuit_cooking_current_c",
+      voltage_a: "sensor.circuit_cooking_voltage_a", voltage_b: "sensor.circuit_cooking_voltage_b", voltage_c: "sensor.circuit_cooking_voltage_c",
+    },
     { name: "Attic", power: "sensor.circuit_attic_power", energy: "sensor.circuit_attic_energy", current: "sensor.circuit_attic_current", power_factor: "sensor.circuit_attic_power_factor", voltage: "sensor.circuit_attic_voltage", frequency: "sensor.circuit_attic_frequency", max_power: 500 },
   ],
 };

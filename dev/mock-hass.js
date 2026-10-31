@@ -81,6 +81,12 @@ add("sensor.main_meter_frequency", 50.01, { unit_of_measurement: "Hz" });
   add(`sensor.circuit_${k}_voltage`, 230.6, { unit_of_measurement: "V" }); add(`sensor.circuit_${k}_frequency`, 50.0, { unit_of_measurement: "Hz" });
 });
 ["power", "energy", "current", "power_factor", "voltage", "frequency"].forEach((k) => na(`sensor.circuit_attic_${k}`));
+// Three-phase circuit (oven and cooktop): phase sensors only, no single current or voltage
+add("sensor.circuit_cooking_power", 2140, W); add("sensor.circuit_cooking_energy", 912.4, { unit_of_measurement: "kWh" });
+add("sensor.circuit_cooking_power_factor", 98, { unit_of_measurement: "%" }); add("sensor.circuit_cooking_frequency", 50.0, { unit_of_measurement: "Hz" });
+[["a", 1420, 6.2, 230.9], ["b", 712, 3.1, 231.4], ["c", 8, 0.04, 230.2]].forEach(([p, w, a, v]) => {
+  add(`sensor.circuit_cooking_power_${p}`, w, W); add(`sensor.circuit_cooking_current_${p}`, a, { unit_of_measurement: "A" }); add(`sensor.circuit_cooking_voltage_${p}`, v, { unit_of_measurement: "V" });
+});
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const fmt = (s) => {

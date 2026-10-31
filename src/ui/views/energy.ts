@@ -39,6 +39,35 @@ const ring = (frac: number | undefined, size: number, warn: boolean) => {
   </svg>`;
 };
 
+type Phase = "a" | "b" | "c";
+/** Phases that have at least one sensor configured. */
+const phasesOf = (m: EnergyMeter): Phase[] =>
+  (["a", "b", "c"] as const).filter((p) => m[`power_${p}`] || m[`current_${p}`] || m[`voltage_${p}`]);
+
+/** Compact phase table for circuit cards: one row per phase, columns for the metrics that are configured. */
+const phaseRows = (ctx: Ctx, m: EnergyMeter) => {
+  const phases = phasesOf(m);
+  if (!phases.length) return nothing;
+  const cols: { key: "power" | "current" | "voltage"; label: string; fmt: (id?: string) => string }[] = [
+    { key: "power", label: "W", fmt: (id) => fmtW(watts(ctx, id)) },
+    { key: "current", label: "A", fmt: (id) => fmtNum(num(ctx.hass, id), 2, " A") },
+    { key: "voltage", label: "V", fmt: (id) => fmtNum(num(ctx.hass, id), 0, " V") },
+  ];
+  const used = cols.filter((c) => phases.some((p) => m[`${c.key}_${p}`]));
+  const grid = `grid-template-columns: 22px repeat(${used.length}, minmax(0, 1fr))`;
+  return html`<div class="ephases" role="table" aria-label="${m.name} phases">
+    ${phases.map(
+      (p) => html`<div class="ph sm" role="row" style=${grid}>
+        <span class="phl" role="rowheader">${p.toUpperCase()}</span>
+        ${used.map((c) => {
+          const id = m[`${c.key}_${p}`];
+          return html`<button class="n" role="cell" ?disabled=${!id} aria-label="Phase ${p.toUpperCase()} ${c.key}" @click=${() => id && ctx.moreInfo(id)}>${id ? c.fmt(id) : ""}</button>`;
+        })}
+      </div>`
+    )}
+  </div>`;
+};
+
 const statusOf = (ctx: Ctx, m: EnergyMeter, w?: number) =>
   !online(ctx, m) ? { text: "Offline", cls: "off" } : w !== undefined && Math.abs(w) >= STANDBY_W ? { text: "Consuming", cls: "on" } : { text: "Standby", cls: "idle" };
 
@@ -49,7 +78,7 @@ const mainCard = (ctx: Ctx, m: EnergyMeter) => {
   const w = watts(ctx, m.power);
   const max = m.max_power || DEFAULT_MAX_W;
   const st = statusOf(ctx, m, w);
-  const phases = (["a", "b", "c"] as const).filter((p) => m[`power_${p}`] || m[`current_${p}`] || m[`voltage_${p}`]);
+  const phases = phasesOf(m);
   const mi = (id?: string) => (id ? () => ctx.moreInfo(id) : undefined);
   return html`<section class="glass card emain">
     <div class="row"><h2>${icon("energy", 20)}${m.name}</h2><span class="estatus ${st.cls}"><i></i>${st.text}</span></div>
@@ -122,6 +151,7 @@ const circuitCard = (ctx: Ctx, m: EnergyMeter) => {
       ${m.current ? stat(fmtNum(num(ctx.hass, m.current), 2, " A"), "Current", mi(m.current)) : nothing}
       ${m.power_factor ? stat(fmtNum(pf(ctx, m.power_factor), 0, " %"), "PF", mi(m.power_factor)) : nothing}
     </div>
+    ${phaseRows(ctx, m)}
     ${extra ? html`<span class="n t2 eextra">${extra}</span>` : nothing}
   </div>`;
 };
