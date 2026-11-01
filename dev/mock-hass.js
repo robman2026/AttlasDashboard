@@ -71,10 +71,10 @@ contact("binary_sensor.garden_door", false); add("switch.garden_irrigation", "of
 th("basement", 20.4, 48); cam("camera.basement", "Basement camera", "basement.jpg");
 contact("binary_sensor.basement_door", true); motion("binary_sensor.basement_hall_motion"); motion("binary_sensor.basement_stairs_motion"); na("media_player.basement_tv");
 th("shelter", 19.4, 50);
-th("server_room", 37.3, 9);
+th("server_room", 37.3, 9); cam("camera.server_room", "Server room camera", "server.jpg");
 cam("camera.workshop", "Workshop camera"); add("sensor.3d_printer_status", "printing"); add("sensor.3d_printer_progress", 14, { unit_of_measurement: "%" });
 add("light.3d_printer_chamber", "on"); motion("binary_sensor.workshop_presence", false, "presence");
-contact("binary_sensor.utility_room_door", false);
+contact("binary_sensor.utility_room_door", false); cam("camera.utility_room", "Utility room camera", "utility.jpg");
 add("sensor.washer_power", 0, { unit_of_measurement: "W" }); add("sensor.dryer_power", 0, { unit_of_measurement: "W" });
 
 // Energy meters (fictional three-phase house meter and circuits)

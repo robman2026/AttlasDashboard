@@ -60,7 +60,14 @@ export interface FloorConfig {
   id: string;
   name: string;
   level?: string;
+  cameras?: FloorCameras; // camera wall on the floor's Rooms page
 }
+
+/** off: no camera wall. live: live streams (muted). stills: snapshots refreshed every 10 s. */
+export type FloorCameras = "off" | "live" | "stills";
+
+/** Any Lovelace card config (built-in or custom:...), rendered inside the room view. */
+export type CardConfig = { type: string } & Record<string, unknown>;
 
 export interface DeviceConfig {
   entity: string;
@@ -80,6 +87,8 @@ export interface RoomConfig {
   remote_media_player?: string; // media_player for power, volume, playback, source
   remote_entity?: string; // remote entity for navigation keys (not needed for webos)
   remote_type?: RemoteType; // which command names the navigation keys use
+  cards?: CardConfig[]; // own cards below the Devices card (e.g. washer, dryer)
+  side_cards?: CardConfig[]; // own cards in the left column below the camera (e.g. a remote)
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;

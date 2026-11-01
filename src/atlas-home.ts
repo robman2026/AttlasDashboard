@@ -7,10 +7,12 @@ import { define } from "./util/navigate";
 import { AtlasHomeStrategy } from "./strategy";
 import { AtlasStrategyEditor } from "./editor/strategy-editor";
 import { AtlasView } from "./ui/atlas-view";
+import { AtlasHuiCard } from "./ui/embedded-card";
 
 define(STRATEGY_TAG, AtlasHomeStrategy);
 define(EDITOR_TAG, AtlasStrategyEditor);
 define(VIEW_CARD_TAG, AtlasView);
+define("atlas-hui-card", AtlasHuiCard);
 
 const w = window as unknown as { customStrategies?: Record<string, unknown>[] };
 w.customStrategies = w.customStrategies || [];

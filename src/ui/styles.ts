@@ -246,6 +246,13 @@ export const styles = css`
   .sw { width: 36px; height: 36px; border-radius: 18px; border: 2px solid transparent; }
   .sw.on { border-color: var(--atlas-text); }
 
+  /* ---------- own cards / camera wall ---------- */
+  .owncards { display: grid; gap: 16px; }
+  .owncards.main { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); align-items: start; }
+  .camwall { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 12px; }
+  .camtile { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .camname { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; }
+
   /* ---------- time ago ---------- */
   .ago { font-size: 11px; color: var(--atlas-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dev .txt .ago { margin-top: 1px; }
@@ -335,6 +342,7 @@ export const styles = css`
     .weather .wtxt { display: none; }
   }
   @media (max-width: 1100px) {
+    .camwall { grid-template-columns: repeat(min(var(--cols, 3), 2), minmax(0, 1fr)); }
     aside { width: 76px; padding: 20px 10px; }
     .logo .lt, .nav .lbl, .user .lbl { display: none; }
     .logo { padding: 0 0 26px; justify-content: center; }
@@ -342,6 +350,7 @@ export const styles = css`
     .home-grid, .room-grid, .energy-top { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 760px) {
+    .camwall, .owncards.main { grid-template-columns: minmax(0, 1fr); }
     .frame { padding: 12px 12px 96px; gap: 12px; }
     aside { display: none; }
     .main { gap: 12px; }

@@ -122,6 +122,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "id", label: "ID", type: "text", required: true, help: "Used in URLs (floor-<id>). Lowercase, no spaces.", selector: text },
       { name: "name", label: "Name", type: "text", required: true, selector: text },
       { name: "level", label: "Level", type: "text", help: "Shown on the floor card, e.g. +1, 0, -1.", selector: text },
+      { name: "cameras", label: "Camera wall", type: "off | live | stills", default: "off", help: "Shows the cameras of all rooms on this floor side by side on its Rooms page (stacked on the phone). live: muted live streams. stills: snapshots refreshed every 10 s (lighter on the tablet). Rooms with the camera section off are skipped; private cameras stay hidden.", selector: sel([{ value: "off", label: "Off" }, { value: "live", label: "Live streams" }, { value: "stills", label: "Snapshots (every 10 s)" }]) },
     ],
   },
   {
@@ -146,6 +147,8 @@ export const SECTIONS: SectionDef[] = [
       { name: "remote_media_player", label: "Remote: media player", type: "entity (media_player)", help: "Shows a Remote card in the room: power, volume, mute, play/pause, previous/next, input source and what is playing.", selector: ent("media_player"), group: "Remote control" },
       { name: "remote_type", label: "Remote: TV type", type: "android_tv | samsung | webos | apple_tv | roku", help: "Command names for the arrow pad, OK, Back, Home and Menu. LG webOS uses the media player; the others need the remote entity below.", selector: sel([{ value: "android_tv", label: "Android TV / Google TV (Android TV Remote)" }, { value: "samsung", label: "Samsung (SamsungTV)" }, { value: "webos", label: "LG (webOS TV)" }, { value: "apple_tv", label: "Apple TV" }, { value: "roku", label: "Roku" }]), group: "Remote control" },
       { name: "remote_entity", label: "Remote: remote entity", type: "entity (remote)", help: "remote.* entity of the same TV, used for the navigation keys (not needed for LG webOS).", selector: ent("remote"), group: "Remote control" },
+      { name: "side_cards", label: "Own cards, left column", type: "list of card configs (YAML)", help: "Any Lovelace cards (built-in or custom:...) shown below the camera, e.g. your own remote card. Example: - type: custom:my-remote-card + its options. Leave the Remote control fields empty to hide the built-in Remote.", selector: { object: {} }, group: "Own cards" },
+      { name: "cards", label: "Own cards, below Devices", type: "list of card configs (YAML)", help: "Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card).", selector: { object: {} }, group: "Own cards" },
       { name: "devices", label: "Devices", type: "list", help: "Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info.", selector: { object: {} }, fields: DEVICE_FIELDS },
     ],
   },

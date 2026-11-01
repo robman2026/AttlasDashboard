@@ -107,6 +107,12 @@ const cameraCard = (ctx: Ctx, r: RoomConfig) => {
   </section>`;
 };
 
+/** Own Lovelace cards from the room config (cards / side_cards). */
+const ownCards = (ctx: Ctx, list: RoomConfig["cards"], cls: string) =>
+  Array.isArray(list) && list.length
+    ? html`<div class="owncards ${cls}">${list.map((c) => html`<atlas-hui-card .config=${c} .hass=${ctx.hass}></atlas-hui-card>`)}</div>`
+    : nothing;
+
 export const renderRoom = (ctx: Ctx) => {
   const r = roomById(ctx.config, ctx.roomId);
   if (!r) return html`<section class="glass card"><p class="empty">Room "${ctx.roomId}" is not in the config.</p></section>`;
@@ -168,6 +174,7 @@ export const renderRoom = (ctx: Ctx) => {
         </section>
         ${cameraCard(ctx, r)}
         ${remoteCard(ctx, r)}
+        ${ownCards(ctx, r.side_cards, "side")}
       </div>
       <div class="col">
         <section class="glass card devcard ${img ? "has-img" : ""}" style="flex:1;padding:18px">
@@ -175,6 +182,7 @@ export const renderRoom = (ctx: Ctx) => {
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
           ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
+        ${ownCards(ctx, r.cards, "main")}
         ${peers.length > 1
           ? html`<section class="glass card" style="padding:14px 16px;gap:10px">
               <h2 style="font-size:14px;margin-left:4px">Other rooms on ${f?.name ?? "this floor"}</h2>

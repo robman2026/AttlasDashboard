@@ -37,7 +37,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     { id: "attic", level: "+2", name: "Attic" },
     { id: "first", level: "+1", name: "First floor" },
     { id: "ground", level: "0", name: "Ground floor" },
-    { id: "basement", level: "-1", name: "Basement" },
+    { id: "basement", level: "-1", name: "Basement", cameras: "live" },
   ],
   rooms: [
     {
@@ -177,7 +177,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "server", name: "Server room", floor: "basement", icon: "server", image: "server.jpg",
-      temperature: "sensor.server_room_temperature", humidity: "sensor.server_room_humidity", devices: [],
+      temperature: "sensor.server_room_temperature", humidity: "sensor.server_room_humidity", camera: "camera.server_room", devices: [],
     },
     {
       id: "workshop", name: "Workshop", floor: "basement", icon: "settings", camera: "camera.workshop",
@@ -189,7 +189,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       ],
     },
     {
-      id: "utility", name: "Utility room", floor: "basement", icon: "system", image: "utility.jpg",
+      id: "utility", name: "Utility room", floor: "basement", icon: "system", image: "utility.jpg", camera: "camera.utility_room",
       devices: [
         { entity: "binary_sensor.utility_room_door", name: "Door" },
         { entity: "climate.heat_pump", name: "Heat pump" },
@@ -197,6 +197,11 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "laundry", name: "Laundry", floor: "basement", icon: "power",
+      // Own cards: any Lovelace card config, e.g. a custom washer / dryer card.
+      cards: [
+        { type: "tile", entity: "sensor.washer_power", name: "Washer" },
+        { type: "tile", entity: "sensor.dryer_power", name: "Dryer" },
+      ],
       devices: [
         { entity: "sensor.washer_power", name: "Washer" },
         { entity: "sensor.dryer_power", name: "Dryer" },

@@ -10,8 +10,17 @@
 <div id="host"></div>
 <script type="module">
   // Simulates hui-root: generates views via the strategy, renders the one matching ?view=.
-  import "../dist/atlas-home.js";
-  import { mockHass } from "./mock-hass.js";
+  // Stand-in for HA's window.loadCardHelpers: renders own cards as simple boxes.
+  window.loadCardHelpers = async () => ({
+    createCardElement: async (cfg) => {
+      const el = document.createElement("div");
+      el.style.cssText = "padding:16px;border-radius:16px;background:#e9ecef;color:#14171c;font:14px system-ui;min-height:120px";
+      Object.defineProperty(el, "hass", { set(h) { const s = h.states[cfg.entity]; el.innerHTML = `<b>${cfg.name ?? cfg.type}</b><br><small>${cfg.type} · ${cfg.entity ?? ""}</small><div style="font-size:28px;margin-top:12px">${s ? s.state + " " + (s.attributes.unit_of_measurement ?? "") : "-"}</div>`; } });
+      return el;
+    },
+  });
+  await import("../dist/atlas-home.js");
+  const { mockHass } = await import("./mock-hass.js");
   const Strategy = customElements.get("ll-strategy-dashboard-atlas-home");
   // Load the preset through the real editor code path ("Load demo house" button).
   const ed = document.createElement("atlas-home-strategy-editor");
