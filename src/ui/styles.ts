@@ -178,7 +178,7 @@ export const styles = css`
 
   /* ---------- rooms / floors ---------- */
   .floors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-  .fl { height: 112px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+  .fl { min-height: 112px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 2px; }
   .fl.on { border-color: var(--atlas-accent); color: var(--atlas-accent); box-shadow: 0 0 24px var(--atlas-accent-glow); }
   .fl .lv { font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
   .fl small { font-size: 12px; opacity: 0.85; }
@@ -258,8 +258,8 @@ export const styles = css`
   .main.fit .hero { flex-direction: row; align-items: baseline; gap: 16px; }
   .main.fit .hero h1.sm { font-size: 40px; }
   .main.fit .hero p { font-size: 14px; }
-  .main.fit .fl { height: 84px; padding: 10px 14px; }
-  .main.fit .fl .lv { font-size: 22px; }
+  .main.fit .fl { min-height: 0; padding: 10px 14px; justify-content: flex-start; }
+  .main.fit .fl .lv { font-size: 22px; line-height: 1.15; }
   .main.fit .roomsec, .main.fit .camsec { min-height: 0; overflow: hidden; }
   .main.fit .roomsec .tiles.floor { flex: 1; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 10px; }
   .main.fit .tiles.floor .tile { padding: 10px 12px; min-height: 0; }
