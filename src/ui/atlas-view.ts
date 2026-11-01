@@ -265,7 +265,7 @@ export class AtlasView extends LitElement {
     const ctx = this._ctx(alerts);
     const view = this._config.view;
     const room = view === "room" ? roomById(c, this._config.room) : undefined;
-    const photo = variant === "warm_glass" ? imageUrl(c, room?.image ? room : roomById(c, ap.background) ?? rooms(c)[0]) : undefined;
+    const photo = variant === "warm_glass" ? (imageUrl(c, room) ?? imageUrl(c, roomById(c, ap.background) ?? rooms(c)[0])) : undefined;
 
     let body;
     if (view === "home") body = renderHome(ctx);

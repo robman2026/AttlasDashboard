@@ -108,7 +108,7 @@ A list; each item has:
 | `name` (required) | text |  | Name |
 | `floor` | floor id |  | Floor |
 | `icon` | ATLAS icon key |  | Icon. One of the shipped line icons, e.g. office, living, server. |
-| `image` | file name or URL |  | Image. File under the image base URL (e.g. office.jpg, backup/shelter.jpg) or a full URL. Empty: no photo. |
+| `image` | file name or URL |  | Image. Pick a shipped image or type a file name under the image base URL, or a full URL. Empty: the shipped image matching the room id is used automatically (e.g. laundry -> laundry.jpg, guest_room -> guest-room.jpg). none: no image. |
 | `temperature` | entity (sensor) |  | Temperature sensor |
 | `humidity` | entity (sensor) |  | Humidity sensor |
 | `show_camera` | boolean | true | Show camera section. Off: the room has no camera section at all (no Camera card, no stream, not counted as unavailable), even if a camera entity is set. On without a camera entity: a compact "No camera" card. |

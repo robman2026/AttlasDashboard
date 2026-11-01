@@ -5,7 +5,7 @@
 // Keep this file free of runtime imports (Node imports it directly for the docs).
 
 /** Placeholders the editor replaces with live option lists. */
-export type DynamicOptions = "$rooms" | "$floors" | "$icons";
+export type DynamicOptions = "$rooms" | "$floors" | "$icons" | "$images";
 
 export interface FieldDef {
   name: string;
@@ -136,7 +136,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "name", label: "Name", type: "text", required: true, selector: text, group: "_grid" },
       { name: "floor", label: "Floor", type: "floor id", selector: sel("$floors"), group: "_grid" },
       { name: "icon", label: "Icon", type: "ATLAS icon key", help: "One of the shipped line icons, e.g. office, living, server.", selector: sel("$icons"), group: "_grid" },
-      { name: "image", label: "Image", type: "file name or URL", help: "File under the image base URL (e.g. office.jpg, backup/shelter.jpg) or a full URL. Empty: no photo.", selector: text },
+      { name: "image", label: "Image", type: "file name or URL", help: "Pick a shipped image or type a file name under the image base URL, or a full URL. Empty: the shipped image matching the room id is used automatically (e.g. laundry -> laundry.jpg, guest_room -> guest-room.jpg). none: no image.", selector: { select: { options: "$images", custom_value: true } } },
       { name: "temperature", label: "Temperature sensor", type: "entity (sensor)", selector: ent("sensor") },
       { name: "humidity", label: "Humidity sensor", type: "entity (sensor)", selector: ent("sensor") },
       { name: "show_camera", label: "Show camera section", type: "boolean", default: "true", help: "Off: the room has no camera section at all (no Camera card, no stream, not counted as unavailable), even if a camera entity is set. On without a camera entity: a compact \"No camera\" card.", selector: bool, group: "Camera" },
