@@ -49,6 +49,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
 | `src/ui/devices.ts` | Device tile icon, state kind, text |
+| `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
 | `src/ui/time.ts` | Relative "time ago" labels (`time_display`) |
 | `src/ui/styles.ts` | Design tokens and all CSS, responsive breakpoints |
 | `src/ui/icons.ts`, `icons.generated.ts` | ATLAS line icons (generated from `assets/icons`) and device glyphs |
@@ -87,6 +88,7 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `webostv.button` (`entity_id`, `button`) | Remote card navigation keys for LG webOS | home-assistant.io `source/_actions/webostv.button.markdown` (2026-11-01) |
 | `media_player.toggle`, `volume_up/down`, `volume_mute`, `media_play_pause`, `media_previous_track/next_track`, `select_source` | Remote card media controls | home-assistant.io `source/_actions/media_player.*.markdown` (2026-11-01) |
 | Entity `last_changed` / `last_updated` | "Time ago" on device tiles and climate values | home-assistant-js-websocket `HassEntity` type |
+| `window.loadCardHelpers()` then `createCardElement(config)`, `ll-rebuild` event | Own cards in rooms | frontend `src/panels/lovelace/ha-panel-lovelace.ts`, `custom-card-helpers.ts` (2026-11-01) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
 The frontend source was read from the `dev` branch on 2026-10-31 and targets HA 2026.10.

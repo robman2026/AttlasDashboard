@@ -6,9 +6,10 @@ import { ACCENT_PRESETS } from "../config/constants";
 import type { HomeAssistant } from "../data/hass";
 import { isInvalid, num, stateObj, formatState } from "../data/hass";
 import { evaluateAlerts, roomBadges, type AtlasAlert } from "../data/alerts";
-import { accentOf, cameraOf, energyMeters, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
+import { accentOf, cameraOf, energyMeters, floorById, floors, imageUrl, mappedEntities, meterEntities, roomById, rooms, roomsOnFloor } from "../data/model";
 import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
+import type { AtlasHuiCard } from "./embedded-card";
 import { icon, weatherIcon } from "./icons";
 import type { Ctx } from "./context";
 import { renderHome } from "./views/home";
@@ -95,7 +96,20 @@ export class AtlasView extends LitElement {
       // (many TVs report unavailable while switched off).
       ...rooms(c).flatMap((r) => [r.remote_media_player, r.remote_entity]).filter((x): x is string => !!x),
     ]);
-    if (config.view === "room") this._prepareCamera(roomById(c, config.room));
+    if (config.view === "room") this._prepareCamera(cameraOf(roomById(c, config.room)));
+    const fc = this._floorCameras();
+    if (fc.mode === "live") this._prepareCamera(fc.cameras[0]);
+  }
+
+  /** Camera wall of the floor shown in a Rooms view (empty when off or not a Rooms view). */
+  private _floorCameras(): { mode: string; cameras: string[] } {
+    const c = this._config;
+    if (!c || c.view !== "rooms") return { mode: "off", cameras: [] };
+    const f = floorById(c.atlas, c.floor) ?? floors(c.atlas)[0];
+    const mode = f?.cameras ?? "off";
+    if (mode === "off") return { mode, cameras: [] };
+    const cams = roomsOnFloor(c.atlas, f!.id).map((r) => cameraOf(r)).filter((x): x is string => !!x);
+    return { mode, cameras: cams };
   }
 
   getCardSize() {
@@ -105,7 +119,8 @@ export class AtlasView extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     // Home refreshes camera stills every 10 s (same interval as HA's picture cards); other views only need the clock.
-    const every = this._config?.view === "home" ? 10_000 : 30_000;
+    // Floor camera walls with snapshots refresh at the same 10 s.
+    const every = this._config?.view === "home" || this._floorCameras().mode !== "off" ? 10_000 : 30_000;
     this._timer = window.setInterval(() => (this._tick = Date.now()), every);
     this._mq = window.matchMedia("(max-width: 760px)");
     this._narrow = this._mq.matches;
@@ -125,13 +140,14 @@ export class AtlasView extends LitElement {
     if (changed.size > 1 || !changed.has("hass")) return true;
     const old = changed.get("hass") as HomeAssistant | undefined;
     if (!old || !this.hass || !this._relevant) return true;
+    // Embedded own cards track their own entities: always hand them the new hass.
+    this.renderRoot?.querySelectorAll?.("atlas-hui-card").forEach((el) => ((el as AtlasHuiCard).hass = this.hass));
     for (const id of this._relevant) if (old.states[id] !== this.hass.states[id]) return true;
     return false;
   }
 
   // HA lazy-loads ha-camera-stream. Creating a picture-glance card imports it.
-  private async _prepareCamera(room?: RoomConfig) {
-    const camera = cameraOf(room);
+  private async _prepareCamera(camera?: string) {
     if (!camera || customElements.get("ha-camera-stream")) return;
     try {
       const helpers = await (window as any).loadCardHelpers?.();

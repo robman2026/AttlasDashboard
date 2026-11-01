@@ -43,6 +43,8 @@ const SHOTS = [
   ["room-kids_room", 1600, 1000, "room-kids-room-desktop"],
   ["room-living", 1600, 1000, "room-living-desktop"],
   ["room-bedroom", 1600, 1000, "room-bedroom-desktop"],
+  ["room-laundry", 1600, 1000, "room-laundry-desktop"],
+  ["floor-basement", 1600, 1000, "floor-cameras-desktop"],
   ["energy", 1600, 1000, "energy-desktop"],
   ["energy", 1280, 800, "energy-tablet"],
   ["energy", 390, 844, "energy-phone"],
@@ -58,7 +60,7 @@ for (const [view, width, height, name] of SHOTS) {
   page.on("pageerror", (e) => { failed = true; console.error(name, e.message); });
   await page.goto(`http://127.0.0.1:${port}/dev/harness.html?view=${view}`);
   await page.waitForTimeout(900);
-  await page.screenshot({ path: `docs/screenshots/${name}.jpg`, type: "jpeg", quality: 82, fullPage: width < 800 });
+  await page.screenshot({ path: `docs/screenshots/${name}.jpg`, type: "jpeg", quality: 82, fullPage: width < 800 || name.includes("cameras") });
   await page.close();
   console.log(`docs/screenshots/${name}.jpg`);
 }

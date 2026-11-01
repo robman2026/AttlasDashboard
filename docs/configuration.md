@@ -94,6 +94,7 @@ A list; each item has:
 | `id` (required) | text |  | ID. Used in URLs (floor-<id>). Lowercase, no spaces. |
 | `name` (required) | text |  | Name |
 | `level` | text |  | Level. Shown on the floor card, e.g. +1, 0, -1. |
+| `cameras` | off \| live \| stills | off | Camera wall. Shows the cameras of all rooms on this floor side by side on its Rooms page (stacked on the phone). live: muted live streams. stills: snapshots refreshed every 10 s (lighter on the tablet). Rooms with the camera section off are skipped; private cameras stay hidden. |
 
 ## Rooms (`rooms`)
 
@@ -118,6 +119,8 @@ A list; each item has:
 | `remote_media_player` | entity (media_player) |  | Remote: media player. Shows a Remote card in the room: power, volume, mute, play/pause, previous/next, input source and what is playing. |
 | `remote_type` | android_tv \| samsung \| webos \| apple_tv \| roku |  | Remote: TV type. Command names for the arrow pad, OK, Back, Home and Menu. LG webOS uses the media player; the others need the remote entity below. |
 | `remote_entity` | entity (remote) |  | Remote: remote entity. remote.* entity of the same TV, used for the navigation keys (not needed for LG webOS). |
+| `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. Example: - type: custom:my-remote-card + its options. Leave the Remote control fields empty to hide the built-in Remote. |
+| `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). |
 | `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. |
 
 Items of `devices`:
@@ -228,6 +231,7 @@ strategy:
     - id: basement
       level: "-1"
       name: Basement
+      cameras: live
   rooms:
     - id: attic
       name: Attic
@@ -459,6 +463,7 @@ strategy:
       image: server.jpg
       temperature: sensor.server_room_temperature
       humidity: sensor.server_room_humidity
+      camera: camera.server_room
       devices: []
     - id: workshop
       name: Workshop
@@ -479,6 +484,7 @@ strategy:
       floor: basement
       icon: system
       image: utility.jpg
+      camera: camera.utility_room
       devices:
         - entity: binary_sensor.utility_room_door
           name: Door
@@ -488,6 +494,13 @@ strategy:
       name: Laundry
       floor: basement
       icon: power
+      cards:
+        - type: tile
+          entity: sensor.washer_power
+          name: Washer
+        - type: tile
+          entity: sensor.dryer_power
+          name: Dryer
       devices:
         - entity: sensor.washer_power
           name: Washer
