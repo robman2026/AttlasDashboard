@@ -7,6 +7,7 @@ import { icon, glyph } from "../icons";
 import { TOGGLE_DOMAINS, deviceLabel, glyphFor, kindOf, stateText } from "../devices";
 import { fmtHum, fmtTemp } from "./common";
 import { stamp, stampTitle, timeAgo } from "../time";
+import { automationsCard, climateExtras, printerCard, statusStrip } from "./room-extras";
 
 const LONG_PRESS_MS = 500;
 
@@ -148,6 +149,7 @@ export const renderRoom = (ctx: Ctx) => {
       <div>
         <div class="title">${icon(r.icon, 44)}<h1>${r.name}</h1>${badge ? html`<span class="badge ${badge.severity === "critical" ? "critical" : ""}">${badge.text}</span>` : nothing}</div>
         <p class="n t2">${f ? html`${f.name} <span style="opacity:.5">·</span> ` : nothing}${summary}</p>
+        ${statusStrip(ctx, r)}
       </div>
       ${peers.length > 1
         ? html`<div style="display:flex;gap:8px">
@@ -174,8 +176,10 @@ export const renderRoom = (ctx: Ctx) => {
                 </button>
               </div>`
             : html`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
+          ${climateExtras(ctx, r)}
         </section>
         ${cameraCard(ctx, r)}
+        ${printerCard(ctx, r)}
         ${ownCards(ctx, r.side_cards, "side")}
       </div>
       <div class="col">
@@ -184,6 +188,7 @@ export const renderRoom = (ctx: Ctx) => {
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
           ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
+        ${automationsCard(ctx, r)}
         ${ownCards(ctx, r.cards, "main")}
         ${peers.length > 1
           ? html`<section class="glass card" style="padding:14px 16px;gap:10px">

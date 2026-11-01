@@ -116,9 +116,31 @@ A list; each item has:
 | `camera_hq` | entity (camera) |  | Camera high quality stream. Optional, reserved for a quality switch. |
 | `camera_snapshot` | entity (camera) |  | Snapshot camera. Optional. Snapshot uses this entity's picture, else the live camera's. |
 | `camera_private` | boolean | false | Private camera. Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens. |
+| `climate_extra` | list |  | Extra climate values. More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history. |
+| `automations` | list of entity (automation) |  | Automations. Shows an Automations card with an on/off switch and the last run time for each. |
+| `printer_name` | text |  | Printer name. Title of the 3D printer card. The card appears when a status or progress sensor is set. |
+| `printer_status` | entity (sensor) |  | Print status. e.g. sensor.<printer>_print_status (Bambu Lab). |
+| `printer_progress` | entity (sensor) |  | Print progress (%) |
+| `printer_remaining` | entity (sensor, duration) |  | Remaining time. Seconds, minutes or hours; converted by its unit. |
+| `printer_nozzle` | entity (sensor) |  | Nozzle temperature |
+| `printer_bed` | entity (sensor) |  | Bed temperature |
+| `printer_chamber` | entity (sensor) |  | Chamber temperature |
+| `printer_light` | entity (light, switch) |  | Chamber light |
+| `printer_pause` | entity (button) |  | Pause button |
+| `printer_resume` | entity (button) |  | Resume button |
+| `printer_stop` | entity (button) |  | Stop button. Always asks for confirmation. |
+| `printer_picture` | entity (camera, image) |  | Printer picture. Chamber camera or cover image, shown as a still in the card. |
 | `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. One card (type: custom:my-card plus its options) or a list of cards (each starting with - type:). |
 | `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). One card or a list of cards. |
 | `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. |
+
+Items of `climate_extra`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
 
 Items of `devices`:
 
@@ -467,7 +489,31 @@ strategy:
       name: Workshop
       floor: basement
       icon: settings
+      image: workshop.jpg
       camera: camera.workshop
+      temperature: sensor.workshop_temperature
+      humidity: sensor.workshop_humidity
+      climate_extra:
+        - entity: sensor.workshop_co2
+          name: CO2
+        - entity: sensor.workshop_pressure
+          name: Pressure
+      automations:
+        - automation.workshop_eco_mode
+        - automation.print_complete_notify
+        - automation.workshop_door_alarm
+      printer_name: 3D printer
+      printer_status: sensor.3d_printer_status
+      printer_progress: sensor.3d_printer_progress
+      printer_remaining: sensor.3d_printer_remaining_time
+      printer_nozzle: sensor.3d_printer_nozzle_temperature
+      printer_bed: sensor.3d_printer_bed_temperature
+      printer_chamber: sensor.3d_printer_chamber_temperature
+      printer_light: light.3d_printer_chamber
+      printer_pause: button.3d_printer_pause
+      printer_resume: button.3d_printer_resume
+      printer_stop: button.3d_printer_stop
+      printer_picture: image.3d_printer_cover
       devices:
         - entity: sensor.3d_printer_status
           name: 3D printer
@@ -492,6 +538,7 @@ strategy:
       name: Laundry
       floor: basement
       icon: power
+      image: laundry.jpg
       cards:
         - type: tile
           entity: sensor.washer_power

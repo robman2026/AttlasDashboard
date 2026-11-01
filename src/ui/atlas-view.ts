@@ -92,6 +92,14 @@ export class AtlasView extends LitElement {
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
       ...meterEntities(c),
+      // Optional room sections: re-render only, not part of the data-quality alert
+      // (a printer that is switched off reports unavailable).
+      ...rooms(c).flatMap((r) => [
+        ...(r.climate_extra ?? []).map((d) => d.entity),
+        ...(r.automations ?? []),
+        r.printer_status, r.printer_progress, r.printer_remaining, r.printer_nozzle, r.printer_bed,
+        r.printer_chamber, r.printer_light, r.printer_picture,
+      ]).filter((x): x is string => !!x),
     ]);
     if (config.view === "room") this._prepareCamera(cameraOf(roomById(c, config.room)));
     const fc = this._floorCameras();

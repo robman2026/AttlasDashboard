@@ -181,7 +181,21 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       temperature: "sensor.server_room_temperature", humidity: "sensor.server_room_humidity", camera: "camera.server_room", devices: [],
     },
     {
-      id: "workshop", name: "Workshop", floor: "basement", icon: "settings", camera: "camera.workshop",
+      id: "workshop", name: "Workshop", floor: "basement", icon: "settings", image: "workshop.jpg", camera: "camera.workshop",
+      temperature: "sensor.workshop_temperature", humidity: "sensor.workshop_humidity",
+      climate_extra: [
+        { entity: "sensor.workshop_co2", name: "CO2" },
+        { entity: "sensor.workshop_pressure", name: "Pressure" },
+      ],
+      automations: ["automation.workshop_eco_mode", "automation.print_complete_notify", "automation.workshop_door_alarm"],
+      // 3D printer card (entity names modeled on the Bambu Lab integration)
+      printer_name: "3D printer",
+      printer_status: "sensor.3d_printer_status", printer_progress: "sensor.3d_printer_progress",
+      printer_remaining: "sensor.3d_printer_remaining_time",
+      printer_nozzle: "sensor.3d_printer_nozzle_temperature", printer_bed: "sensor.3d_printer_bed_temperature",
+      printer_chamber: "sensor.3d_printer_chamber_temperature", printer_light: "light.3d_printer_chamber",
+      printer_pause: "button.3d_printer_pause", printer_resume: "button.3d_printer_resume", printer_stop: "button.3d_printer_stop",
+      printer_picture: "image.3d_printer_cover",
       devices: [
         { entity: "sensor.3d_printer_status", name: "3D printer" },
         { entity: "sensor.3d_printer_progress", name: "Print progress" },
@@ -197,7 +211,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       ],
     },
     {
-      id: "laundry", name: "Laundry", floor: "basement", icon: "power",
+      id: "laundry", name: "Laundry", floor: "basement", icon: "power", image: "laundry.jpg",
       // Own cards: any Lovelace card config, e.g. a custom washer / dryer card.
       cards: [
         { type: "tile", entity: "sensor.washer_power", name: "Washer" },

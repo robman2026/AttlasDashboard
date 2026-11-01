@@ -1128,7 +1128,34 @@ var ut = {
 			name: "Workshop",
 			floor: "basement",
 			icon: "settings",
+			image: "workshop.jpg",
 			camera: "camera.workshop",
+			temperature: "sensor.workshop_temperature",
+			humidity: "sensor.workshop_humidity",
+			climate_extra: [{
+				entity: "sensor.workshop_co2",
+				name: "CO2"
+			}, {
+				entity: "sensor.workshop_pressure",
+				name: "Pressure"
+			}],
+			automations: [
+				"automation.workshop_eco_mode",
+				"automation.print_complete_notify",
+				"automation.workshop_door_alarm"
+			],
+			printer_name: "3D printer",
+			printer_status: "sensor.3d_printer_status",
+			printer_progress: "sensor.3d_printer_progress",
+			printer_remaining: "sensor.3d_printer_remaining_time",
+			printer_nozzle: "sensor.3d_printer_nozzle_temperature",
+			printer_bed: "sensor.3d_printer_bed_temperature",
+			printer_chamber: "sensor.3d_printer_chamber_temperature",
+			printer_light: "light.3d_printer_chamber",
+			printer_pause: "button.3d_printer_pause",
+			printer_resume: "button.3d_printer_resume",
+			printer_stop: "button.3d_printer_stop",
+			printer_picture: "image.3d_printer_cover",
 			devices: [
 				{
 					entity: "sensor.3d_printer_status",
@@ -1168,6 +1195,7 @@ var ut = {
 			name: "Laundry",
 			floor: "basement",
 			icon: "power",
+			image: "laundry.jpg",
 			cards: [{
 				type: "tile",
 				entity: "sensor.washer_power",
@@ -1840,6 +1868,112 @@ var ut = {
 				help: "Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens.",
 				selector: z,
 				group: "Camera"
+			},
+			{
+				name: "climate_extra",
+				label: "Extra climate values",
+				type: "list",
+				help: "More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history.",
+				selector: { object: {} },
+				fields: ft,
+				group: "Climate and automations"
+			},
+			{
+				name: "automations",
+				label: "Automations",
+				type: "list of entity (automation)",
+				help: "Shows an Automations card with an on/off switch and the last run time for each.",
+				selector: L("automation", !0),
+				group: "Climate and automations"
+			},
+			{
+				name: "printer_name",
+				label: "Printer name",
+				type: "text",
+				help: "Title of the 3D printer card. The card appears when a status or progress sensor is set.",
+				selector: R,
+				group: "3D printer"
+			},
+			{
+				name: "printer_status",
+				label: "Print status",
+				type: "entity (sensor)",
+				help: "e.g. sensor.<printer>_print_status (Bambu Lab).",
+				selector: L("sensor"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_progress",
+				label: "Print progress (%)",
+				type: "entity (sensor)",
+				selector: L("sensor"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_remaining",
+				label: "Remaining time",
+				type: "entity (sensor, duration)",
+				help: "Seconds, minutes or hours; converted by its unit.",
+				selector: L("sensor"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_nozzle",
+				label: "Nozzle temperature",
+				type: "entity (sensor)",
+				selector: L("sensor"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_bed",
+				label: "Bed temperature",
+				type: "entity (sensor)",
+				selector: L("sensor"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_chamber",
+				label: "Chamber temperature",
+				type: "entity (sensor)",
+				selector: L("sensor"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_light",
+				label: "Chamber light",
+				type: "entity (light, switch)",
+				selector: L(["light", "switch"]),
+				group: "3D printer"
+			},
+			{
+				name: "printer_pause",
+				label: "Pause button",
+				type: "entity (button)",
+				selector: L("button"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_resume",
+				label: "Resume button",
+				type: "entity (button)",
+				selector: L("button"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_stop",
+				label: "Stop button",
+				type: "entity (button)",
+				help: "Always asks for confirmation.",
+				selector: L("button"),
+				group: "3D printer"
+			},
+			{
+				name: "printer_picture",
+				label: "Printer picture",
+				type: "entity (camera, image)",
+				help: "Chamber camera or cover image, shown as a still in the card.",
+				selector: L(["camera", "image"]),
+				group: "3D printer"
 			},
 			{
 				name: "side_cards",
@@ -2702,6 +2836,53 @@ var V = (e) => e.split(".")[0], H = (e, t) => t && e ? e.states[t] : void 0, U =
   .camwall.fitwall { flex: 1 1 auto; min-height: 0; grid-template-columns: repeat(var(--fcols, var(--cols, 3)), var(--fw, minmax(0, 1fr))); justify-content: center; align-content: center; }
   .camname { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; }
 
+  /* ---------- room status strip ---------- */
+  .strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .schip { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 14px 6px 10px; border-radius: 14px; background: var(--atlas-glass-bg); border: 1px solid var(--atlas-glass-border); text-align: left; max-width: 280px; }
+  .schip > span { display: flex; flex-direction: column; min-width: 0; }
+  .schip b { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .schip small { font-size: 11px; color: var(--atlas-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .schip.ok .okdot { width: 22px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: var(--atlas-accent); color: #14171c; font-size: 13px; font-weight: 800; }
+  .schip.warn { border-color: rgba(255, 191, 87, 0.5); color: var(--atlas-warn); }
+  .schip.on { border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
+  .sbar { display: block; height: 3px; border-radius: 2px; background: rgba(241, 245, 255, 0.12); margin-top: 3px; }
+  .sbar > i { display: block; height: 3px; border-radius: 2px; background: var(--atlas-accent); }
+
+  /* ---------- climate extras / printer / automations ---------- */
+  .cextra { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+  .cx { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.1); text-align: left; min-width: 0; }
+  .cx > span:last-child { display: flex; flex-direction: column; min-width: 0; }
+  .cx b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cx small { font-size: 11px; color: var(--atlas-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cxi { color: var(--atlas-accent); display: flex; }
+  .printer { gap: 12px; }
+  .pstatus { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--atlas-accent); }
+  .pbody { display: flex; align-items: center; gap: 14px; }
+  .ppic { flex: none; width: 112px; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; background: #0e1014; border: 1px solid rgba(188, 200, 222, 0.14); }
+  .ppic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pnum { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+  .pnum b { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .pnum span { font-size: 13px; }
+  .ptemps { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; }
+  .ptemps button { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 12px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.1); text-align: left; }
+  .ptemps b { font-size: 15px; }
+  .ptemps small { font-size: 11px; color: var(--atlas-text2); }
+  .pbtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 8px; }
+  .pbtns .sq { color: var(--atlas-text); }
+  .pbtns .sq.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); }
+  .pbtns .sq.stop { color: var(--atlas-crit); }
+  .autos { gap: 6px; }
+  .auto { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid rgba(188, 200, 222, 0.08); }
+  .auto:first-of-type { border-top: 0; }
+  .atxt { display: flex; flex-direction: column; gap: 2px; text-align: left; min-width: 0; }
+  .atxt b { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .atxt small { font-size: 12px; }
+  .tog { flex: none; width: 48px; height: 28px; border-radius: 14px; background: rgba(241, 245, 255, 0.14); position: relative; border: 1px solid rgba(188, 200, 222, 0.2); }
+  .tog i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 10px; background: var(--atlas-text2); transition: left 0.15s; }
+  .tog.on { background: var(--atlas-accent-soft); border-color: var(--atlas-accent); }
+  .tog.on i { left: 23px; background: var(--atlas-accent); }
+  .tog:disabled { opacity: 0.4; }
+
   /* ---------- time ago ---------- */
   .ago { font-size: 11px; color: var(--atlas-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dev .txt .ago { margin-top: 1px; }
@@ -2780,6 +2961,12 @@ var V = (e) => e.split(".")[0], H = (e, t) => t && e ? e.states[t] : void 0, U =
     .home-grid, .room-grid, .energy-top { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 760px) {
+    .tile .name, .tile .hum { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile .info { flex: 1; }
+    .camsec > .row { flex-wrap: wrap; }
+    .camsec > .row > span.t2 { flex-basis: 100%; }
+    .strip { gap: 6px; }
+    .schip { max-width: 100%; }
     .camwall, .owncards.main { grid-template-columns: minmax(0, 1fr); }
     .frame { padding: 12px 12px 96px; gap: 12px; }
     aside { display: none; }
@@ -2932,39 +3119,39 @@ var kt = Tt(Ot), At = {
 	washer: "M5 3h14v18H5zM5 8h14M12 11a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
 	power: "M12 3v8M6.5 6.5a8 8 0 1 0 11 0",
 	dot: "M12 12m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0"
-}, Mt = (e, t = 20) => A`<svg aria-hidden="true" width=${t} height=${t} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${j`<path d=${jt[e] ?? jt.dot}></path>`}</svg>`, Nt = (e) => {
+}, J = (e, t = 20) => A`<svg aria-hidden="true" width=${t} height=${t} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${j`<path d=${jt[e] ?? jt.dot}></path>`}</svg>`, Mt = (e) => {
 	let t = e ?? "", n = j`<circle cx="14" cy="13" r="6" fill="#FFD27A"></circle>`, r = j`<path d="M10 26h20a7 7 0 0 0 0-14 9.5 9.5 0 0 0-18.3 2A6 6 0 0 0 10 26z" fill="#D3D8DE"></path>`, i = j`<path d="M14 28l-2 3M21 28l-2 3M28 28l-2 3" stroke="#5EC8FF" stroke-width="2" stroke-linecap="round"></path>`, a = j`<path d="M24 6a10 10 0 1 0 8 15A9 9 0 0 1 24 6z" fill="#D3D8DE"></path>`, o = j`${r}`;
 	return t === "sunny" ? o = j`<circle cx="20" cy="15" r="8" fill="#FFD27A"></circle>` : t === "clear-night" ? o = a : t === "partlycloudy" ? o = j`${n}${r}` : (t.includes("rain") || t === "pouring" || t.includes("snow") || t === "hail") && (o = j`${r}${i}`), A`<svg aria-hidden="true" width="40" height="32" viewBox="0 0 40 32">${o}</svg>`;
-}, J = (e, ...t) => t.some((t) => e.includes(t)), Pt = [
+}, Y = (e, ...t) => t.some((t) => e.includes(t)), Nt = [
 	"door",
 	"garage_door",
 	"opening",
 	"window"
-], Ft = [
+], Pt = [
 	"motion",
 	"occupancy",
 	"presence"
-], It = (e) => {
+], Ft = (e) => {
 	if (!e || V(e.entity_id) !== "binary_sensor") return !1;
 	let t = String(e.attributes.device_class ?? "");
-	return Pt.includes(t) || J(e.entity_id, "contact", "window", "door", "skylight", "velux");
-}, Lt = (e, t) => {
+	return Nt.includes(t) || Y(e.entity_id, "contact", "window", "door", "skylight", "velux");
+}, It = (e, t) => {
 	let n = V(e), r = String(t?.attributes.device_class ?? "");
-	return n === "binary_sensor" ? r === "window" || J(e, "window", "skylight", "velux") ? "window" : r === "garage_door" ? "garage" : J(e, "mailbox", "letterbox") ? "mail" : r === "door" || r === "opening" || J(e, "door") ? "door" : Ft.includes(r) || J(e, "motion", "presence", "person", "occupancy") ? "motion" : "dot" : n === "light" ? "bulb" : n === "fan" ? "fan" : n === "media_player" ? "tv" : n === "cover" ? "garage" : n === "camera" ? "camera" : n === "climate" ? "heat" : n === "switch" ? J(e, "water", "valve", "irrig") ? "drop" : "power" : n === "select" ? "washer" : J(e, "print") ? "printer" : J(e, "mower") ? "mower" : J(e, "oven") ? "oven" : J(e, "washer", "dryer") ? "washer" : r === "temperature" ? "thermo" : r === "battery" ? "power" : "dot";
-}, Rt = [
+	return n === "binary_sensor" ? r === "window" || Y(e, "window", "skylight", "velux") ? "window" : r === "garage_door" ? "garage" : Y(e, "mailbox", "letterbox") ? "mail" : r === "door" || r === "opening" || Y(e, "door") ? "door" : Pt.includes(r) || Y(e, "motion", "presence", "person", "occupancy") ? "motion" : "dot" : n === "light" ? "bulb" : n === "fan" ? "fan" : n === "media_player" ? "tv" : n === "cover" ? "garage" : n === "camera" ? "camera" : n === "climate" ? "heat" : n === "switch" ? Y(e, "water", "valve", "irrig") ? "drop" : "power" : n === "select" ? "washer" : Y(e, "print") ? "printer" : Y(e, "mower") ? "mower" : Y(e, "oven") ? "oven" : Y(e, "washer", "dryer") ? "washer" : r === "temperature" ? "thermo" : r === "battery" ? "power" : "dot";
+}, Lt = [
 	"light",
 	"switch",
 	"fan",
 	"input_boolean"
-], zt = (e) => {
+], Rt = (e) => {
 	if (U(e)) return "na";
 	let t = V(e.entity_id), n = e.state;
-	return t === "binary_sensor" ? n === "on" ? It(e) ? "open" : "on" : "idle" : t === "cover" ? n === "open" || n === "opening" ? "open" : "idle" : Rt.includes(t) ? n === "on" ? "on" : "idle" : t === "media_player" ? [
+	return t === "binary_sensor" ? n === "on" ? Ft(e) ? "open" : "on" : "idle" : t === "cover" ? n === "open" || n === "opening" ? "open" : "idle" : Lt.includes(t) ? n === "on" ? "on" : "idle" : t === "media_player" ? [
 		"off",
 		"standby",
 		"idle"
 	].includes(n) ? "idle" : "on" : t === "climate" ? n === "off" ? "idle" : "on" : "idle";
-}, Bt = (e, t) => {
+}, zt = (e, t) => {
 	if (!t) return "Not found";
 	if (t.state === "unavailable") return "Unavailable";
 	if (t.state === "unknown") return "Unknown";
@@ -2975,7 +3162,7 @@ var kt = Tt(Ot), At = {
 		return `${e.charAt(0).toUpperCase()}${e.slice(1)}${n == null ? "" : ` · ${n} °C`}`;
 	}
 	return K(e, t);
-}, Vt = (e, t) => t.name || String(e.states[t.entity]?.attributes.friendly_name ?? t.entity), Y = (e, t = " °C") => e === void 0 ? "–" : `${e.toFixed(1)}${t}`, Ht = (e) => e === void 0 ? "" : `${Math.round(e)} % RH`, Ut = (e, t, n = "", r) => {
+}, Bt = (e, t) => t.name || String(e.states[t.entity]?.attributes.friendly_name ?? t.entity), Vt = (e, t = " °C") => e === void 0 ? "–" : `${e.toFixed(1)}${t}`, Ht = (e) => e === void 0 ? "" : `${Math.round(e)} % RH`, Ut = (e, t, n = "", r) => {
 	let i = W(e.hass, t.temperature), a = W(e.hass, t.humidity), o = e.badges.get(t.id), s = ae(e.config, t), c = t.temperature || t.humidity ? Ht(a) || (t.humidity ? "no reading" : "") : "no climate sensor";
 	return A`<button class="tile ${n} ${o ? "alert" : ""}" aria-label="Open ${t.name}" @click=${() => e.openRoom(t)}>
     ${s ? A`<img src=${s} alt="" loading="lazy" /><span class="shade"></span>` : N}
@@ -2983,7 +3170,7 @@ var kt = Tt(Ot), At = {
     <span class="bot">
       <span class="info">
         <span class="name">${t.name}</span>
-        ${t.temperature ? A`<span class="temp n ${e.hot.has(t.id) ? "hot" : ""}">${Y(i)}</span>` : N}
+        ${t.temperature ? A`<span class="temp n ${e.hot.has(t.id) ? "hot" : ""}">${Vt(i)}</span>` : N}
         <span class="hum n">${[c, r].filter(Boolean).join(" · ")}</span>
       </span>
       <span class="go">${q("chevron", 14)}</span>
@@ -3028,8 +3215,8 @@ var kt = Tt(Ot), At = {
       </svg>
       <div class="det">
         <b>Heat pump · ${s.charAt(0).toUpperCase() + s.slice(1)}</b>
-        <span class="n t2">Outdoor ${Y(c, "°")} · Supply ${Y(l, "°")}</span>
-        <span class="n t2">Return ${Y(u, "°")}</span>
+        <span class="n t2">Outdoor ${Vt(c, "°")} · Supply ${Vt(l, "°")}</span>
+        <span class="n t2">Return ${Vt(u, "°")}</span>
         <div class="btn3">
           <button class="sq" aria-label="Heat pump power" @click=${() => e.moreInfo(t.heat_pump)}>${q("power", 20)}</button>
           <button class="sq" aria-label="Eco mode" @click=${() => e.moreInfo(t.heat_pump)}>${q("eco", 20)}</button>
@@ -3056,7 +3243,7 @@ var kt = Tt(Ot), At = {
     </div>
   </section>`;
 }, Xt = (e) => {
-	let t = e.config.entities ?? {}, n = H(e.hass, t.alarm), r = m(e.config).flatMap((t) => (t.devices ?? []).map((t) => e.hass.states[t.entity])).filter((e) => It(e) || e && V(e.entity_id) === "cover"), i = r.filter((e) => !U(e)), a = i.filter((e) => e.state === "on" || e.state === "open").length, o = (e.config.layout?.security_tiles ?? []).map((t) => _(e.config, t)).filter(Boolean);
+	let t = e.config.entities ?? {}, n = H(e.hass, t.alarm), r = m(e.config).flatMap((t) => (t.devices ?? []).map((t) => e.hass.states[t.entity])).filter((e) => Ft(e) || e && V(e.entity_id) === "cover"), i = r.filter((e) => !U(e)), a = i.filter((e) => e.state === "on" || e.state === "open").length, o = (e.config.layout?.security_tiles ?? []).map((t) => _(e.config, t)).filter(Boolean);
 	return A`<section class="glass card">
     <div class="row">
       <h2>${q("security", 20)}Security</h2>
@@ -3225,13 +3412,99 @@ var kt = Tt(Ot), At = {
 	if (!t) return "";
 	let n = e.locale?.language ?? e.language ?? "en", r = (e) => Number.isFinite(Date.parse(e)) ? new Date(e).toLocaleString(n) : "-";
 	return `${t.entity_id}\nLast changed: ${r(t.last_changed)}\nLast updated: ${r(t.last_updated)}`;
-}, fn = 500, pn = (e, t) => {
-	let n, r = !1, i = Rt.includes(V(t));
+}, fn = (e, t) => {
+	let n = H(e.hass, t);
+	return n ? U(n) ? "–" : K(e.hass, n) : "–";
+}, pn = (e, t) => {
+	let n = W(e.hass, t);
+	if (n === void 0) return;
+	let r = String(H(e.hass, t)?.attributes.unit_of_measurement ?? "min"), i = r === "s" ? n / 60 : r === "h" ? n * 60 : r === "d" ? n * 1440 : n, a = Math.max(0, Math.round(i));
+	return a >= 60 ? `${Math.floor(a / 60)} h ${a % 60} min` : `${a} min`;
+}, mn = (e) => !!(e.printer_status || e.printer_progress), hn = (e, t) => {
+	let n = new Set(e.config.entities?.exclude_lights ?? []);
+	return (t.devices ?? []).map((e) => e.entity).filter((e) => e.startsWith("light.") && !n.has(e));
+}, gn = (e, t) => {
+	let n = e.alerts.filter((e) => e.room === t.id), r = hn(e, t), i = r.filter((t) => e.hass.states[t]?.state === "on"), a = (t.devices ?? []).filter((t) => {
+		let n = e.hass.states[t.entity];
+		return !n || n.state === "unavailable";
+	}).length, o = mn(t) ? W(e.hass, t.printer_progress) : void 0;
+	return A`<div class="strip">
+    <button class="schip ${n.length ? "warn" : "ok"}" @click=${() => e.go("alerts")}>
+      ${n.length ? J("dot", 18) : A`<span class="okdot">✓</span>`}
+      <span><b>${n.length ? `${n.length} alert${n.length > 1 ? "s" : ""}` : "All OK"}</b><small>${n.length ? n[0].title : "No alerts"}</small></span>
+    </button>
+    ${r.length ? A`<button class="schip ${i.length ? "on" : ""}" title=${i.length ? "Turn the room lights off" : "Turn the room lights on"}
+          @click=${() => e.call("light", i.length ? "turn_off" : "turn_on", { entity_id: i.length ? i : r })}>
+          ${J("bulb", 18)}<span><b>Lights</b><small>${i.length ? `${i.length} of ${r.length} on` : "All off"}</small></span>
+        </button>` : N}
+    ${mn(t) ? A`<button class="schip" @click=${() => t.printer_status && e.moreInfo(t.printer_status)}>
+          ${J("printer", 18)}<span><b>${t.printer_name || "3D printer"}</b><small>${fn(e, t.printer_status)}${o === void 0 ? "" : ` · ${Math.round(o)} %`}</small>
+          ${o === void 0 ? N : A`<i class="sbar"><i style="width:${Math.max(0, Math.min(100, o))}%"></i></i>`}</span>
+        </button>` : N}
+    ${a ? A`<span class="schip warn"><span><b>${a} unavailable</b><small>device${a > 1 ? "s" : ""} in this room</small></span></span>` : N}
+  </div>`;
+}, _n = (e, t) => {
+	let n = t.climate_extra ?? [];
+	return n.length ? A`<div class="cextra">
+    ${n.map((t) => {
+		let n = e.hass.states[t.entity];
+		return A`<button class="cx" @click=${() => e.moreInfo(t.entity)}>
+        <span class="cxi">${t.icon ? A`<ha-icon .icon=${t.icon} style="--mdc-icon-size:18px"></ha-icon>` : J(It(t.entity, n), 18)}</span>
+        <span><b class="n">${fn(e, t.entity)}</b><small>${Bt(e.hass, t)}</small></span>
+      </button>`;
+	})}
+  </div>` : N;
+}, vn = (e, t) => {
+	if (!mn(t)) return N;
+	let n = W(e.hass, t.printer_progress), r = pn(e, t.printer_remaining), i = H(e.hass, t.printer_picture)?.attributes.entity_picture, a = Math.floor(e.tick / 1e4), o = [
+		["Nozzle", t.printer_nozzle],
+		["Bed", t.printer_bed],
+		["Chamber", t.printer_chamber]
+	].filter(([, e]) => e), s = H(e.hass, t.printer_light), c = (t) => t && e.call("button", "press", { entity_id: t });
+	return A`<section class="glass card printer">
+    <div class="row">
+      <h2>${J("printer", 20)}${t.printer_name || "3D printer"}</h2>
+      <button class="pstatus" @click=${() => t.printer_status && e.moreInfo(t.printer_status)}>${fn(e, t.printer_status)}</button>
+    </div>
+    <div class="pbody">
+      ${i ? A`<button class="ppic" @click=${() => e.moreInfo(t.printer_picture)}><img src=${`${i}${i.includes("?") ? "&" : "?"}t=${a}`} alt="" /></button>` : N}
+      <button class="pnum" @click=${() => t.printer_progress && e.moreInfo(t.printer_progress)}>
+        <b class="n">${n === void 0 ? "–" : `${Math.round(n)} %`}</b>
+        <span class="t2">${r ? `${r} remaining` : t.printer_remaining ? "no time estimate" : ""}</span>
+      </button>
+    </div>
+    <span class="bar"><span style="width:${n === void 0 ? 0 : Math.max(0, Math.min(100, n))}%;background:var(--atlas-accent)"></span></span>
+    ${o.length ? A`<div class="ptemps">${o.map(([t, n]) => A`<button @click=${() => e.moreInfo(n)}><b class="n">${fn(e, n)}</b><small>${t}</small></button>`)}</div>` : N}
+    ${t.printer_light || t.printer_pause || t.printer_resume || t.printer_stop ? A`<div class="pbtns">
+          ${t.printer_light ? A`<button class="sq ${s?.state === "on" ? "on" : ""}" title="Chamber light" @click=${() => e.call(V(t.printer_light), "toggle", { entity_id: t.printer_light })}>${J("bulb", 20)}</button>` : N}
+          ${t.printer_pause ? A`<button class="sq" title="Pause" @click=${() => c(t.printer_pause)}>Pause</button>` : N}
+          ${t.printer_resume ? A`<button class="sq" title="Resume" @click=${() => c(t.printer_resume)}>Resume</button>` : N}
+          ${t.printer_stop ? A`<button class="sq stop" title="Stop" @click=${() => e.confirm("Stop the print?", "The current print job will be cancelled.", () => c(t.printer_stop), "Stop print")}>Stop</button>` : N}
+        </div>` : N}
+  </section>`;
+}, yn = (e, t) => {
+	let n = t.automations ?? [];
+	return n.length ? A`<section class="glass card autos">
+    <h2>${q("automations", 20)}Automations</h2>
+    ${n.map((t) => {
+		let n = e.hass.states[t], r = n?.state === "on", i = n?.attributes.last_triggered;
+		return A`<div class="auto">
+        <button class="atxt" @click=${() => e.moreInfo(t)}>
+          <b>${String(n?.attributes.friendly_name ?? t)}</b>
+          <small class="t2">${U(n) ? "Unavailable" : i ? `Last run ${ln(e.hass, i)}` : "Never run"}</small>
+        </button>
+        <button class="tog ${r ? "on" : ""}" role="switch" aria-checked=${r ? "true" : "false"} aria-label="Enable ${String(n?.attributes.friendly_name ?? t)}"
+          ?disabled=${U(n)} @click=${() => e.call("automation", "toggle", { entity_id: t })}><i></i></button>
+      </div>`;
+	})}
+  </section>` : N;
+}, bn = 500, xn = (e, t) => {
+	let n, r = !1, i = Lt.includes(V(t));
 	return {
 		down: () => {
 			r = !1, n = window.setTimeout(() => {
 				r = !0, e.moreInfo(t);
-			}, fn);
+			}, bn);
 		},
 		up: () => window.clearTimeout(n),
 		click: () => {
@@ -3243,27 +3516,27 @@ var kt = Tt(Ot), At = {
 			i.preventDefault(), window.clearTimeout(n), r = !0, e.moreInfo(t);
 		}
 	};
-}, mn = (e, t) => {
-	let n = e.hass.states[t.entity], r = zt(n), i = pn(e, t.entity), a = ln(e.hass, un(n, e.config.appearance?.time_display));
+}, Sn = (e, t) => {
+	let n = e.hass.states[t.entity], r = Rt(n), i = xn(e, t.entity), a = ln(e.hass, un(n, e.config.appearance?.time_display));
 	return A`<button class="dev ${r}" title=${dn(e.hass, n) || t.entity}
     @pointerdown=${i.down} @pointerup=${i.up} @pointerleave=${i.up} @click=${i.click} @contextmenu=${i.context}>
-    <span class="chipi">${t.icon ? A`<ha-icon .icon=${t.icon} style="--mdc-icon-size:20px"></ha-icon>` : Mt(Lt(t.entity, n))}</span>
-    <span class="txt"><b>${Vt(e.hass, t)}</b><span>${Bt(e.hass, n)}</span>${a ? A`<small class="ago n">${a}</small>` : N}</span>
+    <span class="chipi">${t.icon ? A`<ha-icon .icon=${t.icon} style="--mdc-icon-size:20px"></ha-icon>` : J(It(t.entity, n))}</span>
+    <span class="txt"><b>${Bt(e.hass, t)}</b><span>${zt(e.hass, n)}</span>${a ? A`<small class="ago n">${a}</small>` : N}</span>
   </button>`;
-}, hn = (e, t) => {
+}, Cn = (e, t) => {
 	if (t.show_camera === !1) return N;
 	if (!t.camera) return A`<section class="glass card"><h2>Camera</h2>
-      <div class="camslot none"><span class="camico">${Mt("camera", 24)}</span><span class="t2" style="font-size:12px">This room has no camera</span></div>
+      <div class="camslot none"><span class="camico">${J("camera", 24)}</span><span class="t2" style="font-size:12px">This room has no camera</span></div>
     </section>`;
 	let n = `cam:${t.id}`, r = e.ui[n] ?? "live", i = !t.camera_private || e.ui[`reveal:${t.id}`] === !0, a = H(e.hass, t.camera), o = H(e.hass, t.camera_snapshot) ?? a, s = (t) => {
 		e.ui[n] = t, e.refresh();
 	}, c = !!customElements.get("ha-camera-stream"), l;
-	if (!i) l = A`<div class="camslot private"><span class="camico">${Mt("camera", 24)}</span>
+	if (!i) l = A`<div class="camslot private"><span class="camico">${J("camera", 24)}</span>
       <b style="font-size:14px">${t.name} camera · private</b><span class="t2" style="font-size:12px">Stream hidden until you tap Reveal</span>
       <button class="ctl" @click=${() => {
 		e.ui[`reveal:${t.id}`] = !0, e.refresh();
 	}}>Reveal</button></div>`;
-	else if (U(a)) l = A`<div class="camslot"><span class="camico">${Mt("camera", 24)}</span><b style="font-size:14px">Camera unavailable</b><span class="t2" style="font-size:12px">${t.camera}</span></div>`;
+	else if (U(a)) l = A`<div class="camslot"><span class="camico">${J("camera", 24)}</span><b style="font-size:14px">Camera unavailable</b><span class="t2" style="font-size:12px">${t.camera}</span></div>`;
 	else if (r === "live" && c) l = A`<div class="camslot live"><ha-camera-stream .hass=${e.hass} .stateObj=${a} .fitMode=${"cover"} controls muted></ha-camera-stream></div>`;
 	else if (r === "snapshot" && o?.attributes.entity_picture) l = A`<div class="camslot live"><img src=${`${o.attributes.entity_picture}&t=${e.ui[`${n}:t`] ?? 0}`} alt="${t.name} snapshot" /></div>`;
 	else {
@@ -3290,14 +3563,14 @@ var kt = Tt(Ot), At = {
           ${u("Recordings", !1, () => e.href("/media-browser/browser"))}
         </div>` : N}
   </section>`;
-}, gn = (e, t, n) => {
+}, wn = (e, t, n) => {
 	let r = (Array.isArray(t) ? t : t && typeof t == "object" ? [t] : []).filter((e) => e && typeof e == "object");
 	return r.length ? A`<div class="owncards ${n}">${r.map((t) => A`<atlas-hui-card .config=${t} .hass=${e.hass}></atlas-hui-card>`)}</div>` : N;
-}, _n = (e) => {
+}, Tn = (e) => {
 	let t = _(e.config, e.roomId);
 	if (!t) return A`<section class="glass card"><p class="empty">Room "${e.roomId}" is not in the config.</p></section>`;
 	let n = re(e.config, t.floor), r = n ? v(e.config, n.id) : m(e.config), i = r.findIndex((e) => e.id === t.id), a = r[(i - 1 + r.length) % r.length], o = r[(i + 1) % r.length], s = W(e.hass, t.temperature), c = W(e.hass, t.humidity), l = e.badges.get(t.id), u = t.devices ?? [], d = ae(e.config, t), f = s === void 0 ? "" : s < 16 ? "#5EC8FF" : s > 30 ? "var(--atlas-crit)" : "var(--atlas-accent)", ee = [
-		s === void 0 ? "" : Y(s),
+		s === void 0 ? "" : Vt(s),
 		c === void 0 ? "" : Ht(c),
 		`${u.length} device${u.length === 1 ? "" : "s"}`
 	].filter(Boolean).join(" · "), p = t.temperature || t.humidity, h = e.config.appearance?.time_display, te = (t) => {
@@ -3314,6 +3587,7 @@ var kt = Tt(Ot), At = {
       <div>
         <div class="title">${q(t.icon, 44)}<h1>${t.name}</h1>${l ? A`<span class="badge ${l.severity === "critical" ? "critical" : ""}">${l.text}</span>` : N}</div>
         <p class="n t2">${n ? A`${n.name} <span style="opacity:.5">·</span> ` : N}${ee}</p>
+        ${gn(e, t)}
       </div>
       ${r.length > 1 ? A`<div style="display:flex;gap:8px">
             <button class="ctl" aria-label="Previous room" @click=${() => e.openRoom(a)}>‹ ${a.name}</button>
@@ -3336,17 +3610,20 @@ var kt = Tt(Ot), At = {
                   <span class="bar">${c === void 0 ? N : A`<span style="width:${Math.round(Math.min(100, c))}%;background:${c < 25 ? "var(--atlas-warn)" : "#5EC8FF"}"></span>`}</span>
                 </button>
               </div>` : A`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
+          ${_n(e, t)}
         </section>
-        ${hn(e, t)}
-        ${gn(e, t.side_cards, "side")}
+        ${Cn(e, t)}
+        ${vn(e, t)}
+        ${wn(e, t.side_cards, "side")}
       </div>
       <div class="col">
         <section class="glass card devcard ${d ? "has-img" : ""}" style="flex:1;padding:18px">
           ${d ? A`<img class="devbg" src=${d} alt="" /><span class="devshade" aria-hidden="true"></span>` : N}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${u.length} device${u.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
-          ${u.length ? A`<div class="devs">${u.map((t) => mn(e, t))}</div>` : A`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${u.length ? A`<div class="devs">${u.map((t) => Sn(e, t))}</div>` : A`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
-        ${gn(e, t.cards, "main")}
+        ${yn(e, t)}
+        ${wn(e, t.cards, "main")}
         ${r.length > 1 ? A`<section class="glass card" style="padding:14px 16px;gap:10px">
               <h2 style="font-size:14px;margin-left:4px">Other rooms on ${n?.name ?? "this floor"}</h2>
               <div class="sibs">
@@ -3359,13 +3636,13 @@ var kt = Tt(Ot), At = {
       </div>
     </div>
   `;
-}, vn = 2, yn = 3e3, X = (e, t) => {
+}, En = 2, Dn = 3e3, X = (e, t) => {
 	let n = G(e.hass, t);
 	return n === void 0 ? void 0 : n * 1e3;
-}, Z = (e) => e === void 0 ? "–" : Math.abs(e) >= 1e4 ? `${(e / 1e3).toFixed(2)} kW` : `${Math.round(e)} W`, Q = (e, t, n) => e === void 0 ? "–" : `${e.toFixed(t)}${n}`, bn = (e, t) => {
+}, Z = (e) => e === void 0 ? "–" : Math.abs(e) >= 1e4 ? `${(e / 1e3).toFixed(2)} kW` : `${Math.round(e)} W`, Q = (e, t, n) => e === void 0 ? "–" : `${e.toFixed(t)}${n}`, On = (e, t) => {
 	let n = W(e.hass, t);
 	if (n !== void 0) return Math.abs(n) <= 1 ? n * 100 : n;
-}, xn = (e, t) => !!H(e.hass, t.power) && !U(H(e.hass, t.power)), Sn = (e, t, n) => {
+}, kn = (e, t) => !!H(e.hass, t.power) && !U(H(e.hass, t.power)), An = (e, t, n) => {
 	let r = e === void 0 ? 0 : Math.max(0, Math.min(1, e));
 	return j`<svg class="ering" width=${t} height=${t} viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(241,245,255,0.08)" stroke-width="7" stroke-linecap="round"
@@ -3373,12 +3650,12 @@ var kt = Tt(Ot), At = {
     ${r > 0 ? j`<circle cx="50" cy="50" r="42" fill="none" stroke=${n ? "var(--atlas-warn)" : "var(--atlas-accent)"} stroke-width="7" stroke-linecap="round"
           pathLength="100" stroke-dasharray=${`${(r * 75).toFixed(1)} 100`} transform="rotate(135 50 50)"></circle>` : N}
   </svg>`;
-}, Cn = (e) => [
+}, jn = (e) => [
 	"a",
 	"b",
 	"c"
-].filter((t) => e[`power_${t}`] || e[`current_${t}`] || e[`voltage_${t}`]), wn = (e, t) => {
-	let n = Cn(t);
+].filter((t) => e[`power_${t}`] || e[`current_${t}`] || e[`voltage_${t}`]), Mn = (e, t) => {
+	let n = jn(t);
 	if (!n.length) return N;
 	let r = [
 		{
@@ -3406,7 +3683,7 @@ var kt = Tt(Ot), At = {
 	})}
       </div>`)}
   </div>`;
-}, Tn = (e, t, n) => xn(e, t) ? n !== void 0 && Math.abs(n) >= vn ? {
+}, Nn = (e, t, n) => kn(e, t) ? n !== void 0 && Math.abs(n) >= En ? {
 	text: "Consuming",
 	cls: "on"
 } : {
@@ -3415,13 +3692,13 @@ var kt = Tt(Ot), At = {
 } : {
 	text: "Offline",
 	cls: "off"
-}, $ = (e, t, n) => A`<button class="estat" ?disabled=${!n} @click=${() => n?.()}><b class="n">${e}</b><span>${t}</span></button>`, En = (e, t) => {
-	let n = X(e, t.power), r = t.max_power || yn, i = Tn(e, t, n), a = Cn(t), o = (t) => t ? () => e.moreInfo(t) : void 0;
+}, $ = (e, t, n) => A`<button class="estat" ?disabled=${!n} @click=${() => n?.()}><b class="n">${e}</b><span>${t}</span></button>`, Pn = (e, t) => {
+	let n = X(e, t.power), r = t.max_power || Dn, i = Nn(e, t, n), a = jn(t), o = (t) => t ? () => e.moreInfo(t) : void 0;
 	return A`<section class="glass card emain">
     <div class="row"><h2>${q("energy", 20)}${t.name}</h2><span class="estatus ${i.cls}"><i></i>${i.text}</span></div>
     <div class="emain-body">
       <button class="egauge big" @click=${() => e.moreInfo(t.power)}>
-        ${Sn(n === void 0 ? void 0 : n / r, 168, n !== void 0 && n > r * .8)}
+        ${An(n === void 0 ? void 0 : n / r, 168, n !== void 0 && n > r * .8)}
         <span class="ev"><b class="n">${Z(n)}</b><span>${i.text === "Offline" ? "no data" : "now"}</span></span>
       </button>
       ${a.length ? A`<div class="phases" role="table" aria-label="Phases">
@@ -3433,16 +3710,16 @@ var kt = Tt(Ot), At = {
     </div>
     <div class="estats">
       ${t.energy ? $(Q(W(e.hass, t.energy), 1, " kWh"), "Total energy", o(t.energy)) : N}
-      ${t.power_factor ? $(Q(bn(e, t.power_factor), 0, " %"), "Power factor", o(t.power_factor)) : N}
+      ${t.power_factor ? $(Q(On(e, t.power_factor), 0, " %"), "Power factor", o(t.power_factor)) : N}
       ${t.current ? $(Q(W(e.hass, t.current), 2, " A"), "Current", o(t.current)) : N}
       ${t.frequency ? $(Q(W(e.hass, t.frequency), 2, " Hz"), "Frequency", o(t.frequency)) : N}
     </div>
   </section>`;
-}, Dn = (e, t, n) => {
+}, Fn = (e, t, n) => {
 	let r = t ? X(e, t.power) : void 0, i = n.map((t) => ({
 		m: t,
 		w: X(e, t.power)
-	})).filter((e) => e.w !== void 0), a = i.reduce((e, t) => e + Math.max(0, t.w), 0), o = r === void 0 ? void 0 : r - a, s = [...i].filter((e) => e.w >= vn).sort((e, t) => t.w - e.w).slice(0, 4), c = Math.max(r ?? 0, s[0]?.w ?? 0, 1), l = n.length - i.length;
+	})).filter((e) => e.w !== void 0), a = i.reduce((e, t) => e + Math.max(0, t.w), 0), o = r === void 0 ? void 0 : r - a, s = [...i].filter((e) => e.w >= En).sort((e, t) => t.w - e.w).slice(0, 4), c = Math.max(r ?? 0, s[0]?.w ?? 0, 1), l = n.length - i.length;
 	return A`<section class="glass card esum">
     <h2>${q("info", 20)}Right now</h2>
     <div class="esum-figs">
@@ -3457,36 +3734,36 @@ var kt = Tt(Ot), At = {
           </button>`)}</div>` : A`<span class="t2" style="font-size:13px">All circuits in standby.</span>`}
     ${l ? A`<span class="t2" style="font-size:12px;color:var(--atlas-warn)">${l} circuit${l > 1 ? "s" : ""} offline</span>` : N}
   </section>`;
-}, On = (e, t) => {
-	let n = X(e, t.power), r = t.max_power || yn, i = Tn(e, t, n), a = (t) => t ? () => e.moreInfo(t) : void 0, o = [t.voltage ? Q(W(e.hass, t.voltage), 1, " V") : "", t.frequency ? Q(W(e.hass, t.frequency), 2, " Hz") : ""].filter(Boolean).join(" · ");
+}, In = (e, t) => {
+	let n = X(e, t.power), r = t.max_power || Dn, i = Nn(e, t, n), a = (t) => t ? () => e.moreInfo(t) : void 0, o = [t.voltage ? Q(W(e.hass, t.voltage), 1, " V") : "", t.frequency ? Q(W(e.hass, t.frequency), 2, " Hz") : ""].filter(Boolean).join(" · ");
 	return A`<div class="ecard ${i.cls}">
     <div class="row"><b class="ename">${t.name}</b><span class="estatus ${i.cls}"><i></i>${i.text}</span></div>
     <button class="egauge" aria-label="${t.name} power details" @click=${() => e.moreInfo(t.power)}>
-      ${Sn(n === void 0 ? void 0 : n / r, 116, n !== void 0 && n > r * .8)}
+      ${An(n === void 0 ? void 0 : n / r, 116, n !== void 0 && n > r * .8)}
       <span class="ev"><b class="n">${Z(n)}</b></span>
     </button>
     <div class="estats sm">
       ${t.energy ? $(Q(W(e.hass, t.energy), 1, " kWh"), "Energy", a(t.energy)) : N}
       ${t.current ? $(Q(W(e.hass, t.current), 2, " A"), "Current", a(t.current)) : N}
-      ${t.power_factor ? $(Q(bn(e, t.power_factor), 0, " %"), "PF", a(t.power_factor)) : N}
+      ${t.power_factor ? $(Q(On(e, t.power_factor), 0, " %"), "PF", a(t.power_factor)) : N}
     </div>
-    ${wn(e, t)}
+    ${Mn(e, t)}
     ${o ? A`<span class="n t2 eextra">${o}</span>` : N}
   </div>`;
-}, kn = (e) => {
-	let t = h(e.config), n = t.find((e) => e.main), r = t.filter((e) => e !== n), i = r.filter((t) => Tn(e, t, X(e, t.power)).cls === "on").length;
+}, Ln = (e) => {
+	let t = h(e.config), n = t.find((e) => e.main), r = t.filter((e) => e !== n), i = r.filter((t) => Nn(e, t, X(e, t.power)).cls === "on").length;
 	return A`
     <section class="hero" aria-label="Energy">
       <h1>Energy</h1>
       <p class="n">${r.length} circuit${r.length === 1 ? "" : "s"} metered <span style="opacity:.5">·</span> ${i} consuming now</p>
     </section>
-    ${t.length ? A`<div class="energy-top">${n ? En(e, n) : N}${Dn(e, n, r)}</div>
+    ${t.length ? A`<div class="energy-top">${n ? Pn(e, n) : N}${Fn(e, n, r)}</div>
           ${r.length ? A`<section class="glass card" style="gap:14px">
                 <div class="row"><h2>Circuits</h2><span class="t2" style="font-size:12px">Tap a value for its history</span></div>
-                <div class="egrid">${r.map((t) => On(e, t))}</div>
+                <div class="egrid">${r.map((t) => In(e, t))}</div>
               </section>` : N}` : A`<section class="glass card"><p class="empty">No energy meters configured. Add them in Edit dashboard > Energy.</p></section>`}
   `;
-}, An, jn = {
+}, Rn, zn = {
 	graphite: {
 		base: [
 			"#1A1D22",
@@ -3567,21 +3844,21 @@ var kt = Tt(Ot), At = {
 		tile: "170,120,80",
 		dark: "20,18,16"
 	}
-}, Mn = "atlas-home.device", Nn = () => {
+}, Bn = "atlas-home.device", Vn = () => {
 	try {
-		return JSON.parse(localStorage.getItem(Mn) ?? "{}");
+		return JSON.parse(localStorage.getItem(Bn) ?? "{}");
 	} catch {
 		return {};
 	}
-}, Pn = (e) => {
+}, Hn = (e) => {
 	try {
-		localStorage.setItem(Mn, JSON.stringify(e));
+		localStorage.setItem(Bn, JSON.stringify(e));
 	} catch {}
-}, Fn = (e) => [
+}, Un = (e) => [
 	1,
 	3,
 	5
-].map((t) => parseInt(e.slice(t, t + 2), 16)).join(","), In = {}, Ln = class extends I {
+].map((t) => parseInt(e.slice(t, t + 2), 16)).join(","), Wn = {}, Gn = class extends I {
 	constructor() {
 		super(), this._onMq = (e) => this._narrow = e.matches, this._call = async (e, t, n) => {
 			try {
@@ -3589,7 +3866,7 @@ var kt = Tt(Ot), At = {
 			} catch (n) {
 				f(this, "hass-notification", { message: `ATLAS: ${e}.${t} failed: ${n?.message ?? n}` });
 			}
-		}, this._settings = !1, this._prefs = Nn(), this._narrow = !1, this._tick = 0;
+		}, this._settings = !1, this._prefs = Vn(), this._narrow = !1, this._tick = 0;
 	}
 	setConfig(e) {
 		if (!e?.atlas) throw Error("atlas-view is generated by the ATLAS Home dashboard strategy");
@@ -3603,7 +3880,19 @@ var kt = Tt(Ot), At = {
 			...t.alerts?.critical ?? [],
 			...[t.alerts?.mailbox, t.alerts?.mailbox_ack].filter((e) => !!e),
 			...t.entities?.exclude_lights ?? [],
-			...ne(t)
+			...ne(t),
+			...m(t).flatMap((e) => [
+				...(e.climate_extra ?? []).map((e) => e.entity),
+				...e.automations ?? [],
+				e.printer_status,
+				e.printer_progress,
+				e.printer_remaining,
+				e.printer_nozzle,
+				e.printer_bed,
+				e.printer_chamber,
+				e.printer_light,
+				e.printer_picture
+			]).filter((e) => !!e)
 		]), e.view === "room" && this._prepareCamera(y(_(t, e.room)));
 		let n = this._floorCameras();
 		n.mode === "live" && this._prepareCamera(n.cameras[0]);
@@ -3702,19 +3991,19 @@ var kt = Tt(Ot), At = {
 				e.room ? d(`room-${e.room}`) : e.entity ? ee(this, e.entity) : e.href ? l(e.href) : d("alerts");
 			},
 			refresh: () => this.requestUpdate(),
-			ui: In
+			ui: Wn
 		};
 	}
 	render() {
 		if (!this._config || !this.hass) return N;
-		let e = this._config.atlas, t = e.appearance ?? {}, n = this._prefs.variant ?? t.variant ?? "warm_glass", r = this._prefs.accent && /^#[0-9a-fA-F]{6}$/.test(this._prefs.accent) ? this._prefs.accent : oe(e), i = jn[t.ambience ?? "graphite"] ?? jn.graphite, a = Fn(r), o = `--atlas-accent:${r};--atlas-accent-soft:rgba(${a},0.16);--atlas-accent-glow:rgba(${a},0.45);--atlas-tile:${i.tile}`;
+		let e = this._config.atlas, t = e.appearance ?? {}, n = this._prefs.variant ?? t.variant ?? "warm_glass", r = this._prefs.accent && /^#[0-9a-fA-F]{6}$/.test(this._prefs.accent) ? this._prefs.accent : oe(e), i = zn[t.ambience ?? "graphite"] ?? zn.graphite, a = Un(r), o = `--atlas-accent:${r};--atlas-accent-soft:rgba(${a},0.16);--atlas-accent-glow:rgba(${a},0.45);--atlas-tile:${i.tile}`;
 		if (!m(e).length) return A`<div class="root v-quiet" style=${o}><div class="frame"><div class="main">
         <section class="glass card" style="max-width:640px;margin:10vh auto;gap:14px">
           <h2 style="font-size:24px">${q("home", 28)}ATLAS Home</h2>
           <p class="t2">No rooms configured yet. Open the dashboard menu, choose <b>Edit dashboard</b>, then <b>Load demo house</b> or paste your own config in YAML mode, and save.</p>
         </section></div></div></div>`;
 		let s = xt(this.hass, e), c = this._ctx(s), l = this._config.view, u = l === "room" ? _(e, this._config.room) : void 0, d = n === "warm_glass" ? ae(e, u?.image ? u : _(e, t.background) ?? m(e)[0]) : void 0, f;
-		return f = l === "home" ? $t(c) : l === "alerts" ? tn(c) : l === "rooms" ? an(c) : l === "energy" ? kn(c) : _n(c), A`<div class="root v-${n}" style=${o}>
+		return f = l === "home" ? $t(c) : l === "alerts" ? tn(c) : l === "rooms" ? an(c) : l === "energy" ? Ln(c) : Tn(c), A`<div class="root v-${n}" style=${o}>
       ${this._background(n, i, d)}
       <div class="frame">
         ${this._sidebar(c)}
@@ -3823,7 +4112,7 @@ var kt = Tt(Ot), At = {
       </div>
       <div class="tools">
         ${n.weather || n.outdoor_temperature ? A`<button class="weather" @click=${() => n.weather && e.moreInfo(n.weather)}>
-              ${Nt(U(i) ? void 0 : i.state)}
+              ${Mt(U(i) ? void 0 : i.state)}
               <span><span class="n" style="font-size:15px;font-weight:600">${a !== void 0 && Number.isFinite(a) ? `${a.toFixed(1)} °C` : "–"}</span>
               <span class="t2 wtxt" style="font-size:11px">${i && !U(i) ? K(this.hass, i) : "Weather unavailable"} · ${c}</span></span>
             </button>` : N}
@@ -3877,7 +4166,7 @@ var kt = Tt(Ot), At = {
 			this._prefs = {
 				...this._prefs,
 				...e
-			}, Pn(this._prefs);
+			}, Hn(this._prefs);
 		};
 		return A`<div class="settings" role="dialog" aria-label="Display settings">
       <div class="row"><b>Display on this device</b><button class="iconbtn" aria-label="Close" @click=${() => this._settings = !1}>✕</button></div>
@@ -3890,7 +4179,7 @@ var kt = Tt(Ot), At = {
       <span class="t2" style="font-size:12px">Accent</span>
       <div class="seg">${o.map((e) => A`<button class="sw ${t === e ? "on" : ""}" style="background:${e}" aria-label="Accent ${e}" @click=${() => n({ accent: e })}></button>`)}</div>
       <button class="ctl" @click=${() => {
-			this._prefs = {}, Pn({});
+			this._prefs = {}, Hn({});
 		}}>Use dashboard defaults</button>
       <span class="t2" style="font-size:11px">Stored in this browser only. Defaults and all entities are set in Edit dashboard.</span>
     </div>`;
@@ -3911,7 +4200,7 @@ var kt = Tt(Ot), At = {
     </div>`;
 	}
 };
-An = Ln, An.styles = Ct, An.properties = {
+Rn = Gn, Rn.styles = Ct, Rn.properties = {
 	hass: { attribute: !1 },
 	_config: { state: !0 },
 	_confirm: { state: !0 },
@@ -3921,7 +4210,7 @@ An = Ln, An.styles = Ct, An.properties = {
 	_tick: { state: !0 }
 };
 // src/ui/embedded-card.ts
-var Rn = class extends HTMLElement {
+var Kn = class extends HTMLElement {
 	constructor(...e) {
 		super(...e), this._key = "", this._onRebuild = (e) => {
 			e.stopPropagation(), this._build();
@@ -3962,9 +4251,9 @@ var Rn = class extends HTMLElement {
 		t.textContent = e, t.style.cssText = "margin:0;padding:12px;border-radius:12px;border:1px dashed #FFBF57;color:#FFBF57;font-size:13px", this.replaceChildren(t);
 	}
 };
-p(t, ue), p(n, ht), p(r, Ln), p("atlas-hui-card", Rn);
-var zn = window;
-zn.customStrategies = zn.customStrategies || [], zn.customStrategies.some((e) => e.type === "atlas-home") || zn.customStrategies.push({
+p(t, ue), p(n, ht), p(r, Gn), p("atlas-hui-card", Kn);
+var qn = window;
+qn.customStrategies = qn.customStrategies || [], qn.customStrategies.some((e) => e.type === "atlas-home") || qn.customStrategies.push({
 	type: e,
 	strategyType: "dashboard",
 	name: "ATLAS Home",

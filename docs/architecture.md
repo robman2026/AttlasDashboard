@@ -49,6 +49,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
 | `src/ui/devices.ts` | Device tile icon, state kind, text |
+| `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
 | `src/ui/time.ts` | Relative "time ago" labels (`time_display`) |
 | `src/ui/styles.ts` | Design tokens and all CSS, responsive breakpoints |
@@ -86,6 +87,7 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `/api/camera_proxy/<id>?token=..&width=W&height=H` (entity `entity_picture`) | Home security stills, refreshed every 10 s like `hui-image` (`UPDATE_INTERVAL = 10000`). Backend reads only `token`, `width`, `height`; the extra `t` cache buster is ignored | frontend `src/panels/lovelace/components/hui-image.ts`, `src/data/camera.ts`; core `homeassistant/components/camera/__init__.py` (`CameraView`, `CameraImageView`) |
 | Entity `last_changed` / `last_updated` | "Time ago" on device tiles and climate values | home-assistant-js-websocket `HassEntity` type |
 | `window.loadCardHelpers()` then `createCardElement(config)`, `ll-rebuild` event | Own cards in rooms | frontend `src/panels/lovelace/ha-panel-lovelace.ts`, `custom-card-helpers.ts` (2026-11-01) |
+| `button.press`, `automation.toggle`, automation `last_triggered` | 3D printer job buttons, Automations card | home-assistant.io `source/_actions/automation.toggle.markdown` (2026-11-01); printer entity names from greghesp/ha-bambulab `definitions.py`, `button.py` (2026-11-01) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
 The frontend source was read from the `dev` branch on 2026-10-31 and targets HA 2026.10.
