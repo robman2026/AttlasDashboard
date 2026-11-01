@@ -116,11 +116,8 @@ A list; each item has:
 | `camera_hq` | entity (camera) |  | Camera high quality stream. Optional, reserved for a quality switch. |
 | `camera_snapshot` | entity (camera) |  | Snapshot camera. Optional. Snapshot uses this entity's picture, else the live camera's. |
 | `camera_private` | boolean | false | Private camera. Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens. |
-| `remote_media_player` | entity (media_player) |  | Remote: media player. Shows a Remote card in the room: power, volume, mute, play/pause, previous/next, input source and what is playing. |
-| `remote_type` | android_tv \| samsung \| webos \| apple_tv \| roku |  | Remote: TV type. Command names for the arrow pad, OK, Back, Home and Menu. LG webOS uses the media player; the others need the remote entity below. |
-| `remote_entity` | entity (remote) |  | Remote: remote entity. remote.* entity of the same TV, used for the navigation keys (not needed for LG webOS). |
-| `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. Example: - type: custom:my-remote-card + its options. Leave the Remote control fields empty to hide the built-in Remote. |
-| `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). |
+| `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. One card (type: custom:my-card plus its options) or a list of cards (each starting with - type:). |
+| `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). One card or a list of cards. |
 | `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. |
 
 Items of `devices`:
@@ -290,8 +287,9 @@ strategy:
       icon: bedroom
       image: bedroom.jpg
       show_camera: false
-      remote_media_player: media_player.bedroom_tv
-      remote_type: webos
+      side_cards:
+        - type: media-control
+          entity: media_player.bedroom_tv
       temperature: sensor.bedroom_temperature
       humidity: sensor.bedroom_humidity
       devices:
@@ -344,9 +342,9 @@ strategy:
       temperature: sensor.living_room_temperature
       humidity: sensor.living_room_humidity
       camera: camera.living_room
-      remote_media_player: media_player.living_room_tv
-      remote_entity: remote.living_room_tv
-      remote_type: android_tv
+      side_cards:
+        - type: media-control
+          entity: media_player.living_room_tv
       devices:
         - entity: binary_sensor.living_room_window_left
           name: Window left

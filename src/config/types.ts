@@ -16,8 +16,6 @@ export interface AppearanceConfig {
 /** changed: HA last_changed (state change). updated: HA last_updated (any update). off: hidden. */
 export type TimeDisplay = "changed" | "updated" | "off";
 
-/** Remote control command sets, from the HA integration docs (see docs/architecture.md). */
-export type RemoteType = "android_tv" | "samsung" | "webos" | "apple_tv" | "roku";
 
 export interface GlobalEntities {
   alarm?: string;
@@ -84,11 +82,8 @@ export interface RoomConfig {
   temperature?: string;
   humidity?: string;
   show_camera?: boolean; // default true; false hides the whole camera section
-  remote_media_player?: string; // media_player for power, volume, playback, source
-  remote_entity?: string; // remote entity for navigation keys (not needed for webos)
-  remote_type?: RemoteType; // which command names the navigation keys use
-  cards?: CardConfig[]; // own cards below the Devices card (e.g. washer, dryer)
-  side_cards?: CardConfig[]; // own cards in the left column below the camera (e.g. a remote)
+  cards?: CardConfig | CardConfig[]; // own cards below the Devices card (e.g. washer, dryer); one card or a list
+  side_cards?: CardConfig | CardConfig[]; // own cards in the left column below the camera (e.g. a remote)
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;

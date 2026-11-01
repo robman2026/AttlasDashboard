@@ -251,31 +251,27 @@ export const styles = css`
   .owncards.main { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); align-items: start; }
   .camwall { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 12px; }
   .camtile { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  /* Fit mode (tablet / desktop): page is one window tall; rooms left, cameras right; JS sizes the camera tiles. */
+  .main.fit { height: calc(100vh - var(--header-height, 56px) - 32px); min-height: 480px; }
+  .main.fit > * { flex: none; }
+  .main.fit > .fitgrid { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 16px; }
+  .main.fit .hero { flex-direction: row; align-items: baseline; gap: 16px; }
+  .main.fit .hero h1.sm { font-size: 40px; }
+  .main.fit .hero p { font-size: 14px; }
+  .main.fit .fl { height: 84px; padding: 10px 14px; }
+  .main.fit .fl .lv { font-size: 22px; }
+  .main.fit .roomsec, .main.fit .camsec { min-height: 0; overflow: hidden; }
+  .main.fit .roomsec .tiles.floor { flex: 1; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 10px; }
+  .main.fit .tiles.floor .tile { padding: 10px 12px; min-height: 0; }
+  .main.fit .tiles.floor .tile .temp { font-size: 20px; }
+  .main.fit .tiles.floor .tile .top .ic { width: 20px; height: 20px; }
+  .camwall.fitwall { flex: 1 1 auto; min-height: 0; grid-template-columns: repeat(var(--fcols, var(--cols, 3)), var(--fw, minmax(0, 1fr))); justify-content: center; align-content: center; }
   .camname { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; }
 
   /* ---------- time ago ---------- */
   .ago { font-size: 11px; color: var(--atlas-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dev .txt .ago { margin-top: 1px; }
   .metric .lbl .ago { margin-left: auto; padding-left: 6px; }
-
-  /* ---------- remote ---------- */
-  .remote { gap: 12px; }
-  .remote h2 { color: var(--atlas-text); }
-  .rpower { width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(188, 200, 222, 0.25); background: rgba(241, 245, 255, 0.06); color: var(--atlas-text2); }
-  .rpower.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); box-shadow: 0 0 16px var(--atlas-accent-glow); }
-  .rnow { display: flex; flex-direction: column; gap: 2px; text-align: left; min-width: 0; }
-  .rnow b { font-size: 14px; }
-  .rnow span { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .rpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(3, 56px); gap: 6px; justify-content: center; padding: 8px; margin: 0 auto; border-radius: 50%; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); }
-  .rk { display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: var(--atlas-r-ctl); border: 1px solid rgba(188, 200, 222, 0.2); background: rgba(241, 245, 255, 0.06); color: var(--atlas-text); font-size: 14px; font-weight: 700; }
-  .rk:active:not(:disabled) { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
-  .rk:disabled, .rpower:disabled, .rsrc:disabled { opacity: 0.4; cursor: default; }
-  .rpad .rk { border-radius: 50%; }
-  .rpad .rk.ok { background: var(--atlas-accent-soft); border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
-  .rrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .rk.sm.on { color: var(--atlas-warn); border-color: rgba(255, 191, 87, 0.5); }
-  .rsrc { height: 44px; border-radius: var(--atlas-r-ctl); padding: 0 12px; font: inherit; font-size: 13px; color: var(--atlas-text); background: rgba(241, 245, 255, 0.06); border: 1px solid rgba(188, 200, 222, 0.2); }
-  .rsrc option { background: var(--atlas-solid); color: var(--atlas-text); }
 
   /* ---------- energy ---------- */
   .energy-top { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; }

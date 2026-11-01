@@ -73,7 +73,8 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "bedroom", name: "Bedroom", floor: "first", icon: "bedroom", image: "bedroom.jpg", show_camera: false,
-      remote_media_player: "media_player.bedroom_tv", remote_type: "webos",
+      // Own card in the left column (any Lovelace card; here the built-in media control).
+      side_cards: [{ type: "media-control", entity: "media_player.bedroom_tv" }],
       temperature: "sensor.bedroom_temperature", humidity: "sensor.bedroom_humidity",
       devices: [
         { entity: "light.bedroom_canopy", name: "Canopy LEDs" },
@@ -106,7 +107,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     {
       id: "living", name: "Living room", floor: "ground", icon: "living", image: "living.jpg",
       temperature: "sensor.living_room_temperature", humidity: "sensor.living_room_humidity", camera: "camera.living_room",
-      remote_media_player: "media_player.living_room_tv", remote_entity: "remote.living_room_tv", remote_type: "android_tv",
+      side_cards: [{ type: "media-control", entity: "media_player.living_room_tv" }],
       devices: [
         { entity: "binary_sensor.living_room_window_left", name: "Window left" },
         { entity: "binary_sensor.living_room_window_right", name: "Window right" },
