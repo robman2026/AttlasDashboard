@@ -2,7 +2,15 @@
 // house in src/config/preset-demo.ts (fictional rooms and entity IDs).
 // Not shipped. Usage: npm run harness, then /dev/harness.html?view=home
 const S = {};
-const add = (id, state, attributes = {}) => (S[id] = { entity_id: id, state: String(state), attributes, last_changed: "", last_updated: "", context: { id: "" } });
+// Deterministic fake timestamps: each entity changed some minutes to days ago, updated a bit later.
+const NOW = Date.now();
+const hash = (s) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const ago = (id) => { const h = hash(id); const mins = [2, 7, 18, 45, 95, 240, 600, 1500, 4300][h % 9]; return mins * 60000; };
+const add = (id, state, attributes = {}) => {
+  const changed = new Date(NOW - ago(id)).toISOString();
+  const updated = new Date(NOW - Math.floor(ago(id) / 3)).toISOString();
+  return (S[id] = { entity_id: id, state: String(state), attributes, last_changed: changed, last_updated: updated, context: { id: "" } });
+};
 const th = (room, t, h) => {
   add(`sensor.${room}_temperature`, t, { unit_of_measurement: "°C", device_class: "temperature" });
   if (h !== undefined) add(`sensor.${room}_humidity`, h, { unit_of_measurement: "%", device_class: "humidity" });
@@ -39,13 +47,15 @@ na("binary_sensor.kids_room_motion"); na("light.kids_room_fan_light"); na("fan.k
 th("office", 23.9, 39); contact("binary_sensor.office_door", true); contact("binary_sensor.office_window", false, "window");
 na("light.office_fan_light"); add("fan.office_fan", "unknown");
 th("bedroom", 23.3, 49); add("light.bedroom_canopy", "off"); add("light.bedroom_wardrobe", "off");
+add("media_player.bedroom_tv", "off", { friendly_name: "Bedroom TV", source_list: ["HDMI 1", "Live TV", "Netflix"] });
 th("hallway", 22.8, 43); motion("binary_sensor.hallway_motion"); contact("binary_sensor.stair_window", false, "window"); contact("binary_sensor.hallway_skylight", false, "window");
 contact("binary_sensor.bathroom_door", true); motion("binary_sensor.bathroom_motion"); contact("binary_sensor.bathroom_skylight", false, "window");
 th("guest_room", 23.4, 50); contact("binary_sensor.guest_room_window", false, "window");
 // Ground floor
 th("living_room", 23.2, 46); cam("camera.living_room", "Living room camera", "living.jpg");
 contact("binary_sensor.living_room_window_left", false, "window"); contact("binary_sensor.living_room_window_right", false, "window");
-motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_backlight", "off"); add("media_player.living_room_tv", "off");
+motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_backlight", "off"); add("media_player.living_room_tv", "on", { friendly_name: "Living room TV", app_name: "YouTube", source: "YouTube", source_list: ["HDMI 1", "Live TV", "Netflix", "YouTube"], volume_level: 0.18, is_volume_muted: false });
+add("remote.living_room_tv", "on", { friendly_name: "Living room TV remote", current_activity: "com.google.android.youtube.tv" });
 add("light.kitchen_cabinet_left", "on", { brightness: 255 }); add("light.kitchen_cabinet_right", "on", { brightness: 255 });
 motion("binary_sensor.kitchen_presence", false, "presence"); contact("binary_sensor.kitchen_window", false, "window");
 add("sensor.oven_temperature", 59, { unit_of_measurement: "°C" }); add("select.dishwasher_program", "unknown");

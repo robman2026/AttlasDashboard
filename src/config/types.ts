@@ -10,7 +10,14 @@ export interface AppearanceConfig {
   ambience?: Ambience;
   background?: string; // room id whose image is the Home background
   image_path?: string; // base URL for room images, default: rooms/ next to the bundle
+  time_display?: TimeDisplay; // relative time on device tiles and climate values
 }
+
+/** changed: HA last_changed (state change). updated: HA last_updated (any update). off: hidden. */
+export type TimeDisplay = "changed" | "updated" | "off";
+
+/** Remote control command sets, from the HA integration docs (see docs/architecture.md). */
+export type RemoteType = "android_tv" | "samsung" | "webos" | "apple_tv" | "roku";
 
 export interface GlobalEntities {
   alarm?: string;
@@ -70,6 +77,9 @@ export interface RoomConfig {
   temperature?: string;
   humidity?: string;
   show_camera?: boolean; // default true; false hides the whole camera section
+  remote_media_player?: string; // media_player for power, volume, playback, source
+  remote_entity?: string; // remote entity for navigation keys (not needed for webos)
+  remote_type?: RemoteType; // which command names the navigation keys use
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;

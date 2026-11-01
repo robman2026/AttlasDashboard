@@ -91,6 +91,9 @@ export class AtlasView extends LitElement {
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
       ...meterEntities(c),
+      // Remote card entities: re-render only, not part of the data-quality alert
+      // (many TVs report unavailable while switched off).
+      ...rooms(c).flatMap((r) => [r.remote_media_player, r.remote_entity]).filter((x): x is string => !!x),
     ]);
     if (config.view === "room") this._prepareCamera(roomById(c, config.room));
   }
