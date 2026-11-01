@@ -6,6 +6,8 @@ import { floorById, imageUrl, roomById, roomsOnFloor, rooms } from "../../data/m
 import { icon, glyph } from "../icons";
 import { TOGGLE_DOMAINS, deviceLabel, glyphFor, kindOf, stateText } from "../devices";
 import { fmtHum, fmtTemp } from "./common";
+import { remoteCard } from "./remote";
+import { stamp, stampTitle, timeAgo } from "../time";
 
 const LONG_PRESS_MS = 500;
 
@@ -42,10 +44,11 @@ const deviceTile = (ctx: Ctx, d: NonNullable<RoomConfig["devices"]>[number]) => 
   const s = ctx.hass.states[d.entity];
   const k = kindOf(s);
   const h = pressHandlers(ctx, d.entity);
-  return html`<button class="dev ${k}" title=${d.entity}
+  const ago = timeAgo(ctx.hass, stamp(s, ctx.config.appearance?.time_display));
+  return html`<button class="dev ${k}" title=${stampTitle(ctx.hass, s) || d.entity}
     @pointerdown=${h.down} @pointerup=${h.up} @pointerleave=${h.up} @click=${h.click} @contextmenu=${h.context}>
     <span class="chipi">${d.icon ? html`<ha-icon .icon=${d.icon} style="--mdc-icon-size:20px"></ha-icon>` : glyph(glyphFor(d.entity, s))}</span>
-    <span class="txt"><b>${deviceLabel(ctx.hass, d)}</b><span>${stateText(ctx.hass, s)}</span></span>
+    <span class="txt"><b>${deviceLabel(ctx.hass, d)}</b><span>${stateText(ctx.hass, s)}</span>${ago ? html`<small class="ago n">${ago}</small>` : nothing}</span>
   </button>`;
 };
 
@@ -120,6 +123,12 @@ export const renderRoom = (ctx: Ctx) => {
   const tone = t === undefined ? "" : t < 16 ? "#5EC8FF" : t > 30 ? "var(--atlas-crit)" : "var(--atlas-accent)";
   const summary = [t !== undefined ? fmtTemp(t) : "", h !== undefined ? fmtHum(h) : "", `${devs.length} device${devs.length === 1 ? "" : "s"}`].filter(Boolean).join(" · ");
   const hasClimate = r.temperature || r.humidity;
+  const tMode = ctx.config.appearance?.time_display;
+  const agoOf = (id?: string) => {
+    const s = stateObj(ctx.hass, id);
+    const a = timeAgo(ctx.hass, stamp(s, tMode));
+    return a ? html`<small class="ago n" title=${stampTitle(ctx.hass, s)}>${a}</small>` : nothing;
+  };
   return html`
     <nav class="crumb" aria-label="Breadcrumb">
       <button @click=${() => ctx.go("home")}>Home</button><span aria-hidden="true">›</span>
@@ -145,12 +154,12 @@ export const renderRoom = (ctx: Ctx) => {
           ${hasClimate
             ? html`<div class="metrics">
                 <button class="metric" @click=${() => r.temperature && ctx.moreInfo(r.temperature)}>
-                  <span class="lbl">${icon("temperature", 16)}Temperature</span>
+                  <span class="lbl">${icon("temperature", 16)}Temperature${agoOf(r.temperature)}</span>
                   <span class="big n" style="color:${ctx.hot.has(r.id) ? "var(--atlas-crit)" : "inherit"}">${t === undefined ? "–" : `${t.toFixed(1)}°`}</span>
                   <span class="bar">${t !== undefined ? html`<span style="width:${Math.round(Math.max(0.05, Math.min(1, (t - 10) / 30)) * 100)}%;background:${tone}"></span>` : nothing}</span>
                 </button>
                 <button class="metric" @click=${() => r.humidity && ctx.moreInfo(r.humidity)}>
-                  <span class="lbl">${icon("humidity", 16)}Humidity</span>
+                  <span class="lbl">${icon("humidity", 16)}Humidity${agoOf(r.humidity)}</span>
                   <span class="big n">${h === undefined ? "–" : `${Math.round(h)} %`}</span>
                   <span class="bar">${h !== undefined ? html`<span style="width:${Math.round(Math.min(100, h))}%;background:${h < 25 ? "var(--atlas-warn)" : "#5EC8FF"}"></span>` : nothing}</span>
                 </button>
@@ -158,6 +167,7 @@ export const renderRoom = (ctx: Ctx) => {
             : html`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
         </section>
         ${cameraCard(ctx, r)}
+        ${remoteCard(ctx, r)}
       </div>
       <div class="col">
         <section class="glass card devcard ${img ? "has-img" : ""}" style="flex:1;padding:18px">

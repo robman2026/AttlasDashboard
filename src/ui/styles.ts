@@ -246,6 +246,30 @@ export const styles = css`
   .sw { width: 36px; height: 36px; border-radius: 18px; border: 2px solid transparent; }
   .sw.on { border-color: var(--atlas-text); }
 
+  /* ---------- time ago ---------- */
+  .ago { font-size: 11px; color: var(--atlas-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dev .txt .ago { margin-top: 1px; }
+  .metric .lbl .ago { margin-left: auto; padding-left: 6px; }
+
+  /* ---------- remote ---------- */
+  .remote { gap: 12px; }
+  .remote h2 { color: var(--atlas-text); }
+  .rpower { width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(188, 200, 222, 0.25); background: rgba(241, 245, 255, 0.06); color: var(--atlas-text2); }
+  .rpower.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); box-shadow: 0 0 16px var(--atlas-accent-glow); }
+  .rnow { display: flex; flex-direction: column; gap: 2px; text-align: left; min-width: 0; }
+  .rnow b { font-size: 14px; }
+  .rnow span { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(3, 56px); gap: 6px; justify-content: center; padding: 8px; margin: 0 auto; border-radius: 50%; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); }
+  .rk { display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: var(--atlas-r-ctl); border: 1px solid rgba(188, 200, 222, 0.2); background: rgba(241, 245, 255, 0.06); color: var(--atlas-text); font-size: 14px; font-weight: 700; }
+  .rk:active:not(:disabled) { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .rk:disabled, .rpower:disabled, .rsrc:disabled { opacity: 0.4; cursor: default; }
+  .rpad .rk { border-radius: 50%; }
+  .rpad .rk.ok { background: var(--atlas-accent-soft); border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
+  .rrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .rk.sm.on { color: var(--atlas-warn); border-color: rgba(255, 191, 87, 0.5); }
+  .rsrc { height: 44px; border-radius: var(--atlas-r-ctl); padding: 0 12px; font: inherit; font-size: 13px; color: var(--atlas-text); background: rgba(241, 245, 255, 0.06); border: 1px solid rgba(188, 200, 222, 0.2); }
+  .rsrc option { background: var(--atlas-solid); color: var(--atlas-text); }
+
   /* ---------- energy ---------- */
   .energy-top { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; }
   .emain-body { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
@@ -342,7 +366,7 @@ export const styles = css`
     .alist { grid-template-columns: minmax(0, 1fr); }
     .crumb, .rhead { padding: 0 6px; }
     .rhead h1 { font-size: 36px; }
-    .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 72px; }
+    .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 76px; }
     .egrid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .ecard { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 8px 12px; padding: 12px; }
     .ecard > .row, .ecard > .eextra, .ecard > .ephases { grid-column: 1 / -1; }
