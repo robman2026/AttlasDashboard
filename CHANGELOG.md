@@ -8,6 +8,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Built-in Remote card and the room options `remote_media_player`, `remote_entity`, `remote_type`. Use your own remote card through `side_cards` instead. Leftover `remote_*` keys in a config are ignored.
 
 ### Fixed
+- Floor cards on a camera-wall page no longer overflow: they were a fixed 84 px tall and the summary line spilled over the bottom border with taller fonts (e.g. Windows). They now size to their content; normal floor cards use a minimum height instead of a fixed one.
 - Own cards (`cards`, `side_cards`) now also accept a single card (`type: ...` without a leading `-`); before, only a list was rendered and a single card was silently ignored.
 
 ### Changed
