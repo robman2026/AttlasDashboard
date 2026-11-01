@@ -4,21 +4,13 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 
 ## Unreleased
 
-### Removed
-- Built-in Remote card and the room options `remote_media_player`, `remote_entity`, `remote_type`. Use your own remote card through `side_cards` instead. Leftover `remote_*` keys in a config are ignored.
-
-### Fixed
-- Floor cards on a camera-wall page no longer overflow: they were a fixed 84 px tall and the summary line spilled over the bottom border with taller fonts (e.g. Windows). They now size to their content; normal floor cards use a minimum height instead of a fixed one.
-- Own cards (`cards`, `side_cards`) now also accept a single card (`type: ...` without a leading `-`); before, only a list was rendered and a single card was silently ignored.
-
-### Changed
-- Floor camera wall fits the window on tablet and desktop: the floor's Rooms page becomes one window tall (compact floor cards and room tiles) and the cameras get the remaining space; the column count is chosen for the largest 16:9 tiles that fit and recalculated on resize. Phone keeps the stacked, scrolling layout.
-
 ### Added
-- Own cards in rooms: `cards` (below the Devices card, side by side when there is room) and `side_cards` (left column below the camera), each a YAML list of any Lovelace card configs, built-in or `custom:...` (e.g. your own washer, dryer or remote card). Rendered with HA's `loadCardHelpers().createCardElement`; the cards get every state update. Edit dashboard > Rooms > **Own cards**. Demo house: Laundry with two tile cards.
-- Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
-
-### Added
+- Hobby room features, all optional per room (Edit dashboard > Rooms):
+  - **Status strip** under the room title: All OK / alerts for this room, lights on (tap switches the room lights off, or on when all are off), 3D printer progress, unavailable devices.
+  - **Extra climate values** (`climate_extra`): CO2, pressure, VOC, ... in the Climate card.
+  - **3D printer card** (`printer_*`): status, progress, remaining time, nozzle / bed / chamber temperatures, chamber light, pause / resume / stop (stop asks first), printer picture. Works with any integration; field names follow the Bambu Lab integration (ha-bambulab) entities.
+  - **Automations card** (`automations`): on/off switch and last run per automation.
+- Room images `laundry.jpg` and `workshop.jpg`. Demo house: Laundry and Workshop use them; Workshop shows all hobby room features.
 - Time since the last change on device tiles and on the room climate values, e.g. "5 min ago"; hovering shows both absolute timestamps. New option `appearance.time_display`: `changed` (default, HA `last_changed`), `updated` (HA `last_updated`) or `off`.
 - Energy view: circuit cards of three-phase meters show a compact phase table (one row per phase with power, current and voltage, only the configured columns; each value opens more-info). Previously phases were shown only on the main meter. Demo house: new three-phase circuit "Oven & cooktop".
 - Energy view (`energy` path): whole-house meter with ring gauge, phase A/B/C power, current and voltage, total energy, power factor, current and frequency; a "Right now" summary (whole house, metered circuits, not metered, top consumers, offline count); one gauge card per circuit (W, Consuming / Standby / Offline, kWh, A, PF, V, Hz). Configured with the new `energy_meters` list (Edit dashboard > Energy). Sidebar and phone nav **Energy** open it when meters are set, otherwise the HA Energy dashboard as before. The Home "Energy flow" card links to it. Unavailable sensors show "–", never 0.
@@ -29,8 +21,11 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - `npm run docs` (part of `npm run build`) and `npm run screenshots`.
 - CI: generated docs must be up to date; pull requests that change `src/` must update `CHANGELOG.md`.
 - Pull request template with a documentation checklist; `CLAUDE.md` with the same rules for AI sessions.
+- Own cards in rooms: `cards` (below the Devices card, side by side when there is room) and `side_cards` (left column below the camera), each a YAML list of any Lovelace card configs, built-in or `custom:...` (e.g. your own washer, dryer or remote card). Rendered with HA's `loadCardHelpers().createCardElement`; the cards get every state update. Edit dashboard > Rooms > **Own cards**. Demo house: Laundry with two tile cards.
+- Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Floor camera wall fits the window on tablet and desktop: the floor's Rooms page becomes one window tall (compact floor cards and room tiles) and the cameras get the remaining space; the column count is chosen for the largest 16:9 tiles that fit and recalculated on resize. Phone keeps the stacked, scrolling layout.
 - Room camera starts the live stream (muted) as soon as the room opens; no tap needed. A still frame is shown while the stream element loads. `camera_private` still hides it behind Reveal.
 - Room image is now only the backdrop of the Devices card (darkened, tiles on frosted glass); the separate picture block is gone.
 - Home Security card: camera tiles are 16:9 live still frames from the camera (scaled server side, refreshed every 10 s) instead of room photos; unavailable cameras show a dashed tile. Tap opens the room with the live stream.
@@ -39,6 +34,14 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - `docs/design.md` replaces the private handoff with an anonymised design brief and milestone status.
 - Editor shows a short intro and help text for each option (from `fields.ts`).
 - Version is read from `package.json` at build time (single source).
+
+### Fixed
+- Phone: room tile text no longer wraps over the arrow button (name and details are cut with "..." instead), and the camera wall header wraps cleanly.
+- Floor cards on a camera-wall page no longer overflow: they were a fixed 84 px tall and the summary line spilled over the bottom border with taller fonts (e.g. Windows). They now size to their content; normal floor cards use a minimum height instead of a fixed one.
+- Own cards (`cards`, `side_cards`) now also accept a single card (`type: ...` without a leading `-`); before, only a list was rendered and a single card was silently ignored.
+
+### Removed
+- Built-in Remote card and the room options `remote_media_player`, `remote_entity`, `remote_type`. Use your own remote card through `side_cards` instead. Leftover `remote_*` keys in a config are ignored.
 
 ## 0.1.0 - 2026-10-31
 

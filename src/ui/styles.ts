@@ -268,6 +268,53 @@ export const styles = css`
   .camwall.fitwall { flex: 1 1 auto; min-height: 0; grid-template-columns: repeat(var(--fcols, var(--cols, 3)), var(--fw, minmax(0, 1fr))); justify-content: center; align-content: center; }
   .camname { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; }
 
+  /* ---------- room status strip ---------- */
+  .strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .schip { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 14px 6px 10px; border-radius: 14px; background: var(--atlas-glass-bg); border: 1px solid var(--atlas-glass-border); text-align: left; max-width: 280px; }
+  .schip > span { display: flex; flex-direction: column; min-width: 0; }
+  .schip b { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .schip small { font-size: 11px; color: var(--atlas-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .schip.ok .okdot { width: 22px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: var(--atlas-accent); color: #14171c; font-size: 13px; font-weight: 800; }
+  .schip.warn { border-color: rgba(255, 191, 87, 0.5); color: var(--atlas-warn); }
+  .schip.on { border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
+  .sbar { display: block; height: 3px; border-radius: 2px; background: rgba(241, 245, 255, 0.12); margin-top: 3px; }
+  .sbar > i { display: block; height: 3px; border-radius: 2px; background: var(--atlas-accent); }
+
+  /* ---------- climate extras / printer / automations ---------- */
+  .cextra { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+  .cx { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.1); text-align: left; min-width: 0; }
+  .cx > span:last-child { display: flex; flex-direction: column; min-width: 0; }
+  .cx b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cx small { font-size: 11px; color: var(--atlas-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cxi { color: var(--atlas-accent); display: flex; }
+  .printer { gap: 12px; }
+  .pstatus { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--atlas-accent); }
+  .pbody { display: flex; align-items: center; gap: 14px; }
+  .ppic { flex: none; width: 112px; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; background: #0e1014; border: 1px solid rgba(188, 200, 222, 0.14); }
+  .ppic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pnum { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+  .pnum b { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .pnum span { font-size: 13px; }
+  .ptemps { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; }
+  .ptemps button { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 12px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.1); text-align: left; }
+  .ptemps b { font-size: 15px; }
+  .ptemps small { font-size: 11px; color: var(--atlas-text2); }
+  .pbtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 8px; }
+  .pbtns .sq { color: var(--atlas-text); }
+  .pbtns .sq.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); }
+  .pbtns .sq.stop { color: var(--atlas-crit); }
+  .autos { gap: 6px; }
+  .auto { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid rgba(188, 200, 222, 0.08); }
+  .auto:first-of-type { border-top: 0; }
+  .atxt { display: flex; flex-direction: column; gap: 2px; text-align: left; min-width: 0; }
+  .atxt b { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .atxt small { font-size: 12px; }
+  .tog { flex: none; width: 48px; height: 28px; border-radius: 14px; background: rgba(241, 245, 255, 0.14); position: relative; border: 1px solid rgba(188, 200, 222, 0.2); }
+  .tog i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 10px; background: var(--atlas-text2); transition: left 0.15s; }
+  .tog.on { background: var(--atlas-accent-soft); border-color: var(--atlas-accent); }
+  .tog.on i { left: 23px; background: var(--atlas-accent); }
+  .tog:disabled { opacity: 0.4; }
+
   /* ---------- time ago ---------- */
   .ago { font-size: 11px; color: var(--atlas-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dev .txt .ago { margin-top: 1px; }
@@ -346,6 +393,12 @@ export const styles = css`
     .home-grid, .room-grid, .energy-top { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 760px) {
+    .tile .name, .tile .hum { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile .info { flex: 1; }
+    .camsec > .row { flex-wrap: wrap; }
+    .camsec > .row > span.t2 { flex-basis: 100%; }
+    .strip { gap: 6px; }
+    .schip { max-width: 100%; }
     .camwall, .owncards.main { grid-template-columns: minmax(0, 1fr); }
     .frame { padding: 12px 12px 96px; gap: 12px; }
     aside { display: none; }

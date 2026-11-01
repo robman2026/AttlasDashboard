@@ -18,6 +18,7 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 - **Rooms:** floors (+2 to -1) with room count, typical temperature and alert count; room tiles per floor.
 - **Room:** climate, camera that starts live (muted) when the room opens (16:9, Live, Snapshot, Recordings; private camera hidden until Reveal), device tiles on the room image (tap toggles, hold opens details), previous / next room. Device tiles show how long ago each entity changed. Add your **own cards** (built-in or custom, e.g. a washer, dryer or remote card) to any room.
 - **Camera wall per floor:** optional live feeds or snapshots of all cameras on a floor, side by side, sized to fit the window without scrolling.
+- **Hobby room extras (any room, optional):** status strip (alerts, lights, printer), extra climate values (CO2, pressure, ...), 3D printer card (progress, time left, temperatures, light, pause / resume / stop), automations with on/off switches.
 - **Energy:** whole-house meter with phases A/B/C, a "right now" summary with top consumers, and a gauge card per metered circuit (W, status, kWh, A, PF, V, Hz). Set up in Edit dashboard > Energy (`energy_meters`).
 - **Fully configurable in the UI:** every entity, room, floor, device, alert rule and layout list in Edit dashboard. Reference: [docs/configuration.md](docs/configuration.md).
 - **Styles:** Warm glass, Glass, Quiet (no blur, for the wall tablet), 5 ambiences, adjustable accent; per-device override with the gear icon.

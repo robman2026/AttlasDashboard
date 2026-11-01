@@ -84,6 +84,21 @@ export interface RoomConfig {
   show_camera?: boolean; // default true; false hides the whole camera section
   cards?: CardConfig | CardConfig[]; // own cards below the Devices card (e.g. washer, dryer); one card or a list
   side_cards?: CardConfig | CardConfig[]; // own cards in the left column below the camera (e.g. a remote)
+  climate_extra?: DeviceConfig[]; // extra values in the Climate card (CO2, pressure, VOC, ...)
+  automations?: string[]; // automation entities shown with on/off toggles
+  // 3D printer card (any integration; names below match ha-bambulab entities)
+  printer_name?: string;
+  printer_status?: string; // sensor, e.g. sensor.<printer>_print_status
+  printer_progress?: string; // sensor in %
+  printer_remaining?: string; // duration sensor (s, min or h)
+  printer_nozzle?: string;
+  printer_bed?: string;
+  printer_chamber?: string;
+  printer_light?: string; // light or switch
+  printer_pause?: string; // button
+  printer_resume?: string; // button
+  printer_stop?: string; // button, always confirmed
+  printer_picture?: string; // camera or image entity (chamber camera, cover image)
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;
