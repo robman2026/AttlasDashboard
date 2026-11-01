@@ -1,6 +1,7 @@
 // Read helpers over the strategy config (rooms, floors, entity lookup).
 import type { AtlasConfig, EnergyMeter, FloorConfig, RoomConfig } from "../config/types";
 import { DEFAULT_ACCENT, DEFAULT_IMAGE_PATH } from "../config/constants";
+import { SHIPPED_IMAGES } from "../config/images.generated";
 
 export const rooms = (c: AtlasConfig): RoomConfig[] => c.rooms ?? [];
 export const energyMeters = (c: AtlasConfig): EnergyMeter[] => (c.energy_meters ?? []).filter((m) => m?.power);
@@ -39,12 +40,25 @@ export const deviceName = (c: AtlasConfig, entityId: string): string | undefined
   return undefined;
 };
 
+/**
+ * Image file of a room: the configured one; "none" for no image; otherwise, with the
+ * shipped images (no custom image_path), the file matching the room id (guest_room -> guest-room.jpg).
+ */
+export const roomImage = (c: AtlasConfig, room?: RoomConfig): string | undefined => {
+  if (!room) return undefined;
+  if (room.image) return room.image === "none" ? undefined : room.image;
+  if (c.appearance?.image_path) return undefined;
+  const auto = `${room.id.replace(/_/g, "-")}.jpg`;
+  return SHIPPED_IMAGES.includes(auto) ? auto : undefined;
+};
+
 export const imageUrl = (c: AtlasConfig, room?: RoomConfig): string | undefined => {
-  if (!room?.image) return undefined;
-  if (/^(https?:)?\/\//.test(room.image) || room.image.startsWith("/")) return room.image;
+  const file = roomImage(c, room);
+  if (!file) return undefined;
+  if (/^(https?:)?\/\//.test(file) || file.startsWith("/")) return file;
   let base = c.appearance?.image_path || DEFAULT_IMAGE_PATH;
   if (!base.endsWith("/")) base += "/";
-  return base + room.image;
+  return base + file;
 };
 
 export const accentOf = (c: AtlasConfig) => {

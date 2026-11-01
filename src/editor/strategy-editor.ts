@@ -7,6 +7,7 @@ import type { AtlasConfig, RoomConfig } from "../config/types";
 import type { HomeAssistant } from "../data/hass";
 import { DEMO_PRESET } from "../config/preset-demo";
 import { ROOM_ICON_KEYS } from "../config/constants";
+import { SHIPPED_IMAGES } from "../config/images.generated";
 import { SECTIONS, type FieldDef, type SectionDef } from "../config/fields";
 import { fireEvent } from "../util/navigate";
 
@@ -79,6 +80,7 @@ export class AtlasStrategyEditor extends LitElement {
       $rooms: (c.rooms ?? []).map((r) => ({ value: r.id, label: r.name })),
       $floors: (c.floors ?? []).map((f) => ({ value: f.id, label: f.name })),
       $icons: ROOM_ICON_KEYS.map((k) => ({ value: k, label: k })),
+      $images: [{ value: "none", label: "none (no image)" }, ...SHIPPED_IMAGES.map((f) => ({ value: f, label: f }))],
     };
   }
 

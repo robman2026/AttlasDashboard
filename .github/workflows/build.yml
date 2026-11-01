@@ -16,7 +16,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run build
       - name: Generated files must be committed (dist/ for HACS, icons, docs/configuration.md)
-        run: git diff --exit-code -- dist src/ui/icons.generated.ts docs/configuration.md
+        run: git diff --exit-code -- dist src/ui/icons.generated.ts src/config/images.generated.ts docs/configuration.md
 
   docs:
     if: github.event_name == 'pull_request'

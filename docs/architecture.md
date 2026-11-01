@@ -53,6 +53,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
 | `src/ui/time.ts` | Relative "time ago" labels (`time_display`) |
 | `src/ui/styles.ts` | Design tokens and all CSS, responsive breakpoints |
+| `src/config/images.generated.ts` | List of shipped room images (generated from `public/rooms` by `scripts/build-icons.mjs`) for the editor picker and the automatic room image |
 | `src/ui/icons.ts`, `icons.generated.ts` | ATLAS line icons (generated from `assets/icons`) and device glyphs |
 | `public/rooms/` | Room images, copied to `dist/rooms/` |
 | `scripts/` | Icon, docs and screenshot generators |

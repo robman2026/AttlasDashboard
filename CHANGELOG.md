@@ -5,6 +5,9 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Room image `guest-room.jpg` (guest room).
+- Automatic room image: a room without `image` uses the shipped image whose name matches the room id (`laundry` -> `laundry.jpg`, `guest_room` -> `guest-room.jpg`, `workshop` -> `workshop.jpg`). `image: none` turns it off. Only with the shipped images (no custom image base URL).
+- Editor: the room Image field is a picker listing every shipped image (typing a file name or URL still works).
 - Hobby room features, all optional per room (Edit dashboard > Rooms):
   - **Status strip** under the room title: All OK / alerts for this room, lights on (tap switches the room lights off, or on when all are off), 3D printer progress, unavailable devices.
   - **Extra climate values** (`climate_extra`): CO2, pressure, VOC, ... in the Climate card.
