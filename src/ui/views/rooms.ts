@@ -13,12 +13,12 @@ const cameraWall = (ctx: Ctx, f: FloorConfig) => {
   if (!rooms.length) return nothing;
   const live = mode === "live" && !!customElements.get("ha-camera-stream");
   const bucket = Math.floor(ctx.tick / 10_000);
-  return html`<section class="glass card" style="padding:16px;gap:12px">
+  return html`<section class="glass card camsec" style="padding:16px;gap:12px">
     <div class="row" style="padding:0 4px">
       <h2 style="font-size:20px">Cameras on ${f.name}</h2>
       <span class="t2" style="font-size:12px">${mode === "live" ? "Live, muted" : "Snapshots every 10 s"} · tap a name for the room</span>
     </div>
-    <div class="camwall" style="--cols:${rooms.length <= 3 ? rooms.length : rooms.length === 4 ? 2 : 3}">
+    <div class="camwall ${ctx.narrow ? "" : "fitwall"}" style="--cols:${rooms.length <= 3 ? rooms.length : rooms.length === 4 ? 2 : 3}">
       ${rooms.map((r) => {
         const id = cameraOf(r)!;
         const s = stateObj(ctx.hass, id);
@@ -51,6 +51,18 @@ export const renderRooms = (ctx: Ctx) => {
   const total = ctx.config.rooms?.length ?? 0;
   const unassigned = (ctx.config.rooms ?? []).filter((r) => !r.floor || !floorById(ctx.config, r.floor));
   const list = cur ? roomsOnFloor(ctx.config, cur.id) : unassigned;
+  const wall = cur ? cameraWall(ctx, cur) : nothing;
+  // Fit mode (tablet / desktop with a camera wall): rooms left, cameras right, one window tall.
+  const fit = wall !== nothing && !ctx.narrow;
+  const roomsCard = html`<section class="glass card roomsec" style="flex:1;padding:16px">
+      <div class="row" style="padding:0 4px">
+        <h2 style="font-size:20px">${cur ? `${cur.name}${cur.level ? ` · level ${cur.level}` : ""}` : "Rooms"}</h2>
+        <span class="t2" style="font-size:12px">Tap a room for its devices</span>
+      </div>
+      <div class="tiles floor">
+        ${list.map((r) => roomTile(ctx, r, "", `${(r.devices ?? []).length} devices`))}
+      </div>
+    </section>`;
   return html`
     <section class="hero">
       <h1 class="sm">Rooms</h1>
@@ -66,15 +78,6 @@ export const renderRooms = (ctx: Ctx) => {
         </button>`;
       })}
     </div>
-    <section class="glass card" style="flex:1;padding:16px">
-      <div class="row" style="padding:0 4px">
-        <h2 style="font-size:20px">${cur ? `${cur.name}${cur.level ? ` · level ${cur.level}` : ""}` : "Rooms"}</h2>
-        <span class="t2" style="font-size:12px">Tap a room for its devices</span>
-      </div>
-      <div class="tiles floor">
-        ${list.map((r) => roomTile(ctx, r, "", `${(r.devices ?? []).length} devices`))}
-      </div>
-    </section>
-    ${cur ? cameraWall(ctx, cur) : nothing}
+    ${fit ? html`<div class="fitgrid">${roomsCard}${wall}</div>` : html`${roomsCard}${wall}`}
   `;
 };

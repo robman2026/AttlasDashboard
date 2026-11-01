@@ -6,7 +6,6 @@ import { floorById, imageUrl, roomById, roomsOnFloor, rooms } from "../../data/m
 import { icon, glyph } from "../icons";
 import { TOGGLE_DOMAINS, deviceLabel, glyphFor, kindOf, stateText } from "../devices";
 import { fmtHum, fmtTemp } from "./common";
-import { remoteCard } from "./remote";
 import { stamp, stampTitle, timeAgo } from "../time";
 
 const LONG_PRESS_MS = 500;
@@ -107,11 +106,15 @@ const cameraCard = (ctx: Ctx, r: RoomConfig) => {
   </section>`;
 };
 
-/** Own Lovelace cards from the room config (cards / side_cards). */
-const ownCards = (ctx: Ctx, list: RoomConfig["cards"], cls: string) =>
-  Array.isArray(list) && list.length
+/** Own Lovelace cards from the room config (cards / side_cards). Accepts one card or a list of cards. */
+const ownCards = (ctx: Ctx, value: RoomConfig["cards"], cls: string) => {
+  const list = (Array.isArray(value) ? value : value && typeof value === "object" ? [value] : []).filter(
+    (c) => c && typeof c === "object"
+  );
+  return list.length
     ? html`<div class="owncards ${cls}">${list.map((c) => html`<atlas-hui-card .config=${c} .hass=${ctx.hass}></atlas-hui-card>`)}</div>`
     : nothing;
+};
 
 export const renderRoom = (ctx: Ctx) => {
   const r = roomById(ctx.config, ctx.roomId);
@@ -173,7 +176,6 @@ export const renderRoom = (ctx: Ctx) => {
             : html`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
         </section>
         ${cameraCard(ctx, r)}
-        ${remoteCard(ctx, r)}
         ${ownCards(ctx, r.side_cards, "side")}
       </div>
       <div class="col">

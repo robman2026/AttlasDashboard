@@ -4,12 +4,20 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 
 ## Unreleased
 
+### Removed
+- Built-in Remote card and the room options `remote_media_player`, `remote_entity`, `remote_type`. Use your own remote card through `side_cards` instead. Leftover `remote_*` keys in a config are ignored.
+
+### Fixed
+- Own cards (`cards`, `side_cards`) now also accept a single card (`type: ...` without a leading `-`); before, only a list was rendered and a single card was silently ignored.
+
+### Changed
+- Floor camera wall fits the window on tablet and desktop: the floor's Rooms page becomes one window tall (compact floor cards and room tiles) and the cameras get the remaining space; the column count is chosen for the largest 16:9 tiles that fit and recalculated on resize. Phone keeps the stacked, scrolling layout.
+
 ### Added
 - Own cards in rooms: `cards` (below the Devices card, side by side when there is room) and `side_cards` (left column below the camera), each a YAML list of any Lovelace card configs, built-in or `custom:...` (e.g. your own washer, dryer or remote card). Rendered with HA's `loadCardHelpers().createCardElement`; the cards get every state update. Edit dashboard > Rooms > **Own cards**. Demo house: Laundry with two tile cards.
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Added
-- Remote control card per room (Edit dashboard > Rooms > **Remote control**): set a media player for power, volume, mute, play/pause, previous/next, input source and now playing; set the TV type (Android TV / Google TV, Samsung, LG webOS, Apple TV, Roku) and, except for LG webOS, the TV's `remote` entity for the arrow pad, OK, Back, Home and Menu. Any room can have one (e.g. living room and bedroom). Command names follow the official HA integration docs. Remote entities only trigger re-renders and are not part of the data-quality alert (many TVs report unavailable while off). Demo house: living room (Android TV) and bedroom (LG webOS).
 - Time since the last change on device tiles and on the room climate values, e.g. "5 min ago"; hovering shows both absolute timestamps. New option `appearance.time_display`: `changed` (default, HA `last_changed`), `updated` (HA `last_updated`) or `off`.
 - Energy view: circuit cards of three-phase meters show a compact phase table (one row per phase with power, current and voltage, only the configured columns; each value opens more-info). Previously phases were shown only on the main meter. Demo house: new three-phase circuit "Oven & cooktop".
 - Energy view (`energy` path): whole-house meter with ring gauge, phase A/B/C power, current and voltage, total energy, power factor, current and frequency; a "Right now" summary (whole house, metered circuits, not metered, top consumers, offline count); one gauge card per circuit (W, Consuming / Standby / Offline, kWh, A, PF, V, Hz). Configured with the new `energy_meters` list (Edit dashboard > Energy). Sidebar and phone nav **Energy** open it when meters are set, otherwise the HA Energy dashboard as before. The Home "Energy flow" card links to it. Unavailable sensors show "–", never 0.

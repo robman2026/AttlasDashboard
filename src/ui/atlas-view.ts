@@ -92,9 +92,6 @@ export class AtlasView extends LitElement {
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
       ...meterEntities(c),
-      // Remote card entities: re-render only, not part of the data-quality alert
-      // (many TVs report unavailable while switched off).
-      ...rooms(c).flatMap((r) => [r.remote_media_player, r.remote_entity]).filter((x): x is string => !!x),
     ]);
     if (config.view === "room") this._prepareCamera(cameraOf(roomById(c, config.room)));
     const fc = this._floorCameras();
@@ -131,6 +128,47 @@ export class AtlasView extends LitElement {
     super.disconnectedCallback();
     window.clearInterval(this._timer);
     this._mq?.removeEventListener("change", this._onMq);
+    this._ro?.disconnect();
+    this._wall = undefined;
+  }
+
+  /** Rooms page with a camera wall on a wide screen: the page is one window tall, no scrolling. */
+  private _fitPage() {
+    const fc = this._floorCameras();
+    return !this._narrow && fc.mode !== "off" && fc.cameras.length > 0;
+  }
+
+  private _ro?: ResizeObserver;
+  private _wall?: HTMLElement;
+
+  protected updated() {
+    const wall = this.renderRoot.querySelector<HTMLElement>(".camwall.fitwall") ?? undefined;
+    if (wall === this._wall) return;
+    this._ro?.disconnect();
+    this._wall = wall;
+    if (!wall) return;
+    this._ro = new ResizeObserver(() => this._fitWall(wall));
+    this._ro.observe(wall);
+  }
+
+  /** Largest 16:9 tiles that fit n cameras into the wall's box: try every column count, keep the biggest. */
+  private _fitWall(wall: HTMLElement) {
+    const n = wall.children.length;
+    const W = wall.clientWidth;
+    const H = wall.clientHeight;
+    if (!n || W <= 0 || H <= 0) return;
+    const GAP = 12;
+    const LABEL = 30; // camera name row + gap above the picture
+    let best = { cols: 1, w: 0 };
+    for (let cols = 1; cols <= n; cols++) {
+      const rows = Math.ceil(n / cols);
+      const byWidth = (W - GAP * (cols - 1)) / cols;
+      const byHeight = (((H - GAP * (rows - 1)) / rows - LABEL) * 16) / 9;
+      const w = Math.floor(Math.min(byWidth, byHeight));
+      if (w > best.w) best = { cols, w };
+    }
+    wall.style.setProperty("--fcols", String(best.cols));
+    wall.style.setProperty("--fw", `${Math.max(best.w, 120)}px`);
   }
 
   private _onMq = (e: MediaQueryListEvent) => (this._narrow = e.matches);
@@ -232,7 +270,7 @@ export class AtlasView extends LitElement {
       ${this._background(variant, mood, photo)}
       <div class="frame">
         ${this._sidebar(ctx)}
-        <div class="main">
+        <div class="main ${this._fitPage() ? "fit" : ""}">
           ${this._topbar(ctx)}
           ${body}
         </div>

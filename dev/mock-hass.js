@@ -55,7 +55,6 @@ th("guest_room", 23.4, 50); contact("binary_sensor.guest_room_window", false, "w
 th("living_room", 23.2, 46); cam("camera.living_room", "Living room camera", "living.jpg");
 contact("binary_sensor.living_room_window_left", false, "window"); contact("binary_sensor.living_room_window_right", false, "window");
 motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_backlight", "off"); add("media_player.living_room_tv", "on", { friendly_name: "Living room TV", app_name: "YouTube", source: "YouTube", source_list: ["HDMI 1", "Live TV", "Netflix", "YouTube"], volume_level: 0.18, is_volume_muted: false });
-add("remote.living_room_tv", "on", { friendly_name: "Living room TV remote", current_activity: "com.google.android.youtube.tv" });
 add("light.kitchen_cabinet_left", "on", { brightness: 255 }); add("light.kitchen_cabinet_right", "on", { brightness: 255 });
 motion("binary_sensor.kitchen_presence", false, "presence"); contact("binary_sensor.kitchen_window", false, "window");
 add("sensor.oven_temperature", 59, { unit_of_measurement: "°C" }); add("select.dishwasher_program", "unknown");
