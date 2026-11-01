@@ -5,6 +5,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Energy view: circuit cards of three-phase meters show a compact phase table (one row per phase with power, current and voltage, only the configured columns; each value opens more-info). Previously phases were shown only on the main meter. Demo house: new three-phase circuit "Oven & cooktop".
 - Energy view (`energy` path): whole-house meter with ring gauge, phase A/B/C power, current and voltage, total energy, power factor, current and frequency; a "Right now" summary (whole house, metered circuits, not metered, top consumers, offline count); one gauge card per circuit (W, Consuming / Standby / Offline, kWh, A, PF, V, Hz). Configured with the new `energy_meters` list (Edit dashboard > Energy). Sidebar and phone nav **Energy** open it when meters are set, otherwise the HA Energy dashboard as before. The Home "Energy flow" card links to it. Unavailable sensors show "–", never 0.
 - Room option `show_camera` (Edit dashboard > Rooms > Camera > **Show camera section**, default on). Off removes the room's camera section completely: no Camera card, no stream loading, camera not counted in the data-quality alert, no "open camera" label on its Home security tile. Demo house: Bedroom has it off.
 - Room images `bathroom.jpg` (large bathroom) and `guest-wc.jpg` (small WC), conceptual like the others. Demo house: Bathroom on the first floor uses `bathroom.jpg`; new ground floor room Guest WC uses `guest-wc.jpg`.

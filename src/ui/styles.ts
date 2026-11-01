@@ -289,6 +289,11 @@ export const styles = css`
   .ecard .ename { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ecard .egauge { align-self: center; }
   .ecard .eextra { font-size: 11px; text-align: center; }
+  .ephases { display: flex; flex-direction: column; gap: 4px; }
+  .ph.sm { gap: 4px; }
+  .ph.sm .phl { font-size: 11px; font-weight: 700; color: var(--atlas-dim); text-align: center; }
+  .ph.sm > button { height: 30px; font-size: 12px; border-radius: 8px; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ph.sm > button:disabled { cursor: default; }
 
   /* ---------- bottom nav (phone) ---------- */
   .bnav { display: none; }
@@ -340,7 +345,7 @@ export const styles = css`
     .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 72px; }
     .egrid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .ecard { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 8px 12px; padding: 12px; }
-    .ecard > .row, .ecard > .eextra { grid-column: 1 / -1; }
+    .ecard > .row, .ecard > .eextra, .ecard > .ephases { grid-column: 1 / -1; }
     .ecard .ering { width: 100px; height: 100px; }
     .estats.sm { grid-template-columns: minmax(0, 1fr); }
     .ph { grid-template-columns: 74px repeat(3, minmax(0, 1fr)); }
