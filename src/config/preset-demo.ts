@@ -64,9 +64,12 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     {
       id: "office", name: "Office", floor: "first", icon: "office", image: "office.jpg",
       temperature: "sensor.office_temperature", humidity: "sensor.office_humidity",
+      // Lights for the photo effect: a ceiling lamp on a relay switch plus the fan light.
+      light_entities: ["switch.office_ceiling_relay", "light.office_fan_light"],
       devices: [
         { entity: "binary_sensor.office_door", name: "Door" },
         { entity: "binary_sensor.office_window", name: "Window" },
+        { entity: "switch.office_ceiling_relay", name: "Ceiling lamp" },
         { entity: "light.office_fan_light", name: "Fan light" },
         { entity: "fan.office_fan", name: "Ceiling fan" },
       ],

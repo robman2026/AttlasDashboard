@@ -6,6 +6,7 @@ import type { Ctx } from "../context";
 import { formatState, isInvalid, num, stateObj, domainOf } from "../../data/hass";
 import { icon, glyph } from "../icons";
 import { deviceLabel, glyphFor } from "../devices";
+import { roomLightEntities } from "../../data/model";
 import { timeAgo } from "../time";
 
 const val = (ctx: Ctx, id?: string) => {
@@ -25,15 +26,11 @@ const duration = (ctx: Ctx, id?: string) => {
 
 export const hasPrinter = (r: RoomConfig) => !!(r.printer_status || r.printer_progress);
 
-const roomLightIds = (ctx: Ctx, r: RoomConfig) => {
-  const excluded = new Set(ctx.config.entities?.exclude_lights ?? []);
-  return (r.devices ?? []).map((d) => d.entity).filter((id) => id.startsWith("light.") && !excluded.has(id));
-};
 
 /** Chips under the room title: alerts, lights, unavailable devices, printer. */
 export const statusStrip = (ctx: Ctx, r: RoomConfig) => {
   const alerts = ctx.alerts.filter((a) => a.room === r.id);
-  const lights = roomLightIds(ctx, r);
+  const lights = roomLightEntities(ctx.config, r);
   const on = lights.filter((id) => ctx.hass.states[id]?.state === "on");
   const na = (r.devices ?? []).filter((d) => {
     const s = ctx.hass.states[d.entity];
@@ -47,7 +44,7 @@ export const statusStrip = (ctx: Ctx, r: RoomConfig) => {
     </button>
     ${lights.length
       ? html`<button class="schip ${on.length ? "on" : ""}" title=${on.length ? "Turn the room lights off" : "Turn the room lights on"}
-          @click=${() => ctx.call("light", on.length ? "turn_off" : "turn_on", { entity_id: on.length ? on : lights })}>
+          @click=${() => ctx.call("homeassistant", on.length ? "turn_off" : "turn_on", { entity_id: on.length ? on : lights })}>
           ${glyph("bulb", 18)}<span><b>Lights</b><small>${on.length ? `${on.length} of ${lights.length} on` : "All off"}</small></span>
         </button>`
       : nothing}

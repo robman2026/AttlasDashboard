@@ -5,7 +5,7 @@ import { isInvalid, num, stateObj, domainOf } from "../../data/hass";
 import { floorById, imageUrl, roomById, roomsOnFloor, rooms } from "../../data/model";
 import { icon, glyph } from "../icons";
 import { TOGGLE_DOMAINS, deviceLabel, glyphFor, kindOf, stateText } from "../devices";
-import { fmtHum, fmtTemp } from "./common";
+import { fmtHum, fmtTemp, lightMood } from "./common";
 import { stamp, stampTitle, timeAgo } from "../time";
 import { automationsCard, climateExtras, printerCard, statusStrip } from "./room-extras";
 
@@ -40,9 +40,10 @@ const pressHandlers = (ctx: Ctx, entity: string) => {
   };
 };
 
-const deviceTile = (ctx: Ctx, d: NonNullable<RoomConfig["devices"]>[number]) => {
+const deviceTile = (ctx: Ctx, d: NonNullable<RoomConfig["devices"]>[number], lights: string[] = []) => {
   const s = ctx.hass.states[d.entity];
-  const k = kindOf(s);
+  // A room light that is on gets the warm "lit" style, matching the photo glow.
+  const k = kindOf(s) === "on" && lights.includes(d.entity) ? "on lit" : kindOf(s);
   const h = pressHandlers(ctx, d.entity);
   const ago = timeAgo(ctx.hass, stamp(s, ctx.config.appearance?.time_display));
   return html`<button class="dev ${k}" title=${stampTitle(ctx.hass, s) || d.entity}
@@ -130,6 +131,7 @@ export const renderRoom = (ctx: Ctx) => {
   const badge = ctx.badges.get(r.id);
   const devs = r.devices ?? [];
   const img = imageUrl(ctx.config, r);
+  const mood = img ? lightMood(ctx, r) : undefined;
   const tone = t === undefined ? "" : t < 16 ? "#5EC8FF" : t > 30 ? "var(--atlas-crit)" : "var(--atlas-accent)";
   const summary = [t !== undefined ? fmtTemp(t) : "", h !== undefined ? fmtHum(h) : "", `${devs.length} device${devs.length === 1 ? "" : "s"}`].filter(Boolean).join(" · ");
   const hasClimate = r.temperature || r.humidity;
@@ -183,10 +185,10 @@ export const renderRoom = (ctx: Ctx) => {
         ${ownCards(ctx, r.side_cards, "side")}
       </div>
       <div class="col">
-        <section class="glass card devcard ${img ? "has-img" : ""}" style="flex:1;padding:18px">
-          ${img ? html`<img class="devbg" src=${img} alt="" /><span class="devshade" aria-hidden="true"></span>` : nothing}
+        <section class="glass card devcard ${img ? "has-img" : ""} ${mood ? `mood ${mood.state}` : ""}" style="flex:1;padding:18px;${mood?.vars ?? ""}">
+          ${img ? html`<img class="devbg" src=${img} alt="" />${mood ? html`<span class="devglow" aria-hidden="true"></span>` : nothing}<span class="devshade" aria-hidden="true"></span>` : nothing}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
-          ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d, mood?.ids ?? []))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
         ${automationsCard(ctx, r)}
         ${ownCards(ctx, r.cards, "main")}

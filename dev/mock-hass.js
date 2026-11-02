@@ -44,9 +44,9 @@ contact("binary_sensor.attic_window", false, "window"); motion("binary_sensor.at
 th("kids_room", 23.3, 48); cam("camera.kids_room", "Kids room camera", "kids-room.jpg");
 contact("binary_sensor.kids_room_window_left", false, "window"); contact("binary_sensor.kids_room_window_right", false, "window");
 na("binary_sensor.kids_room_motion"); na("light.kids_room_fan_light"); na("fan.kids_room_fan");
-th("office", 23.9, 39); contact("binary_sensor.office_door", true); contact("binary_sensor.office_window", false, "window");
+th("office", 23.9, 39); add("switch.office_ceiling_relay", "on", { friendly_name: "Office ceiling relay" }); contact("binary_sensor.office_door", true); contact("binary_sensor.office_window", false, "window");
 na("light.office_fan_light"); add("fan.office_fan", "unknown");
-th("bedroom", 23.3, 49); add("light.bedroom_canopy", "off"); add("light.bedroom_wardrobe", "off");
+th("bedroom", 23.3, 49); add("light.bedroom_canopy", "on", { brightness: 102 }); add("light.bedroom_wardrobe", "off");
 add("media_player.bedroom_tv", "off", { friendly_name: "Bedroom TV", source_list: ["HDMI 1", "Live TV", "Netflix"] });
 th("hallway", 22.8, 43); motion("binary_sensor.hallway_motion"); contact("binary_sensor.stair_window", false, "window"); contact("binary_sensor.hallway_skylight", false, "window");
 contact("binary_sensor.bathroom_door", true); motion("binary_sensor.bathroom_motion"); contact("binary_sensor.bathroom_skylight", false, "window");

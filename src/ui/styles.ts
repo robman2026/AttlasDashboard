@@ -225,7 +225,7 @@ export const styles = css`
   .dev.na .chipi { background: rgba(241, 245, 255, 0.06); color: var(--atlas-dim); }
   /* Room image is only the backdrop of the Devices card. */
   .devcard { position: relative; overflow: hidden; }
-  .devcard > :not(.devbg):not(.devshade) { position: relative; }
+  .devcard > :not(.devbg):not(.devshade):not(.devglow) { position: relative; }
   .devbg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
   .devshade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10, 12, 16, 0.72) 0%, rgba(10, 12, 16, 0.45) 45%, rgba(10, 12, 16, 0.7) 100%); }
   .devcard.has-img .dev:not(.on):not(.open):not(.na) { background: rgba(14, 16, 20, 0.58); border-color: rgba(188, 200, 222, 0.16); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
@@ -273,6 +273,20 @@ export const styles = css`
   .camname { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; min-width: 0; }
   .camname button { padding: 2px 0; font-weight: 600; }
   .camname button:hover { color: var(--atlas-accent); }
+
+  /* ---------- light mood: room photos follow the room lights ---------- */
+  .tright { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
+  .tile.mood img, .devcard.mood .devbg { filter: brightness(var(--lb, 1)) saturate(var(--ls, 1)); transition: filter 0.6s ease; }
+  .tile .glow, .devglow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 80% at 50% 10%, rgba(255, 190, 110, var(--lg, 0)), transparent 60%); }
+  .tile.mood.dark .glow, .devcard.mood.dark .devglow { background: rgba(10, 14, 24, 0.35); }
+  .tile.mood.lit, .devcard.mood.lit { border-color: rgba(255, 191, 87, 0.55); box-shadow: 0 0 28px rgba(255, 180, 90, 0.22); }
+  .lchip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+  .lchip.dark { background: rgba(0, 0, 0, 0.55); color: var(--atlas-text2); }
+  .lchip.part { background: rgba(255, 191, 87, 0.18); color: #ffd9a0; border-color: rgba(255, 191, 87, 0.45); }
+  .lchip.lit { background: var(--atlas-warn); color: #2a1a00; }
+  .dev.on.lit { background: rgba(255, 191, 87, 0.14); border-color: rgba(255, 191, 87, 0.5); }
+  .dev.on.lit .chipi { background: rgba(255, 191, 87, 0.2); color: var(--atlas-warn); }
+  .dev.on.lit .txt span { color: var(--atlas-warn); }
 
   /* ---------- room status strip ---------- */
   .strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
@@ -399,6 +413,7 @@ export const styles = css`
     .home-grid, .room-grid, .energy-top { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 760px) {
+    .lchip { padding: 2px 7px; font-size: 10px; }
     .tile .name, .tile .hum { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tile .info { flex: 1; }
     .camsec > .row { flex-wrap: wrap; }

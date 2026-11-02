@@ -171,7 +171,7 @@ const quickActions = (ctx: Ctx) => {
       <button class="qa" @click=${() =>
         lightsOn.length
           ? ctx.confirm("Turn lights off?", `${lightsOn.length} light${lightsOn.length > 1 ? "s are" : " is"} on in mapped rooms (status LEDs excluded).`,
-              () => ctx.call("light", "turn_off", { entity_id: lightsOn }), "Turn off")
+              () => ctx.call("homeassistant", "turn_off", { entity_id: lightsOn }), "Turn off")
           : ctx.confirm("All lights are off", "No mapped room light is on.", () => undefined, "OK")}>
         ${icon("lights-off", 20)}Lights off${lightsOn.length ? html` <span class="n t2">${lightsOn.length}</span>` : nothing}
       </button>

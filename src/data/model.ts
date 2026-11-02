@@ -1,6 +1,7 @@
 // Read helpers over the strategy config (rooms, floors, entity lookup).
 import type { AtlasConfig, EnergyMeter, FloorConfig, RoomConfig } from "../config/types";
 import { DEFAULT_ACCENT, DEFAULT_IMAGE_PATH } from "../config/constants";
+import type { HomeAssistant } from "./hass";
 import { SHIPPED_IMAGES } from "../config/images.generated";
 
 export const rooms = (c: AtlasConfig): RoomConfig[] => c.rooms ?? [];
@@ -97,11 +98,34 @@ export const mappedEntities = (c: AtlasConfig): string[] => {
 };
 
 /** Light entities in rooms, minus excluded status LEDs. */
-export const roomLights = (c: AtlasConfig): string[] => {
+export const roomLights = (c: AtlasConfig): string[] => [...new Set(rooms(c).flatMap((r) => roomLightEntities(c, r)))];
+
+/**
+ * Entities that count as a room's lights (light mood, Lights chip, Lights off):
+ * the room's light_entities when set (any light / switch / input_boolean, e.g. Tasmota
+ * relays), otherwise its light.* devices minus the excluded status LEDs.
+ */
+export const roomLightEntities = (c: AtlasConfig, r?: RoomConfig): string[] => {
+  if (!r) return [];
+  if (r.light_entities?.length) return r.light_entities;
   const excluded = new Set(c.entities?.exclude_lights ?? []);
-  const out: string[] = [];
-  for (const r of rooms(c))
-    for (const d of r.devices ?? [])
-      if (d.entity.startsWith("light.") && !excluded.has(d.entity)) out.push(d.entity);
-  return out;
+  return (r.devices ?? []).map((d) => d.entity).filter((id) => id.startsWith("light.") && !excluded.has(id));
+};
+
+/**
+ * How lit a room is: level 0..1 = average over its lights, where an on light counts
+ * its brightness (brightness / 255, or 1 for a switch or a light without brightness)
+ * and off / unavailable counts 0.
+ */
+export const roomLightLevel = (hass: HomeAssistant, ids: string[]) => {
+  let on = 0;
+  let sum = 0;
+  for (const id of ids) {
+    const s = hass.states[id];
+    if (s?.state !== "on") continue;
+    on++;
+    const b = s.attributes.brightness;
+    sum += typeof b === "number" ? Math.max(0.05, Math.min(1, b / 255)) : 1;
+  }
+  return { on, total: ids.length, level: ids.length ? sum / ids.length : 0, brightness: on ? Math.round((sum / on) * 100) : 0 };
 };
