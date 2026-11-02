@@ -21,6 +21,19 @@ export const roomsOnFloor = (c: AtlasConfig, floorId?: string) => rooms(c).filte
 export const cameraOf = (room?: RoomConfig): string | undefined =>
   room && room.show_camera !== false ? room.camera || undefined : undefined;
 
+/**
+ * Cameras of a floor, one entry per camera entity (in room order). A camera set in
+ * several rooms (one camera covering two spaces) appears once, with all its rooms.
+ */
+export const floorCameraGroups = (c: AtlasConfig, floorId: string): { camera: string; rooms: RoomConfig[] }[] => {
+  const groups = new Map<string, RoomConfig[]>();
+  for (const r of roomsOnFloor(c, floorId)) {
+    const cam = cameraOf(r);
+    if (cam) groups.set(cam, [...(groups.get(cam) ?? []), r]);
+  }
+  return [...groups].map(([camera, rs]) => ({ camera, rooms: rs }));
+};
+
 /** Room that maps an entity (climate sensors, camera or device list). */
 export const roomOfEntity = (c: AtlasConfig, entityId: string): RoomConfig | undefined =>
   rooms(c).find(

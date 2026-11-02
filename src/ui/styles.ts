@@ -266,7 +266,9 @@ export const styles = css`
   .main.fit .tiles.floor .tile .temp { font-size: 20px; }
   .main.fit .tiles.floor .tile .top .ic { width: 20px; height: 20px; }
   .camwall.fitwall { flex: 1 1 auto; min-height: 0; grid-template-columns: repeat(var(--fcols, var(--cols, 3)), var(--fw, minmax(0, 1fr))); justify-content: center; align-content: center; }
-  .camname { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; }
+  .camname { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14px; font-weight: 600; padding: 2px 4px; min-width: 0; }
+  .camname button { padding: 2px 0; font-weight: 600; }
+  .camname button:hover { color: var(--atlas-accent); }
 
   /* ---------- room status strip ---------- */
   .strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }

@@ -539,6 +539,7 @@ strategy:
       floor: basement
       icon: power
       image: laundry.jpg
+      camera: camera.workshop
       cards:
         - type: tile
           entity: sensor.washer_power
