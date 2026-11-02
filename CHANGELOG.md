@@ -5,6 +5,8 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Light mood: room photos follow the room lights. Off: darker, desaturated, cool; on: brighter with a warm glow, brightness following the light level (average brightness over the room's lights); full: amber edge. Room tiles show a light chip ("Off", "1 on · 40 %", "3 on"); in the room view the Devices background follows the same rule and lights that are on get an amber tile. 0.6 s fade. Rooms without lights are unchanged. Option `appearance.light_mood` (default on).
+- Room option `light_entities`: which entities count as the room's lights (light, switch, input_boolean), e.g. Tasmota relays that power lamps. Used by the light mood, the room Lights chip and the Home "Lights off" action. Empty: the room's `light.*` devices minus the excluded status LEDs.
 - Room image `guest-room.jpg` (guest room).
 - Automatic room image: a room without `image` uses the shipped image whose name matches the room id (`laundry` -> `laundry.jpg`, `guest_room` -> `guest-room.jpg`, `workshop` -> `workshop.jpg`). `image: none` turns it off. Only with the shipped images (no custom image base URL).
 - Editor: the room Image field is a picker listing every shipped image (typing a file name or URL still works).
@@ -28,6 +30,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Room Lights chip and Home "Lights off" use `homeassistant.turn_on` / `turn_off`, so switches used as lights work too.
 - Floor camera wall fits the window on tablet and desktop: the floor's Rooms page becomes one window tall (compact floor cards and room tiles) and the cameras get the remaining space; the column count is chosen for the largest 16:9 tiles that fit and recalculated on resize. Phone keeps the stacked, scrolling layout.
 - Room camera starts the live stream (muted) as soon as the room opens; no tap needed. A still frame is shown while the stream element loads. `camera_private` still hides it behind Reveal.
 - Room image is now only the backdrop of the Devices card (darkened, tiles on frosted glass); the separate picture block is gone.

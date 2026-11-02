@@ -89,6 +89,7 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | Entity `last_changed` / `last_updated` | "Time ago" on device tiles and climate values | home-assistant-js-websocket `HassEntity` type |
 | `window.loadCardHelpers()` then `createCardElement(config)`, `ll-rebuild` event | Own cards in rooms | frontend `src/panels/lovelace/ha-panel-lovelace.ts`, `custom-card-helpers.ts` (2026-11-01) |
 | `button.press`, `automation.toggle`, automation `last_triggered` | 3D printer job buttons, Automations card | home-assistant.io `source/_actions/automation.toggle.markdown` (2026-11-01); printer entity names from greghesp/ha-bambulab `definitions.py`, `button.py` (2026-11-01) |
+| `homeassistant.turn_on` / `turn_off` (any domain) | Room Lights chip, Home "Lights off" (lights and switches together) | home-assistant.io `source/_actions/homeassistant.turn_off.markdown` (2026-11-02) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
 The frontend source was read from the `dev` branch on 2026-10-31 and targets HA 2026.10.

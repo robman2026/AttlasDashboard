@@ -34,6 +34,7 @@ Editor tab: **General**. Look of the dashboard. Each device can override style a
 | `ambience` | graphite \| midnight \| deep_teal \| violet_night \| warm | graphite | Ambience. Background colour mood behind the glass. |
 | `background` | room id | first room | Home background image (room). Room whose image is the blurred Home background. Room views always use their own image. |
 | `time_display` | changed \| updated \| off | changed | Time shown on device tiles. changed: time since the state last changed (HA last_changed). updated: time since the entity last reported anything (HA last_updated). off: hide. |
+| `light_mood` | boolean | true | Room photos follow the lights. Room photos get darker when the room's lights are off and light up (warm glow) when they are on; brightness follows the light level. Rooms without lights stay unchanged. |
 | `image_path` | URL | rooms/ next to atlas-home.js | Room image base URL. Where room images are loaded from. Example for own photos: /local/atlas/rooms/ |
 
 ## Global entities (`entities`)
@@ -116,6 +117,7 @@ A list; each item has:
 | `camera_hq` | entity (camera) |  | Camera high quality stream. Optional, reserved for a quality switch. |
 | `camera_snapshot` | entity (camera) |  | Snapshot camera. Optional. Snapshot uses this entity's picture, else the live camera's. |
 | `camera_private` | boolean | false | Private camera. Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens. |
+| `light_entities` | list of entity (light, switch, input_boolean) |  | Light entities. What counts as this room's lights for the photo effect, the Lights chip and Lights off, e.g. Tasmota relays (switch.*) that power lamps. Empty: the room's light.* devices, minus the excluded status LEDs. |
 | `climate_extra` | list |  | Extra climate values. More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history. |
 | `automations` | list of entity (automation) |  | Automations. Shows an Automations card with an on/off switch and the last run time for each. |
 | `printer_name` | text |  | Printer name. Title of the 3D printer card. The card appears when a status or progress sensor is set. |
@@ -295,11 +297,16 @@ strategy:
       image: office.jpg
       temperature: sensor.office_temperature
       humidity: sensor.office_humidity
+      light_entities:
+        - switch.office_ceiling_relay
+        - light.office_fan_light
       devices:
         - entity: binary_sensor.office_door
           name: Door
         - entity: binary_sensor.office_window
           name: Window
+        - entity: switch.office_ceiling_relay
+          name: Ceiling lamp
         - entity: light.office_fan_light
           name: Fan light
         - entity: fan.office_fan

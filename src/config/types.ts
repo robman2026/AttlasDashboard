@@ -11,6 +11,7 @@ export interface AppearanceConfig {
   background?: string; // room id whose image is the Home background
   image_path?: string; // base URL for room images, default: rooms/ next to the bundle
   time_display?: TimeDisplay; // relative time on device tiles and climate values
+  light_mood?: boolean; // room photos follow the room lights (default true)
 }
 
 /** changed: HA last_changed (state change). updated: HA last_updated (any update). off: hidden. */
@@ -84,6 +85,7 @@ export interface RoomConfig {
   show_camera?: boolean; // default true; false hides the whole camera section
   cards?: CardConfig | CardConfig[]; // own cards below the Devices card (e.g. washer, dryer); one card or a list
   side_cards?: CardConfig | CardConfig[]; // own cards in the left column below the camera (e.g. a remote)
+  light_entities?: string[]; // what counts as this room's lights (light, switch, input_boolean); default: its light.* devices
   climate_extra?: DeviceConfig[]; // extra values in the Climate card (CO2, pressure, VOC, ...)
   automations?: string[]; // automation entities shown with on/off toggles
   // 3D printer card (any integration; names below match ha-bambulab entities)

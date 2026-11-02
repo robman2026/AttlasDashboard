@@ -96,6 +96,7 @@ export class AtlasView extends LitElement {
       // (a printer that is switched off reports unavailable).
       ...rooms(c).flatMap((r) => [
         ...(r.climate_extra ?? []).map((d) => d.entity),
+        ...(r.light_entities ?? []),
         ...(r.automations ?? []),
         r.printer_status, r.printer_progress, r.printer_remaining, r.printer_nozzle, r.printer_bed,
         r.printer_chamber, r.printer_light, r.printer_picture,
