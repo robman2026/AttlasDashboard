@@ -763,7 +763,8 @@ var pt = {
 		{
 			id: "attic",
 			level: "+2",
-			name: "Attic"
+			name: "Attic",
+			cameras: "live"
 		},
 		{
 			id: "first",
@@ -2881,7 +2882,11 @@ var V = (e) => e.split(".")[0], H = (e, t) => t && e ? e.states[t] : void 0, U =
   .main.fit .fl { min-height: 0; padding: 10px 14px; justify-content: flex-start; }
   .main.fit .fl .lv { font-size: 22px; line-height: 1.15; }
   .main.fit .roomsec, .main.fit .camsec { min-height: 0; overflow: hidden; }
-  .main.fit .roomsec .tiles.floor { flex: 1; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 10px; }
+  .main.fit .roomsec .tiles.floor { flex: 1; min-height: 0; grid-template-columns: repeat(var(--rcols, 2), minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 10px; }
+  /* Odd number of rooms: the last tile spans the row, no half-empty row. */
+  .main.fit .fitgrid:not(.single) .tiles.floor .tile:last-child:nth-child(odd) { grid-column: span 2; }
+  /* Single room: the tile fills the left card; the narrower left side gives the cameras more width. */
+  .main.fit > .fitgrid.single { grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); }
   .main.fit .tiles.floor .tile { padding: 10px 12px; min-height: 0; }
   .main.fit .tiles.floor .tile .temp { font-size: 20px; }
   .main.fit .tiles.floor .tile .top .ic { width: 20px; height: 20px; }
@@ -3449,7 +3454,7 @@ var Mt = Ot(jt), Nt = {
         </button>`;
 	})}
     </div>
-    ${s ? A`<div class="fitgrid">${c}${o}</div>` : A`${c}${o}`}
+    ${s ? A`<div class="fitgrid ${a.length === 1 ? "single" : ""}" style="--rcols:${a.length === 1 ? 1 : 2}">${c}${o}</div>` : A`${c}${o}`}
   `;
 }, ln = 6e4, un = 36e5, dn = 864e5, fn = (e, t, n = Date.now()) => {
 	let r = t ? Date.parse(t) : NaN;

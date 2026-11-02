@@ -82,6 +82,8 @@ export const renderRooms = (ctx: Ctx) => {
         </button>`;
       })}
     </div>
-    ${fit ? html`<div class="fitgrid">${roomsCard}${wall}</div>` : html`${roomsCard}${wall}`}
+    ${fit
+      ? html`<div class="fitgrid ${list.length === 1 ? "single" : ""}" style="--rcols:${list.length === 1 ? 1 : 2}">${roomsCard}${wall}</div>`
+      : html`${roomsCard}${wall}`}
   `;
 };

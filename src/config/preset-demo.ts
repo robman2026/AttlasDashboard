@@ -34,7 +34,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     data_quality: true,
   },
   floors: [
-    { id: "attic", level: "+2", name: "Attic" },
+    { id: "attic", level: "+2", name: "Attic", cameras: "live" },
     { id: "first", level: "+1", name: "First floor" },
     { id: "ground", level: "0", name: "Ground floor" },
     { id: "basement", level: "-1", name: "Basement", cameras: "live" },
