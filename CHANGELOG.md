@@ -39,6 +39,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Version is read from `package.json` at build time (single source).
 
 ### Fixed
+- Camera-wall floor page with a single room (e.g. an attic) looked lopsided: the one tile used half of the left card. It now fills the whole card and the left side is narrower, so the cameras get more width. With an odd number of rooms the last tile spans the full row.
 - Floor camera wall showed a camera twice when two rooms use the same camera entity. Each camera now appears once, labeled with all its rooms (e.g. "Workshop · Laundry"); each name opens its room. If any of those rooms marks the camera private, it stays hidden. Demo house: Laundry shares the Workshop camera.
 - Phone: room tile text no longer wraps over the arrow button (name and details are cut with "..." instead), and the camera wall header wraps cleanly.
 - Floor cards on a camera-wall page no longer overflow: they were a fixed 84 px tall and the summary line spilled over the bottom border with taller fonts (e.g. Windows). They now size to their content; normal floor cards use a minimum height instead of a fixed one.

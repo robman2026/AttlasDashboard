@@ -241,6 +241,7 @@ strategy:
     - id: attic
       level: "+2"
       name: Attic
+      cameras: live
     - id: first
       level: "+1"
       name: First floor
