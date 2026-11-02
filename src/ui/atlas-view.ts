@@ -6,7 +6,7 @@ import { ACCENT_PRESETS } from "../config/constants";
 import type { HomeAssistant } from "../data/hass";
 import { isInvalid, num, stateObj, formatState } from "../data/hass";
 import { evaluateAlerts, roomBadges, type AtlasAlert } from "../data/alerts";
-import { accentOf, cameraOf, energyMeters, floorById, floors, imageUrl, mappedEntities, meterEntities, roomById, rooms, roomsOnFloor } from "../data/model";
+import { accentOf, cameraOf, energyMeters, floorById, floorCameraGroups, floors, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
 import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
 import type { AtlasHuiCard } from "./embedded-card";
@@ -113,8 +113,7 @@ export class AtlasView extends LitElement {
     const f = floorById(c.atlas, c.floor) ?? floors(c.atlas)[0];
     const mode = f?.cameras ?? "off";
     if (mode === "off") return { mode, cameras: [] };
-    const cams = roomsOnFloor(c.atlas, f!.id).map((r) => cameraOf(r)).filter((x): x is string => !!x);
-    return { mode, cameras: cams };
+    return { mode, cameras: floorCameraGroups(c.atlas, f!.id).map((g) => g.camera) };
   }
 
   getCardSize() {

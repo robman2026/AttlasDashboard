@@ -212,6 +212,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "laundry", name: "Laundry", floor: "basement", icon: "power", image: "laundry.jpg",
+      camera: "camera.workshop", // one camera covers workshop and laundry: shown once on the camera wall
       // Own cards: any Lovelace card config, e.g. a custom washer / dryer card.
       cards: [
         { type: "tile", entity: "sensor.washer_power", name: "Washer" },
