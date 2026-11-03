@@ -2846,14 +2846,18 @@ var H = (e) => e.split(".")[0], U = (e, t) => t && e ? e.states[t] : void 0, W =
   .fl small { font-size: 12px; opacity: 0.85; }
 
   /* ---------- room view ---------- */
-  .crumb { padding: 4px 26px 0; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--atlas-text2); }
-  .crumb button { padding: 6px 0; }
+  /* Compact room header: breadcrumb line, then title + summary, status chips and prev / next on one row. */
+  .crumb { padding: 0 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--atlas-text2); margin-bottom: -8px; }
+  .crumb button { padding: 2px 0; }
   .crumb b { color: var(--atlas-text); }
-  .rhead { padding: 0 26px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
-  .rhead .title { display: flex; align-items: center; gap: 16px; }
-  .rhead h1 { font-size: 56px; font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
-  .rhead .badge { font-size: 13px; padding: 5px 12px; border-radius: 8px; }
-  .rhead p { margin-top: 8px; font-size: 16px; }
+  .rhead { padding: 0 20px; display: flex; align-items: center; gap: 10px 20px; flex-wrap: wrap; }
+  .rhead .rtitle { min-width: 0; }
+  .rhead .title { display: flex; align-items: center; gap: 12px; }
+  .rhead h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; white-space: nowrap; }
+  .rhead .badge { font-size: 12px; padding: 4px 10px; border-radius: 8px; }
+  .rhead p { margin-top: 2px; font-size: 14px; }
+  .rhead .strip { margin-top: 0; }
+  .rnav { display: flex; gap: 8px; margin-left: auto; }
   .room-grid { flex: 1; display: grid; grid-template-columns: 400px minmax(0, 1fr); grid-template-areas: "left main"; gap: 16px; }
   .room-grid > .lcol { grid-area: left; }
   .room-grid > .mcol { grid-area: main; }
@@ -3121,7 +3125,7 @@ var H = (e) => e.split(".")[0], U = (e, t) => t && e ? e.states[t] : void 0, W =
     .floors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .alist { grid-template-columns: minmax(0, 1fr); }
     .crumb, .rhead { padding: 0 6px; }
-    .rhead h1 { font-size: 36px; }
+    .rhead h1 { font-size: 30px; }
     .devs, .room-grid.has-side .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 76px; }
     .egrid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .ecard { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 8px 12px; padding: 12px; }
@@ -3722,12 +3726,12 @@ var Pt = At(Nt), Ft = {
       <b>${t.name}</b>
     </nav>
     <section class="rhead">
-      <div>
-        <div class="title">${q(t.icon, 44)}<h1>${t.name}</h1>${l ? j`<span class="badge ${l.severity === "critical" ? "critical" : ""}">${l.text}</span>` : P}</div>
+      <div class="rtitle">
+        <div class="title">${q(t.icon, 32)}<h1>${t.name}</h1>${l ? j`<span class="badge ${l.severity === "critical" ? "critical" : ""}">${l.text}</span>` : P}</div>
         <p class="n t2">${n ? j`${n.name} <span style="opacity:.5">·</span> ` : P}${ee}</p>
-        ${xn(e, t)}
       </div>
-      ${r.length > 1 ? j`<div style="display:flex;gap:8px">
+      ${xn(e, t)}
+      ${r.length > 1 ? j`<div class="rnav">
             <button class="ctl" aria-label="Previous room" @click=${() => e.openRoom(a)}>‹ ${a.name}</button>
             <button class="ctl" aria-label="Next room" @click=${() => e.openRoom(o)}>${o.name} ›</button>
           </div>` : P}
@@ -3998,7 +4002,7 @@ var Pt = At(Nt), Ft = {
 	5
 ].map((t) => parseInt(e.slice(t, t + 2), 16)).join(","), Yn = {}, Xn = class extends L {
 	constructor() {
-		super(), this._onMq = (e) => this._narrow = e.matches, this._call = async (e, t, n) => {
+		super(), this._onResize = () => this._side && this._fitSide(this._side), this._onMq = (e) => this._narrow = e.matches, this._call = async (e, t, n) => {
 			try {
 				await this.hass.callService(e, t, n);
 			} catch (n) {
@@ -4060,15 +4064,31 @@ var Pt = At(Nt), Ft = {
 		this._timer = window.setInterval(() => this._tick = Date.now(), e), this._mq = window.matchMedia("(max-width: 760px)"), this._narrow = this._mq.matches, this._mq.addEventListener("change", this._onMq);
 	}
 	disconnectedCallback() {
-		super.disconnectedCallback(), window.clearInterval(this._timer), this._mq?.removeEventListener("change", this._onMq), this._ro?.disconnect(), this._wall = void 0;
+		super.disconnectedCallback(), window.clearInterval(this._timer), this._mq?.removeEventListener("change", this._onMq), this._ro?.disconnect(), this._wall = void 0, this._sideRo?.disconnect(), this._side = void 0, window.removeEventListener("resize", this._onResize);
 	}
 	_fitPage() {
 		let e = this._floorCameras();
 		return !this._narrow && e.mode !== "off" && e.cameras.length > 0;
 	}
 	updated() {
+		this._watchSide();
 		let e = this.renderRoot.querySelector(".camwall.fitwall") ?? void 0;
 		e !== this._wall && (this._ro?.disconnect(), this._wall = e, e && (this._ro = new ResizeObserver(() => this._fitWall(e)), this._ro.observe(e)));
+	}
+	_watchSide() {
+		let e = this.renderRoot.querySelector(".room-grid.has-side > .scol") ?? void 0;
+		e !== this._side && (this._sideRo?.disconnect(), window.removeEventListener("resize", this._onResize), this._side = e, e?.firstElementChild && (this._sideRo = new ResizeObserver(() => this._fitSide(e)), this._sideRo.observe(e.firstElementChild), window.addEventListener("resize", this._onResize)));
+	}
+	_fitSide(e) {
+		let t = e.firstElementChild;
+		if (!t) return;
+		let n = window.innerWidth > 1200, r = Number(e.style.zoom || 1), i = t.getBoundingClientRect().height / r, a = this.renderRoot.querySelector(".root");
+		if (!n || !a || !i) {
+			e.style.zoom && (e.style.zoom = "");
+			return;
+		}
+		let o = parseFloat(getComputedStyle(this).getPropertyValue("--header-height")) || 0, s = e.getBoundingClientRect().top - a.getBoundingClientRect().top + o, c = window.innerHeight - s - 16, l = Math.max(.75, Math.min(1, c / i)), u = l > .995 ? "" : l.toFixed(3);
+		e.style.zoom !== u && (e.style.zoom = u);
 	}
 	_fitWall(e) {
 		let t = e.children.length, n = e.clientWidth, r = e.clientHeight;

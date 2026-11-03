@@ -30,6 +30,8 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Room view, wide screens: if the own-cards column (e.g. a tall remote) is taller than the space left in the window, it is scaled down to fit (CSS `zoom`, not below 75 %, only shrinks). Recalculated on resize and when the cards change size.
+- Room view header is compact: a small breadcrumb line, then icon, title (40 px instead of 56 px) and summary, the status chips and previous / next on one row. The room content starts about 100 px higher, so tall cards such as a remote fit on smaller laptops.
 - Room Lights chip and Home "Lights off" use `homeassistant.turn_on` / `turn_off`, so switches used as lights work too.
 - Floor camera wall fits the window on tablet and desktop: the floor's Rooms page becomes one window tall (compact floor cards and room tiles) and the cameras get the remaining space; the column count is chosen for the largest 16:9 tiles that fit and recalculated on resize. Phone keeps the stacked, scrolling layout.
 - Room camera starts the live stream (muted) as soon as the room opens; no tap needed. A still frame is shown while the stream element loads. `camera_private` still hides it behind Reveal.

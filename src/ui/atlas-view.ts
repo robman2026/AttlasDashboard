@@ -138,6 +138,9 @@ export class AtlasView extends LitElement {
     this._mq?.removeEventListener("change", this._onMq);
     this._ro?.disconnect();
     this._wall = undefined;
+    this._sideRo?.disconnect();
+    this._side = undefined;
+    window.removeEventListener("resize", this._onResize);
   }
 
   /** Rooms page with a camera wall on a wide screen: the page is one window tall, no scrolling. */
@@ -150,6 +153,7 @@ export class AtlasView extends LitElement {
   private _wall?: HTMLElement;
 
   protected updated() {
+    this._watchSide();
     const wall = this.renderRoot.querySelector<HTMLElement>(".camwall.fitwall") ?? undefined;
     if (wall === this._wall) return;
     this._ro?.disconnect();
@@ -157,6 +161,47 @@ export class AtlasView extends LitElement {
     if (!wall) return;
     this._ro = new ResizeObserver(() => this._fitWall(wall));
     this._ro.observe(wall);
+  }
+
+  private _sideRo?: ResizeObserver;
+  private _side?: HTMLElement;
+  private _onResize = () => this._side && this._fitSide(this._side);
+
+  /** Watch the room view's own-cards column (third column on wide screens). */
+  private _watchSide() {
+    const side = this.renderRoot.querySelector<HTMLElement>(".room-grid.has-side > .scol") ?? undefined;
+    if (side === this._side) return;
+    this._sideRo?.disconnect();
+    window.removeEventListener("resize", this._onResize);
+    this._side = side;
+    if (!side?.firstElementChild) return;
+    this._sideRo = new ResizeObserver(() => this._fitSide(side));
+    this._sideRo.observe(side.firstElementChild);
+    window.addEventListener("resize", this._onResize);
+  }
+
+  /**
+   * Third column on wide screens: if its cards (e.g. a tall remote) are taller than the
+   * space left in the window, scale the column down (CSS zoom, not below 75 %) so it
+   * fits without scrolling. Only shrinks, never enlarges; off in the stacked layouts.
+   */
+  private _fitSide(side: HTMLElement) {
+    const inner = side.firstElementChild as HTMLElement | null;
+    if (!inner) return;
+    const besides = window.innerWidth > 1200; // matches the 3-column breakpoint in styles.ts
+    const zoom = Number(side.style.zoom || 1);
+    const natural = inner.getBoundingClientRect().height / zoom;
+    const root = this.renderRoot.querySelector<HTMLElement>(".root");
+    if (!besides || !root || !natural) {
+      if (side.style.zoom) side.style.zoom = "";
+      return;
+    }
+    const header = parseFloat(getComputedStyle(this).getPropertyValue("--header-height")) || 0;
+    const top = side.getBoundingClientRect().top - root.getBoundingClientRect().top + header;
+    const avail = window.innerHeight - top - 16;
+    const z = Math.max(0.75, Math.min(1, avail / natural));
+    const next = z > 0.995 ? "" : z.toFixed(3);
+    if (side.style.zoom !== next) side.style.zoom = next;
   }
 
   /** Largest 16:9 tiles that fit n cameras into the wall's box: try every column count, keep the biggest. */
