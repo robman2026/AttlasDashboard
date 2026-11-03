@@ -192,7 +192,15 @@ export const styles = css`
   .rhead h1 { font-size: 56px; font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
   .rhead .badge { font-size: 13px; padding: 5px 12px; border-radius: 8px; }
   .rhead p { margin-top: 8px; font-size: 16px; }
-  .room-grid { flex: 1; display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 16px; }
+  .room-grid { flex: 1; display: grid; grid-template-columns: 400px minmax(0, 1fr); grid-template-areas: "left main"; gap: 16px; }
+  .room-grid > .lcol { grid-area: left; }
+  .room-grid > .mcol { grid-area: main; }
+  .room-grid > .scol { grid-area: side; }
+  /* Room with own left-column cards (e.g. a tall remote): third column on wide screens. */
+  .room-grid.has-side { grid-template-columns: minmax(280px, min(26%, 360px)) minmax(0, 1fr) minmax(300px, min(28%, 400px)); grid-template-areas: "left main side"; }
+  .room-grid.has-side .devs { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .room-grid.has-side .metric .lbl { flex-wrap: wrap; }
+  .room-grid.has-side .metric .lbl .ago { flex-basis: 100%; margin-left: 0; padding-left: 22px; }
   .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .metric { display: flex; flex-direction: column; gap: 8px; }
   .metric .lbl { font-size: 12px; display: flex; align-items: center; gap: 6px; color: var(--atlas-text2); }
@@ -393,6 +401,11 @@ export const styles = css`
   .bnav { display: none; }
 
   /* ---------- responsive ---------- */
+  /* Medium screens: own cards go below climate and camera; Devices spans the full height. */
+  @media (max-width: 1200px) {
+    .room-grid.has-side { grid-template-columns: 340px minmax(0, 1fr); grid-template-areas: "left main" "side main"; grid-template-rows: auto 1fr; }
+    .room-grid.has-side > .scol { align-self: start; }
+  }
   @media (max-width: 1280px) {
     .home-grid { grid-template-columns: minmax(0, 1fr) 340px; }
     .room-grid { grid-template-columns: 340px minmax(0, 1fr); }
@@ -410,7 +423,9 @@ export const styles = css`
     .logo .lt, .nav .lbl, .user .lbl { display: none; }
     .logo { padding: 0 0 26px; justify-content: center; }
     .nav button { justify-content: center; padding: 0; }
-    .home-grid, .room-grid, .energy-top { grid-template-columns: minmax(0, 1fr); }
+    .home-grid, .room-grid, .room-grid.has-side, .energy-top { grid-template-columns: minmax(0, 1fr); }
+    .room-grid { grid-template-areas: "left" "main"; }
+    .room-grid.has-side { grid-template-areas: "left" "side" "main"; grid-template-rows: auto; }
   }
   @media (max-width: 760px) {
     .lchip { padding: 2px 7px; font-size: 10px; }
@@ -445,7 +460,7 @@ export const styles = css`
     .alist { grid-template-columns: minmax(0, 1fr); }
     .crumb, .rhead { padding: 0 6px; }
     .rhead h1 { font-size: 36px; }
-    .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 76px; }
+    .devs, .room-grid.has-side .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 76px; }
     .egrid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .ecard { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 8px 12px; padding: 12px; }
     .ecard > .row, .ecard > .eextra, .ecard > .ephases { grid-column: 1 / -1; }

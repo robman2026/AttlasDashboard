@@ -42,6 +42,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Version is read from `package.json` at build time (single source).
 
 ### Fixed
+- Room view with own left-column cards (`side_cards`, e.g. a tall remote) on smaller screens: the card was pushed below the window and the Devices card stretched into a large empty photo. From 1200 px wide these cards now get their own third column (side columns scale with the width, device tiles pick their column count); from 1100 to 1200 px they sit below climate and camera while Devices spans the full height; phone and tablet stack them after the camera.
 - Camera-wall floor page with a single room (e.g. an attic) looked lopsided: the one tile used half of the left card. It now fills the whole card and the left side is narrower, so the cameras get more width. With an odd number of rooms the last tile spans the full row.
 - Floor camera wall showed a camera twice when two rooms use the same camera entity. Each camera now appears once, labeled with all its rooms (e.g. "Workshop · Laundry"); each name opens its room. If any of those rooms marks the camera private, it stays hidden. Demo house: Laundry shares the Workshop camera.
 - Phone: room tile text no longer wraps over the arrow button (name and details are cut with "..." instead), and the camera wall header wraps cleanly.
