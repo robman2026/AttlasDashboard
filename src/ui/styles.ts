@@ -184,14 +184,18 @@ export const styles = css`
   .fl small { font-size: 12px; opacity: 0.85; }
 
   /* ---------- room view ---------- */
-  .crumb { padding: 4px 26px 0; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--atlas-text2); }
-  .crumb button { padding: 6px 0; }
+  /* Compact room header: breadcrumb line, then title + summary, status chips and prev / next on one row. */
+  .crumb { padding: 0 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--atlas-text2); margin-bottom: -8px; }
+  .crumb button { padding: 2px 0; }
   .crumb b { color: var(--atlas-text); }
-  .rhead { padding: 0 26px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
-  .rhead .title { display: flex; align-items: center; gap: 16px; }
-  .rhead h1 { font-size: 56px; font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
-  .rhead .badge { font-size: 13px; padding: 5px 12px; border-radius: 8px; }
-  .rhead p { margin-top: 8px; font-size: 16px; }
+  .rhead { padding: 0 20px; display: flex; align-items: center; gap: 10px 20px; flex-wrap: wrap; }
+  .rhead .rtitle { min-width: 0; }
+  .rhead .title { display: flex; align-items: center; gap: 12px; }
+  .rhead h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; white-space: nowrap; }
+  .rhead .badge { font-size: 12px; padding: 4px 10px; border-radius: 8px; }
+  .rhead p { margin-top: 2px; font-size: 14px; }
+  .rhead .strip { margin-top: 0; }
+  .rnav { display: flex; gap: 8px; margin-left: auto; }
   .room-grid { flex: 1; display: grid; grid-template-columns: 400px minmax(0, 1fr); grid-template-areas: "left main"; gap: 16px; }
   .room-grid > .lcol { grid-area: left; }
   .room-grid > .mcol { grid-area: main; }
@@ -459,7 +463,7 @@ export const styles = css`
     .floors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .alist { grid-template-columns: minmax(0, 1fr); }
     .crumb, .rhead { padding: 0 6px; }
-    .rhead h1 { font-size: 36px; }
+    .rhead h1 { font-size: 30px; }
     .devs, .room-grid.has-side .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 76px; }
     .egrid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .ecard { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 8px 12px; padding: 12px; }

@@ -151,13 +151,13 @@ export const renderRoom = (ctx: Ctx) => {
       <b>${r.name}</b>
     </nav>
     <section class="rhead">
-      <div>
-        <div class="title">${icon(r.icon, 44)}<h1>${r.name}</h1>${badge ? html`<span class="badge ${badge.severity === "critical" ? "critical" : ""}">${badge.text}</span>` : nothing}</div>
+      <div class="rtitle">
+        <div class="title">${icon(r.icon, 32)}<h1>${r.name}</h1>${badge ? html`<span class="badge ${badge.severity === "critical" ? "critical" : ""}">${badge.text}</span>` : nothing}</div>
         <p class="n t2">${f ? html`${f.name} <span style="opacity:.5">·</span> ` : nothing}${summary}</p>
-        ${statusStrip(ctx, r)}
       </div>
+      ${statusStrip(ctx, r)}
       ${peers.length > 1
-        ? html`<div style="display:flex;gap:8px">
+        ? html`<div class="rnav">
             <button class="ctl" aria-label="Previous room" @click=${() => ctx.openRoom(prev)}>‹ ${prev.name}</button>
             <button class="ctl" aria-label="Next room" @click=${() => ctx.openRoom(next)}>${next.name} ›</button>
           </div>`
