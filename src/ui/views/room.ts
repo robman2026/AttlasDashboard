@@ -132,6 +132,9 @@ export const renderRoom = (ctx: Ctx) => {
   const devs = r.devices ?? [];
   const img = imageUrl(ctx.config, r);
   const mood = img ? lightMood(ctx, r) : undefined;
+  // Own left-column cards (e.g. a remote) get their own grid area: a third column on
+  // wide screens, below climate and camera on medium ones (see .room-grid.has-side).
+  const side = ownCards(ctx, r.side_cards, "side");
   const tone = t === undefined ? "" : t < 16 ? "#5EC8FF" : t > 30 ? "var(--atlas-crit)" : "var(--atlas-accent)";
   const summary = [t !== undefined ? fmtTemp(t) : "", h !== undefined ? fmtHum(h) : "", `${devs.length} device${devs.length === 1 ? "" : "s"}`].filter(Boolean).join(" · ");
   const hasClimate = r.temperature || r.humidity;
@@ -160,8 +163,8 @@ export const renderRoom = (ctx: Ctx) => {
           </div>`
         : nothing}
     </section>
-    <div class="room-grid">
-      <div class="col">
+    <div class="room-grid ${side !== nothing ? "has-side" : ""}">
+      <div class="col lcol">
         <section class="glass card" style="gap:16px">
           <h2>Climate</h2>
           ${hasClimate
@@ -182,9 +185,9 @@ export const renderRoom = (ctx: Ctx) => {
         </section>
         ${cameraCard(ctx, r)}
         ${printerCard(ctx, r)}
-        ${ownCards(ctx, r.side_cards, "side")}
       </div>
-      <div class="col">
+      ${side !== nothing ? html`<div class="col scol">${side}</div>` : nothing}
+      <div class="col mcol">
         <section class="glass card devcard ${img ? "has-img" : ""} ${mood ? `mood ${mood.state}` : ""}" style="flex:1;padding:18px;${mood?.vars ?? ""}">
           ${img ? html`<img class="devbg" src=${img} alt="" />${mood ? html`<span class="devglow" aria-hidden="true"></span>` : nothing}<span class="devshade" aria-hidden="true"></span>` : nothing}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
