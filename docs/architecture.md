@@ -19,6 +19,7 @@ All `customElements.define` calls are guarded against double registration (`src/
 | `home` | Home | first view, default |
 | `alerts` | Alerts | `subview`, `back_path: home` |
 | `lights` | Lights page (only when some room has lights) | subview |
+| `security` | Security page (only with an alarm, door lists, a camera, or a binary sensor, cover or lock in a room) | subview |
 | `rooms` | Rooms, first floor selected | subview |
 | `floor-<floor id>` | Rooms, that floor selected | subview |
 | `room-<room id>` | Room | subview |
@@ -45,12 +46,14 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/config/constants.ts` | Tags, version (from package.json), defaults |
 | `src/editor/strategy-editor.ts` | Editor built from `fields.ts` with HA `ha-form` |
 | `src/data/hass.ts` | Minimal `hass` types and state helpers (invalid, numeric, power in kW) |
-| `src/data/model.ts` | Config lookups (rooms, floors, images, mapped entities, room lights, `cameraOf` which respects `show_camera`, `floorCameraGroups` which merges rooms sharing a camera) |
+| `src/data/model.ts` | Config lookups (rooms, floors, images, mapped entities, room lights, `cameraOf` which respects `show_camera`, `floorCameraGroups` / `houseCameraGroups` which merge rooms sharing a camera, `hasSecurity`) |
 | `src/data/alerts.ts` | Attention engine ([alerts.md](alerts.md)) |
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
 | `src/ui/devices.ts` | Device tile icon, state kind, text, tap action, cover control rules |
 | `src/ui/views/lights.ts` | Lights page: rooms grouped by floor, tap / hold / drag-to-dim tiles |
+| `src/ui/views/security.ts` | Security page: alarm modes, doors and windows, locks, motion, all cameras; `cameraStill` also used by Home |
+| `src/ui/views/presence.ts` | Presence chips on Home (`entities.persons`) |
 | `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
@@ -102,6 +105,9 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | Timestamp sensor state: ISO date-time in UTC | Vehicle last update | home-assistant.io `source/_integrations/sensor.markdown` (2026-11-15) |
 | `supported_color_modes` brightness rule (brightness, color_temp, hs, xy, rgb, rgbw, rgbww, white) | Lights page: which tiles can be dragged to dim | frontend `src/data/light.ts` (`lightSupportsBrightness`, dev branch 2026-10-31) |
 | `light.turn_on` with `brightness_pct` (0 off, 1 minimum, 100 maximum) | Lights page drag to dim | home-assistant.io `source/_actions/light.turn_on.markdown` (2026-11-15) |
+| `alarm_control_panel` `supported_features` ARM_HOME 1, ARM_AWAY 2, ARM_NIGHT 4, TRIGGER 8, ARM_CUSTOM_BYPASS 16, ARM_VACATION 32; services `alarm_arm_home` / `_away` / `_night` / `_vacation` / `_custom_bypass`, `alarm_disarm`; code needed when `code_format` is set (disarm) or `code_format` and `code_arm_required` (arm); attribute `changed_by` | Security page alarm buttons (code panels open the HA dialog, which also applies a stored default code) | frontend `src/data/alarm_control_panel.ts` (`ALARM_MODES`, `supportedAlarmModes`, `setProtectedAlarmControlPanelMode`, dev branch 2026-11-15); home-assistant.io `source/_integrations/alarm_control_panel.markdown` (states, code, `changed_by`, 2026-11-15) |
+| Alarm states `disarmed`, `armed_home`, `armed_away`, `armed_night`, `armed_vacation`, `armed_custom_bypass`, `arming`, `pending`, `triggered`, `disarming` | Security page alarm colour (armed: accent, arming / pending / disarming: amber, triggered: red) | home-assistant.io `source/_integrations/alarm_control_panel.markdown` (2026-11-15) |
+| `person` state: `home`, `not_home` or a zone name; `entity_picture` | Presence chips on Home | home-assistant.io `source/_integrations/person.markdown` (2026-11-15) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 

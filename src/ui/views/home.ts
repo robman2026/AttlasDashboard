@@ -1,10 +1,11 @@
 import { html, nothing, svg } from "lit";
 import type { Ctx } from "../context";
-import { formatState, isInvalid, num, powerKw, stateObj, domainOf } from "../../data/hass";
-import { cameraOf, energyMeters, roomById, roomLights, rooms } from "../../data/model";
+import { formatState, isInvalid, isOpen, num, powerKw, stateObj, domainOf } from "../../data/hass";
+import { cameraOf, energyMeters, hasSecurity, roomById, roomLights, rooms } from "../../data/model";
 import { icon } from "../icons";
-import { isContact } from "../devices";
 import { fmtTemp, roomTile } from "./common";
+import { cameraStill, securityContacts } from "./security";
+import { presenceRow } from "./presence";
 
 const greeting = () => {
   const h = new Date().getHours();
@@ -114,31 +115,22 @@ const energyCard = (ctx: Ctx) => {
 const securityCard = (ctx: Ctx) => {
   const e = ctx.config.entities ?? {};
   const alarm = stateObj(ctx.hass, e.alarm);
-  const contacts = rooms(ctx.config).flatMap((r) => (r.devices ?? []).map((d) => ctx.hass.states[d.entity])).filter((s) => isContact(s) || (s && domainOf(s.entity_id) === "cover"));
-  const valid = contacts.filter((s) => !isInvalid(s));
-  const open = valid.filter((s) => s.state === "on" || s.state === "open").length;
+  // Same list as the Security page: room contacts and covers plus the alert door lists, mailbox excluded.
+  const contacts = securityContacts(ctx).map((id) => ctx.hass.states[id]);
+  const valid = contacts.filter((s): s is NonNullable<typeof s> => !isInvalid(s));
+  const open = valid.filter((s) => isOpen(s)).length;
   const tiles = (ctx.config.layout?.security_tiles ?? []).map((id) => roomById(ctx.config, id)).filter(Boolean);
   return html`<section class="glass card">
     <div class="row">
-      <h2>${icon("security", 20)}Security</h2>
+      ${hasSecurity(ctx.config)
+        ? html`<button class="h2btn" @click=${() => ctx.go("security")}><h2>${icon("security", 20)}Security${icon("chevron", 14)}</h2></button>`
+        : html`<h2>${icon("security", 20)}Security</h2>`}
       <button class="n t2" style="font-size:12px" @click=${() => e.alarm && ctx.moreInfo(e.alarm)}>
         ${alarm ? (isInvalid(alarm) ? "Alarm unavailable" : formatState(ctx.hass, alarm)) : ""} · ${open} / ${valid.length} open${valid.length < contacts.length ? ` · ${contacts.length - valid.length} n/a` : ""}
       </button>
     </div>
     ${tiles.length
-      ? html`<div class="cams">
-          ${tiles.map((r) => {
-            const camera = cameraOf(r);
-            const cam = stateObj(ctx.hass, camera);
-            const ok = !!cam && !isInvalid(cam) && !!cam.attributes.entity_picture;
-            // Still frame from /api/camera_proxy (width/height scale it server side), refreshed with the 10 s tick.
-            const src = ok ? `${cam!.attributes.entity_picture}&width=640&height=360&t=${Math.floor(ctx.tick / 10_000)}` : undefined;
-            return html`<button class="cam ${ok ? "" : "na"}" aria-label="${r!.name} camera" @click=${() => ctx.openRoom(r!)}>
-              ${src ? html`<img src=${src} alt="" />` : html`<span class="camna">${icon("camera", 22)}${camera ? "Camera unavailable" : "No camera"}</span>`}
-              <span class="lbl"><i class="dotst ${ok ? "" : "na"}"></i>${r!.name}</span>
-            </button>`;
-          })}
-        </div>`
+      ? html`<div class="cams">${tiles.map((r) => cameraStill(ctx, cameraOf(r), r!.name, () => ctx.openRoom(r!)))}</div>`
       : nothing}
   </section>`;
 };
@@ -201,12 +193,15 @@ export const renderHome = (ctx: Ctx) => {
   const alarmTxt = alarm ? (isInvalid(alarm) ? "Alarm unavailable" : `Alarm ${formatState(ctx.hass, alarm).toLowerCase()}`) : "";
   const alarmWarn = alarm && (isInvalid(alarm) || ["triggered", "pending"].includes(alarm.state));
   return html`
-    <section class="hero" aria-label="Greeting">
+    <section class="hero ${e.persons?.length ? "split" : ""}" aria-label="Greeting">
+      <div class="hgreet">
       <h1>${greeting()}</h1>
       <p class="n">
         ${e.heat_pump ? html`Heat pump reads ${inside !== undefined && Number.isFinite(inside) ? `${inside.toFixed(1)} °C` : "–"} indoors` : nothing}
         ${alarmTxt ? html`<span style="opacity:.5"> · </span><span style="color:${alarmWarn ? "var(--atlas-warn)" : "var(--atlas-accent)"};font-weight:600">${alarmTxt}</span>` : nothing}
       </p>
+      </div>
+      ${presenceRow(ctx)}
     </section>
     ${attentionBanner(ctx, ctx.narrow)}
     <div class="home-grid">

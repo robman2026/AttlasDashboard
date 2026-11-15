@@ -13,7 +13,15 @@ const MOTION_CLASSES = ["motion", "occupancy", "presence"];
 export const isContact = (s?: HassEntity) => {
   if (!s || domainOf(s.entity_id) !== "binary_sensor") return false;
   const dc = String(s.attributes.device_class ?? "");
+  if (MOTION_CLASSES.includes(dc)) return false; // e.g. a doorbell's person sensor is not a door
   return DOOR_CLASSES.includes(dc) || has(s.entity_id, "contact", "window", "door", "skylight", "velux");
+};
+
+/** Motion, occupancy or presence sensor (binary_sensor). */
+export const isMotion = (s?: HassEntity) => {
+  if (!s || domainOf(s.entity_id) !== "binary_sensor" || isContact(s)) return false;
+  const dc = String(s.attributes.device_class ?? "");
+  return MOTION_CLASSES.includes(dc) || has(s.entity_id, "motion", "presence", "occupancy");
 };
 
 export const glyphFor = (id: string, s?: HassEntity): string => {

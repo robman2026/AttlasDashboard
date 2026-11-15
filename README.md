@@ -16,6 +16,8 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 - **Home:** time-aware greeting with heat pump reading and alarm state, attention banner (critical / warning / info), 8 photo room tiles, quick actions (Arm away, Garage, Lights off with confirmation, Wake PC), climate ring, energy flow, security with live 16:9 camera stills.
 - **Alerts:** grouped by severity. Rules for temperature limits with hysteresis, doors, unavailable devices, incident report, mailbox, updates. Unknown or unavailable is never treated as clear. Details: [docs/alerts.md](docs/alerts.md).
 - **Rooms:** floors (+2 to -1) with room count, typical temperature and alert count; room tiles per floor.
+- **Security:** alarm with the arm modes the panel supports and Disarm (asks first, code panels use the HA dialog), doors and windows (open first), locks, motion, all cameras as stills.
+- **Presence:** person chips on Home (Home / Away / zone).
 - **Lights:** all lights by floor and room; tap toggles, hold opens details, drag left / right to dim; All off asks first.
 - **Room:** climate, camera that starts live (muted) when the room opens (16:9, Live, Snapshot, Recordings; private camera hidden until Reveal), device tiles on the room image (tap toggles, hold opens details; per tile a press action for buttons and scripts, and an optional confirmation for risky switches), covers with Open / Stop / Close (garage doors and gates ask first), previous / next room. Device tiles show how long ago each entity changed. Add your **own cards** (built-in or custom, e.g. a washer, dryer or remote card) to any room.
 - **Camera wall per floor:** optional live feeds or snapshots of all cameras on a floor, side by side, sized to fit the window without scrolling.

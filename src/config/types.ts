@@ -177,7 +177,7 @@ export interface AtlasConfig {
 /** Config passed to every generated custom:atlas-view card. */
 export interface AtlasViewCardConfig {
   type: string;
-  view: "home" | "alerts" | "rooms" | "room" | "energy" | "lights";
+  view: "home" | "alerts" | "rooms" | "room" | "energy" | "lights" | "security";
   room?: string;
   floor?: string;
   atlas: AtlasConfig;

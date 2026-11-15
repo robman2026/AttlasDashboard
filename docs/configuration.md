@@ -43,7 +43,7 @@ Editor tab: **Entities**. House-wide entities used by the greeting, top bar, Cli
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `alarm` | entity (alarm_control_panel) |  | Alarm panel. Greeting line, Security card, Arm away quick action. |
+| `alarm` | entity (alarm_control_panel) |  | Alarm panel. Greeting line, Security card, Security page (arm modes the panel supports, Disarm), Arm away quick action. Panels that need a code open the Home Assistant dialog, which asks for it. |
 | `weather` | entity (weather) |  | Weather. Top bar condition and icon. |
 | `outdoor_temperature` | entity (sensor) |  | Outdoor temperature. Top bar temperature. Falls back to the weather entity's temperature. |
 | `heat_pump` | entity (climate) |  | Heat pump (climate). Greeting indoor reading and Climate card ring (current and target). |
@@ -57,7 +57,7 @@ Editor tab: **Entities**. House-wide entities used by the greeting, top bar, Cli
 | `garage_cover` | entity (cover) |  | Garage door (cover). Garage quick action (open or close, always confirmed). |
 | `wake_pc` | entity (input_button, button, script) |  | Wake PC. Wake PC quick action (press, or script.turn_on). |
 | `incidents` | entity (sensor) |  | Incident report sensor. Optional log analysis sensor with attributes critical, warning, minor (numbers or lists) and summary. |
-| `persons` | list of entity (person) |  | Persons. Reserved for presence display (not shown yet). |
+| `persons` | list of entity (person) |  | Persons. Presence chips on Home (picture, name, Home / Away / zone). Tap opens the person details. |
 | `exclude_lights` | list of entity (light) |  | Lights never counted as room lights. Camera status LEDs etc. Excluded from Lights off. |
 
 ## Alert rules (`alerts`)
@@ -432,6 +432,8 @@ strategy:
       devices:
         - entity: binary_sensor.front_door
           name: Front door
+        - entity: lock.front_door
+          name: Front door lock
         - entity: binary_sensor.mailbox
           name: Mailbox
         - entity: binary_sensor.doorbell_person

@@ -99,6 +99,30 @@ export const mappedEntities = (c: AtlasConfig): string[] => {
   return [...ids];
 };
 
+/**
+ * Cameras of the whole house, one entry per camera entity (in room order), with every
+ * room that uses it. Rooms with the camera section off are skipped.
+ */
+export const houseCameraGroups = (c: AtlasConfig): { camera: string; rooms: RoomConfig[] }[] => {
+  const groups = new Map<string, RoomConfig[]>();
+  for (const r of rooms(c)) {
+    const cam = cameraOf(r);
+    if (cam) groups.set(cam, [...(groups.get(cam) ?? []), r]);
+  }
+  return [...groups].map(([camera, rs]) => ({ camera, rooms: rs }));
+};
+
+/**
+ * Whether the Security page has anything to show (config only, used by the strategy):
+ * an alarm panel, door lists, a camera, or a room device that is a binary sensor, cover or lock.
+ */
+export const hasSecurity = (c: AtlasConfig): boolean =>
+  !!c.entities?.alarm ||
+  !!c.alerts?.exterior_doors?.length ||
+  !!c.alerts?.interior_doors?.length ||
+  houseCameraGroups(c).length > 0 ||
+  rooms(c).some((r) => !!r.car_lock || (r.devices ?? []).some((d) => ["binary_sensor", "cover", "lock"].includes(d.entity.split(".")[0])));
+
 /** Light entities in rooms, minus excluded status LEDs. */
 export const roomLights = (c: AtlasConfig): string[] => [...new Set(rooms(c).flatMap((r) => roomLightEntities(c, r)))];
 

@@ -21,7 +21,10 @@ const cam = (id, name, img) => add(id, "idle", { friendly_name: name, ...(img ? 
 const na = (id) => add(id, "unavailable");
 
 // Global
-add("alarm_control_panel.home_alarm", "disarmed", { friendly_name: "Home alarm" });
+// supported_features 39 = ARM_HOME 1 + ARM_AWAY 2 + ARM_NIGHT 4 + ARM_VACATION 32; no code
+add("alarm_control_panel.home_alarm", "disarmed", { friendly_name: "Home alarm", supported_features: 39, code_format: null, changed_by: null });
+add("person.alex", "home", { friendly_name: "Alex" });
+add("person.sam", "not_home", { friendly_name: "Sam" });
 add("weather.home", "cloudy", { temperature: 5.5 });
 add("sensor.outdoor_temperature", 5.5, { unit_of_measurement: "°C" });
 add("climate.heat_pump", "heat", { current_temperature: 18.2, temperature: 17, hvac_action: "heating", friendly_name: "Heat pump" });
@@ -60,7 +63,7 @@ motion("binary_sensor.kitchen_presence", false, "presence"); contact("binary_sen
 add("sensor.oven_temperature", 59, { unit_of_measurement: "°C" }); add("select.dishwasher_program", "unknown");
 contact("binary_sensor.guest_wc_door", false); motion("binary_sensor.guest_wc_motion"); add("light.guest_wc_mirror", "on", { brightness: 160, supported_color_modes: ["brightness"] });
 cam("camera.doorbell", "Doorbell", "entrance.jpg");
-contact("binary_sensor.front_door", false); contact("binary_sensor.mailbox", true, "opening");
+contact("binary_sensor.front_door", false); add("lock.front_door", "unlocked", { friendly_name: "Front door lock" }); contact("binary_sensor.mailbox", true, "opening");
 motion("binary_sensor.doorbell_person", false, "occupancy"); na("binary_sensor.entrance_motion");
 th("garage", 11.4, 58); cam("camera.garage", "Garage camera", "garage.jpg");
 add("cover.garage_door", "closed", { device_class: "garage", supported_features: 11 }); /* open, close, stop */ contact("binary_sensor.garage_side_door", false);
@@ -126,6 +129,7 @@ const fmt = (s) => {
     if (["door", "window", "opening", "garage_door"].includes(dc)) return s.state === "on" ? "Open" : "Closed";
     return s.state === "on" ? "Detected" : "Clear";
   }
+  if (s.entity_id.startsWith("person.")) return s.state === "home" ? "Home" : s.state === "not_home" ? "Away" : cap(s.state.replace(/_/g, " "));
   const u = s.attributes.unit_of_measurement;
   return u ? `${s.state} ${u}` : cap(s.state.replace(/_/g, " "));
 };

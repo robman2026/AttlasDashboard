@@ -12,7 +12,7 @@ export interface Ctx {
   floorId?: string;
   roomId?: string;
   narrow: boolean;
-  /** Timestamp of the last periodic refresh (10 s on Home for camera stills, else 30 s). */
+  /** Timestamp of the last periodic refresh (10 s on Home and Security for camera stills, else 30 s). */
   tick: number;
   go(viewPath: string): void;
   /** Navigate to an absolute HA path, e.g. /energy. */
