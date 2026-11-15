@@ -49,6 +49,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
 | `src/ui/devices.ts` | Device tile icon, state kind, text, tap action, cover control rules |
+| `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
 | `src/ui/time.ts` | Relative "time ago" labels (`time_display`) |
@@ -93,6 +94,10 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `cover.open_cover` / `close_cover` / `stop_cover`; `supported_features` OPEN = 1, CLOSE = 2, STOP = 8; enable rules (Open: not fully open and not opening, Close: not fully closed and not closing, both always with `assumed_state`; fully open / closed from `current_position` when present, else the state; nothing when unavailable) | Cover tiles (Open / Stop / Close) | core `homeassistant/components/cover/const.py` (`CoverEntityFeature`, `CoverState`), `cover/services.py` (required features per service); frontend `src/data/cover.ts` (`canOpen`, `canClose`, `canStop`), `src/data/feature/cover_entity_feature.ts` (dev branch, 2026-11-15) |
 | `button.press`, `input_button.press`, `script.turn_on` (entity target) | Device tile `tap: press`; Wake PC quick action | core `button/const.py`, `button/services.py`, `input_button/const.py`, `input_button/services.py`, `script/const.py`, `script/services.py` (dev branch, 2026-11-15) |
 | Button / input_button state: last press as ISO timestamp, `unknown` before the first press, restored after restart | "Never pressed" on device tiles | core `button/entity.py` (`state`, `__last_pressed_isoformat`), `input_button/entity.py` (inherits `ButtonEntity`); home-assistant.io `source/_integrations/button.markdown` (2026-11-15) |
+| `lock.lock` / `lock.unlock` (entity target, optional `code`); lock states `locked`, `locking`, `unlocked`, `unlocking`, `open`, `opening`, `jammed`; `code_format` attribute when a code is needed | Vehicle card Lock / Unlock (code locks open the HA dialog) | home-assistant.io `source/_integrations/lock.markdown`, `source/_actions/lock.lock.markdown`, `lock.unlock.markdown` (2026-11-15) |
+| `binary_sensor` device class `lock`: `on` = unlocked, `off` = locked | Vehicle doors status without a lock entity | home-assistant.io `source/_integrations/binary_sensor.markdown` (2026-11-15) |
+| `device_tracker` state: zone name, `home`, `not_home` | Vehicle location | home-assistant.io `source/_integrations/device_tracker.markdown` (2026-11-15) |
+| Timestamp sensor state: ISO date-time in UTC | Vehicle last update | home-assistant.io `source/_integrations/sensor.markdown` (2026-11-15) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 

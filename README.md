@@ -20,6 +20,7 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 - **Camera wall per floor:** optional live feeds or snapshots of all cameras on a floor, side by side, sized to fit the window without scrolling.
 - **Hobby room extras (any room, optional):** status strip (alerts, lights, printer), extra climate values (CO2, pressure, ...), 3D printer card (progress, time left, temperatures, light, pause / resume / stop), automations with on/off switches.
 - **Light mood:** room photos get darker when the room lights are off and glow warm when they are on, following the light level. Which entities count as lights is configurable per room (e.g. relay switches).
+- **Vehicle card (any room, optional):** lock state with Lock / Unlock, range, odometer, location, distance and trips today and this month, last update, flash lights / horn / update data.
 - **Energy:** whole-house meter with phases A/B/C, a "right now" summary with top consumers, and a gauge card per metered circuit (W, status, kWh, A, PF, V, Hz). Set up in Edit dashboard > Energy (`energy_meters`).
 - **Fully configurable in the UI:** every entity, room, floor, device, alert rule and layout list in Edit dashboard. Reference: [docs/configuration.md](docs/configuration.md).
 - **Styles:** Warm glass, Glass, Quiet (no blur, for the wall tablet), 5 ambiences, adjustable accent; per-device override with the gear icon.

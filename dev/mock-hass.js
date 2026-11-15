@@ -65,6 +65,15 @@ motion("binary_sensor.doorbell_person", false, "occupancy"); na("binary_sensor.e
 th("garage", 11.4, 58); cam("camera.garage", "Garage camera", "garage.jpg");
 add("cover.garage_door", "closed", { device_class: "garage", supported_features: 11 }); /* open, close, stop */ contact("binary_sensor.garage_side_door", false);
 na("binary_sensor.garage_window"); na("binary_sensor.garage_motion");
+// Fictional car for the vehicle card
+add("lock.family_car", "locked", { friendly_name: "Family car lock" });
+add("sensor.family_car_range", 312, { unit_of_measurement: "km", device_class: "distance" });
+add("sensor.family_car_odometer", 48213, { unit_of_measurement: "km", device_class: "distance" });
+add("device_tracker.family_car", "home", { friendly_name: "Family car", source_type: "gps" });
+add("sensor.family_car_distance_today", 23.4, { unit_of_measurement: "km" }); add("sensor.family_car_trips_today", 3);
+add("sensor.family_car_distance_month", 612, { unit_of_measurement: "km" }); add("sensor.family_car_trips_month", 41);
+add("sensor.family_car_last_update", new Date(NOW - 12 * 60000).toISOString(), { device_class: "timestamp" });
+["flash_lights", "honk", "update_data"].forEach((b) => add(`button.family_car_${b}`, "unknown"));
 contact("binary_sensor.garden_door", false); add("switch.garden_irrigation", "off"); add("sensor.lawn_mower_status", "docked");
 // Basement
 th("basement", 20.4, 48); cam("camera.basement", "Basement camera", "basement.jpg");
