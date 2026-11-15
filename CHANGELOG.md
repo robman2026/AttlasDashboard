@@ -5,6 +5,27 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Fan tiles (porting plan step 7): a `fan.*` room device gets its own tile.
+  - Tap toggles, or asks first with `confirm`.
+  - Hold opens the details.
+  - A horizontal drag sets the speed (`fan.set_percentage`, snapped to the fan's speed steps); only for fans that support a speed.
+  - The tile fill shows the speed, and the icon spins while the fan is on (not with reduced motion).
+  - A Fwd / Rev button switches the direction (`fan.set_direction`) for fans that support it.
+- Room power (room options `power`, `power_energy`, `power_current`, `power_max`, Edit dashboard > Rooms > Room power): a gauge card with watts and Consuming / Standby / Offline, plus energy and current. The colour follows the load: accent up to 65 % of full scale, then amber, red from 85 %. There is also a power chip in the room status strip. Demo house: the kitchen.
+- Lawn mower card (room options `mower`, `mower_battery`, `mower_name`):
+  - state badge, time since the last change, battery bar;
+  - Start mowing / Pause (one slot, as in the source card) and Return to dock, for what the mower supports (`supported_features`) and enabled per state;
+  - a status chip;
+  - a warning alert while the mower reports an error.
+
+  Demo house: the garden.
+- Salt level card (room options `salt_level`, `salt_distance`, `salt_warn_below`, `salt_name`):
+  - a tank showing the level in % (the sensor may report 0-100 or 0-1), red below 30 %, amber below 60 %;
+  - an optional raw reading;
+  - a status chip;
+  - an info alert "Salt low" below the threshold (default 30 %).
+
+  Demo house: the utility room.
 - Weather forecast on Home (porting plan step 6): a compact strip next to the greeting with five days (high / low, rain chance) or six hours, a Days / Hours toggle for the forecast types the weather entity supports, and tap for the HA weather dialog. On narrower screens and the phone it sits below the greeting. Uses the Home Assistant forecast subscription (`weather/subscribe_forecast`); hidden while the weather entity is unavailable.
 - Alert rule **open window while it rains** (`alerts.rain_windows`, Edit dashboard > Alerts > Weather): warning for each listed window that is open while the weather is rainy, pouring, snowy, snowy-rainy, hail or a thunderstorm with rain, with a room badge. When the weather entity has an hourly forecast, the current and next hour must confirm precipitation (`alerts.rain_min_mm`, default 0.1 mm, or a 50 % chance); this stops false alarms from a wrong "rainy" state. Optional `alerts.rain_weather` uses another weather entity for the rule. Behaviour from the owner's Adaptive Room Card.
 - Alert rule **severe weather** (`alerts.severe_weather`, default on): warning while the weather is lightning, thunderstorm with rain, hail, pouring or exceptional.
@@ -53,6 +74,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Demo house: the garden's lawn mower status sensor is replaced by a `lawn_mower` entity with the mower card.
 - The "Log report" alert opens the System page and lists the first incident titles.
 - Home Security card: the open count uses the same list as the Security page (alert door lists included, mailbox left out).
 - Sidebar **Security** opens the Security page (before: the alarm details).
@@ -71,6 +93,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Version is read from `package.json` at build time (single source).
 
 ### Fixed
+- Lights page: after dragging a tile to dim it, the next state update could fail to render (the live percentage overwrote text managed by the renderer). The live value now uses its own element. Fan tiles use the same approach.
 - Incident report: counts are read from the `summary` object the log analyzer publishes (then top-level `critical` / `warning` / `minor`, then the incident list). Before, a sensor with only `summary` raised no alert, and the alert text showed "[object Object]".
 - A motion, occupancy or presence sensor whose entity id contains "door" or "window" (e.g. a doorbell's person sensor) no longer counts as a door or window.
 - Room view with own left-column cards (`side_cards`, e.g. a tall remote) on smaller screens: the card was pushed below the window and the Devices card stretched into a large empty photo. From 1200 px wide these cards now get their own third column (side columns scale with the width, device tiles pick their column count); from 1100 to 1200 px they sit below climate and camera while Devices spans the full height; phone and tablet stack them after the camera.

@@ -132,6 +132,20 @@ export interface RoomConfig {
   car_flash?: string; // button / input_button / script
   car_horn?: string; // button / input_button / script, asks first
   car_refresh?: string; // button / input_button / script: ask the car for fresh data
+  // Room power (porting plan step 7): metered circuit of this room
+  power?: string; // power sensor (W or kW)
+  power_energy?: string; // energy sensor (kWh)
+  power_current?: string; // current sensor (A)
+  power_max?: number; // W at full gauge (default 3000)
+  // Lawn mower card
+  mower?: string; // lawn_mower entity
+  mower_battery?: string; // battery sensor (%)
+  mower_name?: string;
+  // Salt level (water softener)
+  salt_level?: string; // sensor in % (0..100, or 0..1)
+  salt_distance?: string; // optional raw sensor shown as detail (e.g. distance to the salt)
+  salt_warn_below?: number; // % below which the alert asks to buy salt (default 30)
+  salt_name?: string; // default "Salt level"
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;

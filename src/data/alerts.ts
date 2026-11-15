@@ -107,6 +107,25 @@ export const evaluateAlerts = (hass: HomeAssistant, c: AtlasConfig, forecasts: F
     }
   }
 
+  // Lawn mower in error (room option mower) and low salt (salt_level below salt_warn_below).
+  for (const r of c.rooms ?? []) {
+    const m = stateObj(hass, r.mower);
+    if (r.mower && m?.state === "error") {
+      const name = r.mower_name || friendlyName(hass, r.mower);
+      out.push({ id: `mower-${r.id}`, severity: "warning", title: `${name} needs help`, meta: `Lawn mower error · ${r.name}`,
+        chipTitle: r.name, chipValue: name, badge: "Error", icon: "alert", room: r.id, roomBadge: "Mower error", entity: r.mower });
+    }
+    const sv = num(hass, r.salt_level);
+    if (r.salt_level && sv !== undefined) {
+      const pct = Math.max(0, Math.min(100, sv > 1 ? sv : sv * 100));
+      const below = Number.isFinite(Number(r.salt_warn_below)) && r.salt_warn_below !== undefined ? Number(r.salt_warn_below) : 30;
+      if (pct < below) {
+        out.push({ id: `salt-${r.id}`, severity: "info", title: `Salt low: ${Math.round(pct)} %`, meta: `${r.salt_name || "Salt level"} · ${r.name} · buy salt`,
+          chipTitle: r.name, chipValue: `${Math.round(pct)} %`, badge: "Buy salt", icon: "info", room: r.id, roomBadge: "Salt low", entity: r.salt_level });
+      }
+    }
+  }
+
   // Severe weather (lightning, hail, pouring, exceptional).
   const main = stateObj(hass, c.entities?.weather);
   if (a.severe_weather !== false && c.entities?.weather && !isInvalid(main) && SEVERE_CONDITIONS.includes(main!.state)) {

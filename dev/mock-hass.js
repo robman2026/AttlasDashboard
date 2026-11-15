@@ -61,6 +61,8 @@ na("binary_sensor.kids_room_motion"); na("light.kids_room_fan_light"); na("fan.k
 th("office", 23.9, 39); add("switch.office_ceiling_relay", "on", { friendly_name: "Office ceiling relay" }); contact("binary_sensor.office_door", true); contact("binary_sensor.office_window", false, "window");
 na("light.office_fan_light"); add("fan.office_fan", "unknown");
 th("bedroom", 23.3, 49); add("light.bedroom_canopy", "on", { brightness: 102, supported_color_modes: ["color_temp"] }); add("light.bedroom_wardrobe", "off", { supported_color_modes: ["brightness"] });
+// fan features 53 = SET_SPEED 1 + DIRECTION 4 + TURN_OFF 16 + TURN_ON 32; four speeds (step 25)
+add("fan.bedroom_ceiling_fan", "on", { friendly_name: "Bedroom ceiling fan", percentage: 50, percentage_step: 25, direction: "forward", supported_features: 53 });
 add("media_player.bedroom_tv", "off", { friendly_name: "Bedroom TV", source_list: ["HDMI 1", "Live TV", "Netflix"] });
 th("hallway", 22.8, 43); motion("binary_sensor.hallway_motion"); contact("binary_sensor.stair_window", false, "window"); contact("binary_sensor.hallway_skylight", false, "window");
 contact("binary_sensor.bathroom_door", true); motion("binary_sensor.bathroom_motion"); contact("binary_sensor.bathroom_skylight", false, "window");
@@ -88,7 +90,8 @@ add("sensor.family_car_distance_today", 23.4, { unit_of_measurement: "km" }); ad
 add("sensor.family_car_distance_month", 612, { unit_of_measurement: "km" }); add("sensor.family_car_trips_month", 41);
 add("sensor.family_car_last_update", new Date(NOW - 12 * 60000).toISOString(), { device_class: "timestamp" });
 ["flash_lights", "honk", "update_data"].forEach((b) => add(`button.family_car_${b}`, "unknown"));
-contact("binary_sensor.garden_door", false); add("switch.garden_irrigation", "off"); add("sensor.lawn_mower_status", "docked");
+contact("binary_sensor.garden_door", false); add("switch.garden_irrigation", "off"); // lawn_mower features 7 = START_MOWING 1 + PAUSE 2 + DOCK 4
+add("lawn_mower.garden_mower", "docked", { friendly_name: "Garden mower", supported_features: 7 }); add("sensor.garden_mower_battery", 86, { unit_of_measurement: "%", device_class: "battery" });
 // Basement
 th("basement", 20.4, 48); cam("camera.basement", "Basement camera", "basement.jpg");
 contact("binary_sensor.basement_door", true); motion("binary_sensor.basement_hall_motion"); motion("binary_sensor.basement_stairs_motion"); na("media_player.basement_tv");
@@ -108,7 +111,7 @@ add("automation.workshop_eco_mode", "off", { friendly_name: "Workshop eco mode",
 add("automation.print_complete_notify", "on", { friendly_name: "3D print complete: notify and light", last_triggered: new Date(NOW - 3 * 3600000).toISOString() });
 add("automation.workshop_door_alarm", "on", { friendly_name: "Workshop door alarm", last_triggered: null });
 add("light.3d_printer_chamber", "on", { supported_color_modes: ["onoff"] }); // on / off only, no dimming motion("binary_sensor.workshop_presence", false, "presence");
-contact("binary_sensor.utility_room_door", false); cam("camera.utility_room", "Utility room camera", "utility.jpg");
+contact("binary_sensor.utility_room_door", false); add("sensor.water_softener_salt", 42, { unit_of_measurement: "%" }); add("sensor.water_softener_salt_distance", 31.5, { unit_of_measurement: "cm", device_class: "distance" }); cam("camera.utility_room", "Utility room camera", "utility.jpg");
 add("sensor.washer_power", 0, { unit_of_measurement: "W" }); add("sensor.dryer_power", 0, { unit_of_measurement: "W" });
 
 // Energy meters (fictional three-phase house meter and circuits)

@@ -153,6 +153,17 @@ A list; each item has:
 | `car_flash` | entity (button, input_button, script) |  | Flash lights |
 | `car_horn` | entity (button, input_button, script) |  | Honk horn. Asks first. |
 | `car_refresh` | entity (button, input_button, script) |  | Update data. Asks the car to send fresh data. |
+| `power` | entity (sensor) |  | Power sensor. Room power card (gauge coloured by load) and a power chip in the room status strip. |
+| `power_energy` | entity (sensor) |  | Energy sensor (kWh) |
+| `power_current` | entity (sensor) |  | Current sensor (A) |
+| `power_max` | number | 3000 | Full scale (W). Power at a full gauge. Colour: green up to 40 %, then amber, orange from 85 %, red at full scale. |
+| `mower` | entity (lawn_mower) |  | Lawn mower. Mower card: state, battery, Start / Pause / Dock for what the mower supports. A mower in error raises a warning. |
+| `mower_battery` | entity (sensor) |  | Mower battery (%) |
+| `mower_name` | text | entity name | Mower name |
+| `salt_level` | entity (sensor) |  | Salt level sensor (%). Water softener salt in % (0-100, or 0-1). Card with the level; an info alert asks to buy salt below the threshold. |
+| `salt_distance` | entity (sensor) |  | Salt distance sensor. Optional raw reading shown as a detail (e.g. distance from the lid to the salt). |
+| `salt_warn_below` | number | 30 | Buy salt below (%) |
+| `salt_name` | text | Salt level | Salt card title |
 | `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. One card (type: custom:my-card plus its options) or a list of cards (each starting with - type:). |
 | `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). One card or a list of cards. |
 | `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. Per tile you can change the tap action (e.g. press a button) and ask before acting. A cover gets a full-width tile with Open / Stop / Close buttons for the actions it supports. |
@@ -357,6 +368,8 @@ strategy:
           name: Canopy LEDs
         - entity: light.bedroom_wardrobe
           name: Wardrobe LEDs
+        - entity: fan.bedroom_ceiling_fan
+          name: Ceiling fan
         - entity: media_player.bedroom_tv
           name: TV
     - id: hallway
@@ -421,6 +434,10 @@ strategy:
       floor: ground
       icon: kitchen
       image: kitchen.jpg
+      power: sensor.circuit_kitchen_power
+      power_energy: sensor.circuit_kitchen_energy
+      power_current: sensor.circuit_kitchen_current
+      power_max: 3000
       devices:
         - entity: light.kitchen_cabinet_left
           name: Cabinet light left
@@ -498,13 +515,14 @@ strategy:
       name: Garden
       floor: ground
       icon: eco
+      mower: lawn_mower.garden_mower
+      mower_battery: sensor.garden_mower_battery
+      mower_name: Mower
       devices:
         - entity: binary_sensor.garden_door
           name: Garden door
         - entity: switch.garden_irrigation
           name: Irrigation valve
-        - entity: sensor.lawn_mower_status
-          name: Lawn mower
     - id: basement
       name: Basement
       floor: basement
@@ -590,6 +608,8 @@ strategy:
       icon: system
       image: utility.jpg
       camera: camera.utility_room
+      salt_level: sensor.water_softener_salt
+      salt_distance: sensor.water_softener_salt_distance
       devices:
         - entity: binary_sensor.utility_room_door
           name: Door
