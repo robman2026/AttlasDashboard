@@ -61,6 +61,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/drag.ts` | Shared tap / hold / horizontal drag handling (Lights page tiles, fan tiles) |
 | `src/ui/views/fan.ts` | Fan tile: speed by drag, direction button |
 | `src/ui/views/room-more.ts` | Room power, lawn mower and salt level cards (room options `power_*`, `mower_*`, `salt_*`) |
+| `src/ui/views/appliances.ts` | Appliances card (room option `appliances`) |
 | `src/data/incidents.ts` | Reads the log analyzer sensor (counts from `summary`, top-level attributes or the incident list) |
 | `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
@@ -124,6 +125,7 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `fan` features SET_SPEED 1, OSCILLATE 2, DIRECTION 4, PRESET_MODE 8, TURN_OFF 16, TURN_ON 32; attributes `percentage`, `percentage_step`, `direction`; `fan.set_percentage` (`percentage` 0-100), `fan.set_direction` (`direction` forward / reverse) | Fan tiles | frontend `src/data/fan.ts` (dev branch 2026-10-31); home-assistant.io `source/_actions/fan.set_percentage.markdown`, `fan.set_direction.markdown` (2026-11-15) |
 | `lawn_mower` features START_MOWING 1, PAUSE 2, DOCK 4; states `mowing`, `paused`, `returning`, `docked`, `idle`, `error`; enable rules (start: not mowing, pause: not paused, dock: not docked, none while unavailable); `lawn_mower.start_mowing`, `pause`, `dock` | Mower card | frontend `src/data/lawn_mower.ts` (dev branch 2026-10-31); home-assistant.io `source/_integrations/lawn_mower.markdown`, `source/_actions/lawn_mower.start_mowing.markdown`, `lawn_mower.pause.markdown` (2026-11-15) |
 | Salt level as % (0-100 or 0-1), thresholds 30 / 60 %, "buy salt" below 30 % | Salt card and alert | owner's Multi-panel-dashboard-card `multi-panel-dashboard-card.js` (`calcSaltPct`, `DEFAULT_THRESHOLDS.salt`), read 2026-11-15 |
+| Appliance tile rules: running = main state on (`on`, `true`, `home`, `open`) or operation containing run / active / heat / progress; controls and Stop only while running; finish as a timestamp | Appliances card | owner's Kitchen-Card `kitchen-card.js` (`_applTileHTML`, `_controlsRowHTML`, `fmtFinish`), read 2026-11-15; button state `unknown` before the first press (core `button/entity.py`, see above) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 

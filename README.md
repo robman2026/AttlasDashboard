@@ -19,6 +19,7 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 - **Security:** alarm with the arm modes the panel supports and Disarm (asks first, code panels use the HA dialog), doors and windows (open first), locks, motion, all cameras as stills.
 - **System:** log analyzer report (severity, detail, recommendation), available updates, unavailable devices, links to Settings, Logs, Repairs and Updates, your own cards.
 - **Own cards on Home:** any Lovelace cards below the Home grid (`layout.home_cards`).
+- **Appliances:** oven, dishwasher, washer, dryer with temperature, program, progress, finish time and controls while running.
 - **Room extras:** fan tiles (drag for speed, direction), room power gauge, lawn mower card, water softener salt level, each only in the rooms that set them.
 - **Weather:** forecast strip on Home (days or hours), warnings for severe weather and for open windows while it rains (checked against the hourly forecast).
 - **Presence:** person chips on Home (Home / Away / zone).

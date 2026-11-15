@@ -123,6 +123,7 @@ A list; each item has:
 | `camera_private` | boolean | false | Private camera. Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens. |
 | `light_entities` | list of entity (light, switch, input_boolean) |  | Light entities. What counts as this room's lights for the photo effect, the Lights chip and Lights off, e.g. Tasmota relays (switch.*) that power lamps. Empty: the room's light.* devices, minus the excluded status LEDs. |
 | `climate_extra` | list |  | Extra climate values. More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history. |
+| `appliances` | list |  | Appliances. Appliances card (oven, dishwasher, washer, dryer ..). Only the name is required; every other field adds its part of the tile. Controls and Stop appear while the appliance runs. |
 | `automations` | list of entity (automation) |  | Automations. Shows an Automations card with an on/off switch and the last run time for each. |
 | `printer_name` | text |  | Printer name. Title of the 3D printer card. The card appears when a status or progress sensor is set. |
 | `printer_status` | entity (sensor) |  | Print status. e.g. sensor.<printer>_print_status (Bambu Lab). |
@@ -175,6 +176,25 @@ Items of `climate_extra`:
 | `entity` (required) | entity (any) |  | Entity |
 | `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
 | `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
+Items of `appliances`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | text |  | Name |
+| `entity` | entity (switch, binary_sensor, sensor) |  | Main state. On (or an operation state like Run) counts as running. |
+| `icon` | icon |  | Icon. Shown when no temperature sensor is set. |
+| `operation` | entity (sensor, select) |  | Operation state. e.g. Ready, Run, Finished (Home Connect operation state). |
+| `program` | entity (sensor, select) |  | Active program |
+| `door` | entity (binary_sensor, sensor) |  | Door |
+| `temperature` | entity (sensor) |  | Temperature. Shows an arc gauge instead of the icon. |
+| `temperature_max` | number | 300 | Temperature full scale |
+| `setpoint` | entity (sensor, number) |  | Setpoint |
+| `progress` | entity (sensor) |  | Program progress (%) |
+| `finish` | entity (sensor) |  | Finish time. Timestamp sensor (shows the time and how long until then) or a remaining time sensor. |
+| `remote` | entity (binary_sensor, switch) |  | Remote start allowed |
+| `controls` | list of entity (switch, button, script) |  | Controls while running. Switches toggle, buttons are pressed, scripts run. |
+| `stop` | entity (button, script) |  | Stop button. Shown while running; always asks first. |
 
 Items of `devices`:
 
@@ -447,10 +467,33 @@ strategy:
           name: Presence
         - entity: binary_sensor.kitchen_window
           name: Window
-        - entity: sensor.oven_temperature
-          name: Oven
-        - entity: select.dishwasher_program
-          name: Dishwasher
+      appliances:
+        - name: Oven
+          entity: switch.oven_power
+          temperature: sensor.oven_temperature
+          temperature_max: 300
+          setpoint: number.oven_setpoint
+          operation: sensor.oven_operation_state
+          program: select.oven_program
+          door: binary_sensor.oven_door
+          progress: sensor.oven_program_progress
+          finish: sensor.oven_finish_time
+          controls:
+            - switch.oven_fast_preheat
+            - button.oven_pause
+          stop: button.oven_stop
+        - name: Dishwasher
+          icon: mdi:dishwasher
+          entity: switch.dishwasher_power
+          operation: sensor.dishwasher_operation_state
+          program: select.dishwasher_program
+          door: binary_sensor.dishwasher_door
+          progress: sensor.dishwasher_program_progress
+          finish: sensor.dishwasher_finish_time
+          remote: binary_sensor.dishwasher_remote_start
+          controls:
+            - switch.dishwasher_extra_dry
+          stop: button.dishwasher_stop
     - id: entrance
       name: Entrance
       floor: ground

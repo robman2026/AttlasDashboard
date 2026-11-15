@@ -73,7 +73,16 @@ contact("binary_sensor.living_room_window_left", false, "window"); contact("bina
 motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_backlight", "off", { supported_color_modes: ["rgb"] }); add("media_player.living_room_tv", "on", { friendly_name: "Living room TV", app_name: "YouTube", source: "YouTube", source_list: ["HDMI 1", "Live TV", "Netflix", "YouTube"], volume_level: 0.18, is_volume_muted: false });
 add("light.kitchen_cabinet_left", "on", { brightness: 255, supported_color_modes: ["brightness"] }); add("light.kitchen_cabinet_right", "on", { brightness: 255, supported_color_modes: ["brightness"] });
 motion("binary_sensor.kitchen_presence", false, "presence"); contact("binary_sensor.kitchen_window", false, "window");
-add("sensor.oven_temperature", 59, { unit_of_measurement: "°C" }); add("select.dishwasher_program", "unknown");
+// Appliances (fictional, Home Connect style): oven heating, dishwasher ready
+add("switch.oven_power", "on", { friendly_name: "Oven power" }); add("sensor.oven_temperature", 182, { unit_of_measurement: "°C" });
+add("number.oven_setpoint", 200, { unit_of_measurement: "°C" }); add("sensor.oven_operation_state", "run", { friendly_name: "Oven operation state" });
+add("select.oven_program", "hot_air", { friendly_name: "Oven program" }); add("binary_sensor.oven_door", "off", { device_class: "door" });
+add("sensor.oven_program_progress", 35, { unit_of_measurement: "%" }); add("sensor.oven_finish_time", new Date(NOW + 38 * 60000).toISOString(), { device_class: "timestamp" });
+add("switch.oven_fast_preheat", "off", { friendly_name: "Oven Fast pre-heat" }); add("button.oven_pause", "unknown", { friendly_name: "Oven Pause" }); add("button.oven_stop", "unknown", { friendly_name: "Oven Stop" });
+add("switch.dishwasher_power", "off", { friendly_name: "Dishwasher power" }); add("sensor.dishwasher_operation_state", "ready");
+add("select.dishwasher_program", "eco_50", { friendly_name: "Dishwasher program" }); add("binary_sensor.dishwasher_door", "off", { device_class: "door" });
+add("sensor.dishwasher_program_progress", 0, { unit_of_measurement: "%" }); add("sensor.dishwasher_finish_time", "unknown", { device_class: "timestamp" });
+add("binary_sensor.dishwasher_remote_start", "on"); add("switch.dishwasher_extra_dry", "off", { friendly_name: "Dishwasher Extra dry" }); add("button.dishwasher_stop", "unknown", { friendly_name: "Dishwasher Stop" });
 contact("binary_sensor.guest_wc_door", false); motion("binary_sensor.guest_wc_motion"); add("light.guest_wc_mirror", "on", { brightness: 160, supported_color_modes: ["brightness"] });
 cam("camera.doorbell", "Doorbell", "entrance.jpg");
 contact("binary_sensor.front_door", false); add("lock.front_door", "unlocked", { friendly_name: "Front door lock" }); contact("binary_sensor.mailbox", true, "opening");

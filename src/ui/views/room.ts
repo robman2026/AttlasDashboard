@@ -11,6 +11,7 @@ import { automationsCard, climateExtras, printerCard, statusStrip } from "./room
 import { vehicleCard } from "./vehicle";
 import { fanTile } from "./fan";
 import { mowerCard, powerCard, saltCard } from "./room-more";
+import { appliancesCard } from "./appliances";
 
 const LONG_PRESS_MS = 500;
 
@@ -255,6 +256,7 @@ export const renderRoom = (ctx: Ctx) => {
         </section>
         ${vehicleCard(ctx, r)}
         ${mowerCard(ctx, r)}
+        ${appliancesCard(ctx, r)}
         ${automationsCard(ctx, r)}
         ${ownCards(ctx, r.cards, "main")}
         ${peers.length > 1
