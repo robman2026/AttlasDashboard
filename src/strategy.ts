@@ -36,6 +36,7 @@ export class AtlasHomeStrategy extends HTMLElement {
       { title: "Alerts", path: "alerts", type: "panel", ...sub, cards: [card(config, "alerts")] },
       { title: "Rooms", path: "rooms", type: "panel", ...sub, cards: [card(config, "rooms", { floor: firstFloor })] },
     ];
+    views.push({ title: "System", path: "system", type: "panel", ...sub, cards: [card(config, "system")] });
     if (hasSecurity(config)) {
       views.push({ title: "Security", path: "security", type: "panel", ...sub, cards: [card(config, "security")] });
     }

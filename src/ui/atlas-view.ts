@@ -20,6 +20,7 @@ import { renderRoom } from "./views/room";
 import { renderEnergy } from "./views/energy";
 import { hasLights, renderLights } from "./views/lights";
 import { renderSecurity } from "./views/security";
+import { renderSystem } from "./views/system";
 
 const MOODS: Record<string, { base: string[]; g: string[]; light: string; tile: string; dark: string }> = {
   graphite: { base: ["#1A1D22", "#14171C", "#0E1014"], g: ["rgba(150,160,180,0.14)", "rgba(130,140,160,0.12)", "rgba(170,180,200,0.16)", "rgba(50,54,62,0.5)"], light: "rgba(220,228,240,0.4)", tile: "120,130,150", dark: "20,23,28" },
@@ -239,6 +240,8 @@ export class AtlasView extends LitElement {
     // Embedded own cards track their own entities: always hand them the new hass.
     this.renderRoot?.querySelectorAll?.("atlas-hui-card").forEach((el) => ((el as AtlasHuiCard).hass = this.hass));
     for (const id of this._relevant) if (old.states[id] !== this.hass.states[id]) return true;
+    // System page lists update.* entities, which are not in the config.
+    if (this._config?.view === "system") for (const id in this.hass.states) if (id.startsWith("update.") && old.states[id] !== this.hass.states[id]) return true;
     return false;
   }
 
@@ -284,6 +287,7 @@ export class AtlasView extends LitElement {
       confirm: (title, text, action, ok = "Confirm") => (this._confirm = { title, text, action, ok }),
       openAlert: (a) => {
         if (a.room) goView(`room-${a.room}`);
+        else if (a.view) goView(a.view);
         else if (a.entity) moreInfo(this, a.entity);
         else if (a.href) navigate(a.href);
         else goView("alerts");
@@ -324,6 +328,7 @@ export class AtlasView extends LitElement {
     else if (view === "energy") body = renderEnergy(ctx);
     else if (view === "lights") body = renderLights(ctx);
     else if (view === "security") body = renderSecurity(ctx);
+    else if (view === "system") body = renderSystem(ctx);
     else body = renderRoom(ctx);
 
     return html`<div class="root v-${variant}" style=${style}>
@@ -364,7 +369,7 @@ export class AtlasView extends LitElement {
       ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
       ["Security", "security", v === "security", () => (hasSecurity(ctx.config) ? ctx.go("security") : e.alarm ? ctx.moreInfo(e.alarm) : undefined)],
       ["Automations", "automations", false, () => ctx.href("/config/automation/dashboard")],
-      ["System", "system", false, () => ctx.href("/config/system")],
+      ["System", "system", v === "system", () => ctx.go("system")],
     ];
     const user = this.hass!.user?.name ?? "";
     return html`<aside class="glass">

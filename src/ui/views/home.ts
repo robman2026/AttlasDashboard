@@ -3,7 +3,7 @@ import type { Ctx } from "../context";
 import { formatState, isInvalid, isOpen, num, powerKw, stateObj, domainOf } from "../../data/hass";
 import { cameraOf, energyMeters, hasSecurity, roomById, roomLights, rooms } from "../../data/model";
 import { icon } from "../icons";
-import { fmtTemp, roomTile } from "./common";
+import { fmtTemp, ownCards, roomTile } from "./common";
 import { cameraStill, securityContacts } from "./security";
 import { presenceRow } from "./presence";
 
@@ -217,5 +217,6 @@ export const renderHome = (ctx: Ctx) => {
       </div>
       <div class="col">${climateCard(ctx)}${energyCard(ctx)}${securityCard(ctx)}</div>
     </div>
+    ${ownCards(ctx, ctx.config.layout?.home_cards, "main homecards")}
   `;
 };

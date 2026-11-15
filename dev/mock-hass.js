@@ -35,7 +35,17 @@ add("sensor.solar_power", 0, { unit_of_measurement: "kW" });
 add("sensor.house_power", 0.42, { unit_of_measurement: "kW" });
 add("sensor.grid_import_power", 0.42, { unit_of_measurement: "kW" });
 add("sensor.grid_export_power", 0, { unit_of_measurement: "kW" });
-add("sensor.incident_report", "0C / 1W / 1M", { critical: 0, warning: 1, minor: 1, summary: "Log analyzer · 06:00 run" });
+// Same attribute layout as the log analyzer sensor (summary object, incidents list); fictional content.
+add("sensor.incident_report", "0C / 1W / 1M", {
+  friendly_name: "Incident report", generated: new Date(NOW - 3 * 3600000).toISOString(),
+  summary: { critical: 0, warning: 1, minor: 1 },
+  incidents: [
+    { id: "zigbee-timeout", severity: "warning", title: "Zigbee device not responding", detail: "Matched 6x in Zigbee bridge over the scanned window.", recommendation: "Check the battery of the hallway motion sensor or move it closer to a router.", count: 6, sources: ["Zigbee bridge"] },
+    { id: "slow-setup", severity: "minor", title: "Integration slow to set up", detail: "Matched 1x in Home Assistant Core.", recommendation: "Usually harmless after a restart. Check again if it repeats.", count: 1, sources: ["Home Assistant Core"] },
+  ],
+});
+add("update.home_assistant_core_update", "on", { friendly_name: "Home Assistant Core update", title: "Home Assistant Core", installed_version: "2026.11.1", latest_version: "2026.11.2", in_progress: false });
+add("update.zigbee_bridge_update", "off", { friendly_name: "Zigbee bridge update", title: "Zigbee bridge", installed_version: "2.6.0", latest_version: "2.6.0", in_progress: false });
 add("input_button.wake_pc", "2026-10-30T20:00:00");
 add("update.heat_pump_firmware", "on", { title: "Heat pump firmware" });
 add("update.irrigation_controller", "on", { title: "Irrigation controller" });

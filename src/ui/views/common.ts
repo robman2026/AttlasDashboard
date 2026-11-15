@@ -1,5 +1,5 @@
 import { html, nothing } from "lit";
-import type { RoomConfig } from "../../config/types";
+import type { CardConfig, RoomConfig } from "../../config/types";
 import type { Ctx } from "../context";
 import { num } from "../../data/hass";
 import { imageUrl, roomLightEntities, roomLightLevel } from "../../data/model";
@@ -52,4 +52,14 @@ export const sevColor: Record<string, string> = {
   critical: "var(--atlas-crit)",
   warning: "var(--atlas-warn)",
   info: "var(--atlas-info)",
+};
+
+/** Own Lovelace cards (one card config or a list), rendered with HA's card helpers. */
+export const ownCards = (ctx: Ctx, value: CardConfig | CardConfig[] | undefined, cls: string) => {
+  const list = (Array.isArray(value) ? value : value && typeof value === "object" ? [value] : []).filter(
+    (c) => c && typeof c === "object"
+  );
+  return list.length
+    ? html`<div class="owncards ${cls}">${list.map((c) => html`<atlas-hui-card .config=${c} .hass=${ctx.hass}></atlas-hui-card>`)}</div>`
+    : nothing;
 };

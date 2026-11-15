@@ -25,6 +25,10 @@ Public, anonymised summary of the approved ATLAS design. House-specific details 
 
 **Security:** hero with alarm state, open count and camera count; left column: Alarm (shield, state, since / by, one button per supported arm mode plus Disarm, all confirmed), Doors and windows (open first, amber for open exterior doors and unavailable sensors), Locks (Lock / Unlock); right column: Cameras (16:9 stills, 10 s), Motion and presence. Phone: one column, cameras stacked, alarm buttons 3 per row.
 
+**System:** hero with the Home Assistant version and log report counts; link buttons (Settings, Logs, Repairs, Updates); left: Log report (banner red / amber / waiting, three count tiles, incident rows with a severity bar and tag, title, count, detail and source on the left, recommendation on the right); right: Updates (installed and latest version), Unavailable devices (room, entity id); own cards full width below. Phone: one column, recommendation below the detail.
+
+**Own cards on Home:** full-width row of cards below the Home grid (side by side, stacked on the phone).
+
 **Presence (Home):** person chips (avatar or initial with a status dot, name, Home / Away / zone) right of the greeting on desktop, below it on the phone.
 
 **Lights:** hero with "N of M on", All off (confirm); one card per floor, a block per room (name opens the room, "x of y on", on / off switch) with light tiles (amber fill showing the brightness, tap toggles, hold for details, horizontal drag dims). Phone: room blocks stacked, tiles 2 per row.

@@ -19,6 +19,7 @@ All `customElements.define` calls are guarded against double registration (`src/
 | `home` | Home | first view, default |
 | `alerts` | Alerts | `subview`, `back_path: home` |
 | `lights` | Lights page (only when some room has lights) | subview |
+| `system` | System page (always) | subview |
 | `security` | Security page (only with an alarm, door lists, a camera, or a binary sensor, cover or lock in a room) | subview |
 | `rooms` | Rooms, first floor selected | subview |
 | `floor-<floor id>` | Rooms, that floor selected | subview |
@@ -54,6 +55,8 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/views/lights.ts` | Lights page: rooms grouped by floor, tap / hold / drag-to-dim tiles |
 | `src/ui/views/security.ts` | Security page: alarm modes, doors and windows, locks, motion, all cameras; `cameraStill` also used by Home |
 | `src/ui/views/presence.ts` | Presence chips on Home (`entities.persons`) |
+| `src/ui/views/system.ts` | System page: log report, updates, unavailable devices, HA links, `layout.system_cards` |
+| `src/data/incidents.ts` | Reads the log analyzer sensor (counts from `summary`, top-level attributes or the incident list) |
 | `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
@@ -108,6 +111,9 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `alarm_control_panel` `supported_features` ARM_HOME 1, ARM_AWAY 2, ARM_NIGHT 4, TRIGGER 8, ARM_CUSTOM_BYPASS 16, ARM_VACATION 32; services `alarm_arm_home` / `_away` / `_night` / `_vacation` / `_custom_bypass`, `alarm_disarm`; code needed when `code_format` is set (disarm) or `code_format` and `code_arm_required` (arm); attribute `changed_by` | Security page alarm buttons (code panels open the HA dialog, which also applies a stored default code) | frontend `src/data/alarm_control_panel.ts` (`ALARM_MODES`, `supportedAlarmModes`, `setProtectedAlarmControlPanelMode`, dev branch 2026-11-15); home-assistant.io `source/_integrations/alarm_control_panel.markdown` (states, code, `changed_by`, 2026-11-15) |
 | Alarm states `disarmed`, `armed_home`, `armed_away`, `armed_night`, `armed_vacation`, `armed_custom_bypass`, `arming`, `pending`, `triggered`, `disarming` | Security page alarm colour (armed: accent, arming / pending / disarming: amber, triggered: red) | home-assistant.io `source/_integrations/alarm_control_panel.markdown` (2026-11-15) |
 | `person` state: `home`, `not_home` or a zone name; `entity_picture` | Presence chips on Home | home-assistant.io `source/_integrations/person.markdown` (2026-11-15) |
+| Log analyzer sensor: state summary text; attributes `generated` (ISO), `summary` (`critical`, `warning`, `minor`), `incidents` (`id`, `severity`, `title`, `detail`, `recommendation`, `count`, `sources`) | System page log report, Log report alert | owner's repositories `ha-log-analyzer-dashboard` (`system-incident-report-card.js` `_readEntity`, README "How the sensor looks", `node-red-analyzer.md`), read 2026-11-15 |
+| `update` entity: state `on` = update available; attributes `title`, `installed_version`, `latest_version`, `in_progress` | System page Updates card | frontend `src/data/update.ts` (dev branch 2026-10-31) |
+| Config routes `/config/system`, `/config/logs`, `/config/repairs`, `/config/updates` | System page links | frontend `src/panels/config/ha-panel-config.ts` (dev branch 2026-10-31) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 

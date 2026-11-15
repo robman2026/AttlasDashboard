@@ -52,6 +52,8 @@ const SHOTS = [
   ["lights", 390, 844, "lights-phone"],
   ["security", 1600, 1000, "security-desktop"],
   ["security", 390, 844, "security-phone"],
+  ["system", 1600, 1000, "system-desktop"],
+  ["system", 390, 844, "system-phone"],
   ["energy", 1600, 1000, "energy-desktop"],
   ["energy", 1280, 800, "energy-tablet"],
   ["energy", 390, 844, "energy-phone"],

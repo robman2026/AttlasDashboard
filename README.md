@@ -17,6 +17,8 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 - **Alerts:** grouped by severity. Rules for temperature limits with hysteresis, doors, unavailable devices, incident report, mailbox, updates. Unknown or unavailable is never treated as clear. Details: [docs/alerts.md](docs/alerts.md).
 - **Rooms:** floors (+2 to -1) with room count, typical temperature and alert count; room tiles per floor.
 - **Security:** alarm with the arm modes the panel supports and Disarm (asks first, code panels use the HA dialog), doors and windows (open first), locks, motion, all cameras as stills.
+- **System:** log analyzer report (severity, detail, recommendation), available updates, unavailable devices, links to Settings, Logs, Repairs and Updates, your own cards.
+- **Own cards on Home:** any Lovelace cards below the Home grid (`layout.home_cards`).
 - **Presence:** person chips on Home (Home / Away / zone).
 - **Lights:** all lights by floor and room; tap toggles, hold opens details, drag left / right to dim; All off asks first.
 - **Room:** climate, camera that starts live (muted) when the room opens (16:9, Live, Snapshot, Recordings; private camera hidden until Reveal), device tiles on the room image (tap toggles, hold opens details; per tile a press action for buttons and scripts, and an optional confirmation for risky switches), covers with Open / Stop / Close (garage doors and gates ask first), previous / next room. Device tiles show how long ago each entity changed. Add your **own cards** (built-in or custom, e.g. a washer, dryer or remote card) to any room.

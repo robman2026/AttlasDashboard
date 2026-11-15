@@ -56,7 +56,7 @@ Editor tab: **Entities**. House-wide entities used by the greeting, top bar, Cli
 | `grid_export` | entity (sensor, W or kW) |  | Grid export. When export is larger than import the arrow points to the grid. |
 | `garage_cover` | entity (cover) |  | Garage door (cover). Garage quick action (open or close, always confirmed). |
 | `wake_pc` | entity (input_button, button, script) |  | Wake PC. Wake PC quick action (press, or script.turn_on). |
-| `incidents` | entity (sensor) |  | Incident report sensor. Optional log analysis sensor with attributes critical, warning, minor (numbers or lists) and summary. |
+| `incidents` | entity (sensor) |  | Incident report sensor. Optional log analyzer sensor (e.g. the incident report published by Node-RED). Attributes: generated, summary (critical, warning, minor), incidents (severity, title, detail, recommendation, count, sources). Counts may also be top-level attributes, numbers or lists. Shown on the System page and in the attention banner. |
 | `persons` | list of entity (person) |  | Persons. Presence chips on Home (picture, name, Home / Away / zone). Tap opens the person details. |
 | `exclude_lights` | list of entity (light) |  | Lights never counted as room lights. Camera status LEDs etc. Excluded from Lights off. |
 
@@ -173,13 +173,15 @@ Items of `devices`:
 
 ## Layout (`layout`)
 
-Editor tab: **Layout**. Which rooms appear where. Lists of room ids, in order.
+Editor tab: **Layout**. Which rooms appear where (lists of room ids, in order) and your own cards on Home and on the System page.
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `home_tiles` | list of room id | first 8 rooms | Home room tiles. 8 tiles use the 3 / 2 / 3 design grid. |
 | `top_tabs` | list of room id |  | Top bar room tabs |
 | `security_tiles` | list of room id |  | Security camera tiles. Live camera stills (16:9, refreshed every 10 s) on the Home Security card; tap opens the room view. |
+| `home_cards` | list of card configs (YAML) |  | Own cards on Home. Any Lovelace cards (built-in or custom:..) shown below the Home grid, side by side (stacked on the phone). One card (type: .. plus its options) or a list of cards (each starting with - type:). |
+| `system_cards` | list of card configs (YAML) |  | Own cards on the System page. Any Lovelace cards shown on the System page below the incident report, e.g. a history graph of the server temperature. One card or a list of cards. |
 
 ## Energy meters (`energy_meters`)
 
@@ -622,6 +624,15 @@ strategy:
     security_tiles:
       - entrance
       - garage
+    home_cards:
+      - type: markdown
+        content: "**Own cards** appear here. Edit dashboard > Layout > Own cards on Home."
+    system_cards:
+      - type: history-graph
+        title: Server room temperature
+        hours_to_show: 24
+        entities:
+          - sensor.server_room_temperature
   energy_meters:
     - name: Whole house
       main: true

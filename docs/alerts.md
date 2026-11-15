@@ -23,15 +23,15 @@ The Home banner counts critical + warning as "things need attention" and lists i
 | Exterior door | binary_sensor `on` or cover `open`/`opening` | Warning, room badge "<name> open" | Room |
 | Interior door | same as above | Info, room badge | Room |
 | Data quality | mapped entities (globals, room sensors, cameras, devices) that are `unavailable` or not found; names listed | Warning | Alerts view |
-| Incident report | attributes `critical` + `warning` > 0 | Warning | more-info of the sensor |
-| Incident report (minor only) | only `minor` > 0 | Info | more-info |
+| Incident report | critical + warning > 0; the alert lists the first incident titles | Warning | System page |
+| Incident report (minor only) | only minor > 0 | Info | System page |
 | Incident report unreadable | sensor unavailable or unknown | Warning | more-info |
 | Mailbox | contact `on`; or, with `mailbox_ack` set, while the helper is `on` | Info, Acknowledge button turns the helper off | Room |
 | Updates | any `update.*` entity `on` | Info | `/config/updates` |
 | Critical detector | `on` | Critical | Room |
 | Critical detector unreadable | unavailable or unknown | Warning | Room |
 
-Counts in the incident report attributes may be numbers or lists; lists are counted by length.
+Incident report counts come from the `summary` attribute (`critical`, `warning`, `minor`), else from top-level `critical` / `warning` / `minor` attributes (numbers or lists; lists are counted by length), else from the `incidents` list by severity.
 
 ## Hysteresis
 
