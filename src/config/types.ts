@@ -74,6 +74,15 @@ export interface DeviceConfig {
   icon?: string; // optional mdi:* override
 }
 
+/** toggle: light, switch, fan, input_boolean. press: press a button / input_button, run a script. more-info: details. */
+export type TapAction = "toggle" | "more-info" | "press";
+
+/** One tile in a room's Devices card. */
+export interface RoomDeviceConfig extends DeviceConfig {
+  tap?: TapAction; // default: toggle for light, switch, fan, input_boolean; more-info otherwise
+  confirm?: boolean; // ask before the tap action and before cover Open / Close (default: true for garage doors and gates)
+}
+
 export interface RoomConfig {
   id: string;
   name: string;
@@ -105,7 +114,7 @@ export interface RoomConfig {
   camera_hq?: string;
   camera_snapshot?: string;
   camera_private?: boolean; // hidden until "Reveal"
-  devices?: DeviceConfig[];
+  devices?: RoomDeviceConfig[];
 }
 
 export interface LayoutConfig {

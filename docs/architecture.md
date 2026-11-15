@@ -48,7 +48,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/data/alerts.ts` | Attention engine ([alerts.md](alerts.md)) |
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
-| `src/ui/devices.ts` | Device tile icon, state kind, text |
+| `src/ui/devices.ts` | Device tile icon, state kind, text, tap action, cover control rules |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
 | `src/ui/time.ts` | Relative "time ago" labels (`time_display`) |
@@ -90,6 +90,9 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `window.loadCardHelpers()` then `createCardElement(config)`, `ll-rebuild` event | Own cards in rooms | frontend `src/panels/lovelace/ha-panel-lovelace.ts`, `custom-card-helpers.ts` (2026-11-01) |
 | `button.press`, `automation.toggle`, automation `last_triggered` | 3D printer job buttons, Automations card | home-assistant.io `source/_actions/automation.toggle.markdown` (2026-11-01); printer entity names from greghesp/ha-bambulab `definitions.py`, `button.py` (2026-11-01) |
 | `homeassistant.turn_on` / `turn_off` (any domain) | Room Lights chip, Home "Lights off" (lights and switches together) | home-assistant.io `source/_actions/homeassistant.turn_off.markdown` (2026-11-02) |
+| `cover.open_cover` / `close_cover` / `stop_cover`; `supported_features` OPEN = 1, CLOSE = 2, STOP = 8; enable rules (Open: not fully open and not opening, Close: not fully closed and not closing, both always with `assumed_state`; fully open / closed from `current_position` when present, else the state; nothing when unavailable) | Cover tiles (Open / Stop / Close) | core `homeassistant/components/cover/const.py` (`CoverEntityFeature`, `CoverState`), `cover/services.py` (required features per service); frontend `src/data/cover.ts` (`canOpen`, `canClose`, `canStop`), `src/data/feature/cover_entity_feature.ts` (dev branch, 2026-11-15) |
+| `button.press`, `input_button.press`, `script.turn_on` (entity target) | Device tile `tap: press`; Wake PC quick action | core `button/const.py`, `button/services.py`, `input_button/const.py`, `input_button/services.py`, `script/const.py`, `script/services.py` (dev branch, 2026-11-15) |
+| Button / input_button state: last press as ISO timestamp, `unknown` before the first press, restored after restart | "Never pressed" on device tiles | core `button/entity.py` (`state`, `__last_pressed_isoformat`), `input_button/entity.py` (inherits `ButtonEntity`); home-assistant.io `source/_integrations/button.markdown` (2026-11-15) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
