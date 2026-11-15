@@ -5,7 +5,7 @@ import { isInvalid, num, stateObj, domainOf } from "../../data/hass";
 import { floorById, imageUrl, roomById, roomsOnFloor, rooms } from "../../data/model";
 import { icon, glyph } from "../icons";
 import { PRESS_DOMAINS, TOGGLE_DOMAINS, confirmCover, coverCan, coverFeatures, deviceLabel, glyphFor, kindOf, stateText, tapAction } from "../devices";
-import { fmtHum, fmtTemp, lightMood } from "./common";
+import { fmtHum, fmtTemp, lightMood, ownCards } from "./common";
 import { stamp, stampTitle, timeAgo } from "../time";
 import { automationsCard, climateExtras, printerCard, statusStrip } from "./room-extras";
 import { vehicleCard } from "./vehicle";
@@ -173,15 +173,6 @@ const cameraCard = (ctx: Ctx, r: RoomConfig) => {
 };
 
 /** Own Lovelace cards from the room config (cards / side_cards). Accepts one card or a list of cards. */
-const ownCards = (ctx: Ctx, value: RoomConfig["cards"], cls: string) => {
-  const list = (Array.isArray(value) ? value : value && typeof value === "object" ? [value] : []).filter(
-    (c) => c && typeof c === "object"
-  );
-  return list.length
-    ? html`<div class="owncards ${cls}">${list.map((c) => html`<atlas-hui-card .config=${c} .hass=${ctx.hass}></atlas-hui-card>`)}</div>`
-    : nothing;
-};
-
 export const renderRoom = (ctx: Ctx) => {
   const r = roomById(ctx.config, ctx.roomId);
   if (!r) return html`<section class="glass card"><p class="empty">Room "${ctx.roomId}" is not in the config.</p></section>`;

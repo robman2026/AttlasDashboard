@@ -424,6 +424,44 @@ export const styles = css`
   .ptxt small { font-size: 11px; color: var(--atlas-text2); }
   .pchip.home .ptxt small { color: var(--atlas-accent); }
 
+  /* ---------- system page ---------- */
+  .syslinks { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 6px; }
+  .sys-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr); gap: 16px; align-items: start; }
+  .sys-grid > .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .report { gap: 14px; }
+  .rbanner { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 14px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.12); }
+  .rbanner .rico { width: 44px; height: 44px; flex: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .rbanner b { font-size: 16px; }
+  .rbanner small { font-size: 12px; color: var(--atlas-text2); }
+  .rbanner.crit { background: rgba(255, 114, 125, 0.12); border-color: rgba(255, 114, 125, 0.5); }
+  .rbanner.crit .rico { background: rgba(255, 114, 125, 0.2); color: var(--atlas-crit); }
+  .rbanner.warn, .rbanner.wait { background: rgba(255, 191, 87, 0.1); border-color: rgba(255, 191, 87, 0.45); }
+  .rbanner.warn .rico, .rbanner.wait .rico { background: rgba(255, 191, 87, 0.18); color: var(--atlas-warn); }
+  .rbanner.info .rico { background: rgba(167, 163, 255, 0.18); color: var(--atlas-info); }
+  .rstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .rstat { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.1); }
+  .rstat b { font-size: 24px; font-weight: 700; color: var(--atlas-text2); }
+  .rstat small { font-size: 12px; color: var(--atlas-text2); }
+  .rstat.critical.has b { color: var(--atlas-crit); }
+  .rstat.warning.has b { color: var(--atlas-warn); }
+  .rstat.minor.has b { color: var(--atlas-info); }
+  .incs { display: flex; flex-direction: column; gap: 8px; }
+  .inc { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; padding: 12px 14px; border-radius: 14px; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); border-left: 3px solid var(--atlas-info); }
+  .inc.critical { border-left-color: var(--atlas-crit); }
+  .inc.warning { border-left-color: var(--atlas-warn); }
+  .incmain { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .inchead { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .inchead b { font-size: 14px; }
+  .inc p { margin: 0; font-size: 13px; color: var(--atlas-text2); line-height: 1.4; }
+  .inc small { font-size: 11px; }
+  .itag { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: rgba(167, 163, 255, 0.18); color: var(--atlas-info); }
+  .itag.critical { background: rgba(255, 114, 125, 0.18); color: var(--atlas-crit); }
+  .itag.warning { background: rgba(255, 191, 87, 0.18); color: var(--atlas-warn); }
+  .icount { font-size: 12px; color: var(--atlas-text2); }
+  .increc { padding-left: 14px; border-left: 1px solid rgba(188, 200, 222, 0.12); display: flex; flex-direction: column; gap: 4px; }
+  .increc small { font-size: 11px; color: var(--atlas-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .increc p { color: var(--atlas-text); }
+
   /* ---------- vehicle card ---------- */
   .vehicle { gap: 14px; }
   .vehicle h2 { min-width: 0; }
@@ -527,13 +565,15 @@ export const styles = css`
     .logo .lt, .nav .lbl, .user .lbl { display: none; }
     .logo { padding: 0 0 26px; justify-content: center; }
     .nav button { justify-content: center; padding: 0; }
-    .home-grid, .room-grid, .room-grid.has-side, .energy-top, .sec-grid { grid-template-columns: minmax(0, 1fr); }
+    .home-grid, .room-grid, .room-grid.has-side, .energy-top, .sec-grid, .sys-grid { grid-template-columns: minmax(0, 1fr); }
     .room-grid { grid-template-areas: "left" "main"; }
     .room-grid.has-side { grid-template-areas: "left" "side" "main"; grid-template-rows: auto; }
   }
   @media (max-width: 760px) {
     .lrooms { grid-template-columns: minmax(0, 1fr); }
     .scams { grid-template-columns: minmax(0, 1fr); }
+    .inc { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .increc { padding: 10px 0 0; border-left: 0; border-top: 1px solid rgba(188, 200, 222, 0.12); }
     .amodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .ltiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .vbody { grid-template-columns: minmax(0, 1fr); }

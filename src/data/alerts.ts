@@ -4,6 +4,7 @@ import type { AtlasConfig } from "../config/types";
 import type { HomeAssistant } from "./hass";
 import { domainOf, friendlyName, isInvalid, isOpen, num, stateObj } from "./hass";
 import { deviceName, mappedEntities, roomOfEntity } from "./model";
+import { readIncidentReport } from "./incidents";
 
 export type Severity = "critical" | "warning" | "info";
 
@@ -17,6 +18,7 @@ export interface AtlasAlert {
   badge: string; // e.g. "Too hot", "Open"
   icon: string; // ATLAS icon key
   room?: string; // room id to navigate to
+  view?: string; // ATLAS view path to open (e.g. "system")
   roomBadge?: string; // badge shown on the room tile
   entity?: string; // more-info target when no room
   href?: string; // HA path when neither room nor entity
@@ -26,12 +28,6 @@ export interface AtlasAlert {
 const tempActive = new Map<string, boolean>();
 
 const SEV_ORDER: Record<Severity, number> = { critical: 0, warning: 1, info: 2 };
-
-const count = (v: unknown): number => {
-  if (Array.isArray(v)) return v.length;
-  const n = Number(v);
-  return Number.isFinite(n) ? n : 0;
-};
 
 export const evaluateAlerts = (hass: HomeAssistant, c: AtlasConfig): AtlasAlert[] => {
   const out: AtlasAlert[] = [];
@@ -107,20 +103,22 @@ export const evaluateAlerts = (hass: HomeAssistant, c: AtlasConfig): AtlasAlert[
     }
   }
 
-  // Incident report (sensor.incident_report: attributes critical / warning / minor).
+  // Incident report (log analyzer sensor; counts from summary, top-level attributes or the incident list).
   const inc = c.entities?.incidents;
   if (inc) {
     const s = stateObj(hass, inc);
-    if (isInvalid(s)) {
+    const rep = readIncidentReport(s);
+    if (!rep) {
       out.push({ id: "incidents-na", severity: "warning", title: "Incident report unavailable", meta: "Log analysis state unknown",
         chipTitle: "Log report", chipValue: "No data", badge: "Unavailable", icon: "system", entity: inc });
     } else {
-      const cr = count(s!.attributes.critical), w = count(s!.attributes.warning), m = count(s!.attributes.minor);
+      const { critical: cr, warning: w, minor: m } = rep.counts;
       if (cr + w + m > 0) {
         const parts = [cr && `${cr} critical`, w && `${w} warning${w > 1 ? "s" : ""}`, m && `${m} minor`].filter(Boolean).join(", ");
         out.push({ id: "incidents", severity: cr + w > 0 ? "warning" : "info", title: `Log report: ${parts}`,
-          meta: String(s!.attributes.summary ?? "Incident analyzer"), chipTitle: "System", chipValue: `${cr + w + m} issue${cr + w + m > 1 ? "s" : ""}`,
-          badge: "Check log", icon: "system", entity: inc });
+          meta: rep.incidents.length ? rep.incidents.slice(0, 2).map((x) => x.title).join(" · ") : "Incident analyzer",
+          chipTitle: "System", chipValue: `${cr + w + m} issue${cr + w + m > 1 ? "s" : ""}`,
+          badge: "Check log", icon: "system", view: "system", entity: inc });
       }
     }
   }

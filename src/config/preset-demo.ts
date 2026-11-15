@@ -246,6 +246,9 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     home_tiles: ["living", "office", "kids_room", "bedroom", "hallway", "basement", "garage", "server"],
     top_tabs: ["living", "kitchen", "bedroom", "office", "kids_room", "garage"],
     security_tiles: ["entrance", "garage"],
+    // Own Lovelace cards (any card type). Built-in cards here so the demo works everywhere.
+    home_cards: [{ type: "markdown", content: "**Own cards** appear here. Edit dashboard > Layout > Own cards on Home." }],
+    system_cards: [{ type: "history-graph", title: "Server room temperature", hours_to_show: 24, entities: ["sensor.server_room_temperature"] }],
   },
   energy_meters: [
     {

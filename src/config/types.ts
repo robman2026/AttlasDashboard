@@ -139,6 +139,8 @@ export interface LayoutConfig {
   home_tiles?: string[];
   top_tabs?: string[];
   security_tiles?: string[];
+  home_cards?: CardConfig | CardConfig[]; // own Lovelace cards below the Home grid
+  system_cards?: CardConfig | CardConfig[]; // own Lovelace cards on the System page
 }
 
 /** One power meter or metered circuit on the Energy view. */
@@ -177,7 +179,7 @@ export interface AtlasConfig {
 /** Config passed to every generated custom:atlas-view card. */
 export interface AtlasViewCardConfig {
   type: string;
-  view: "home" | "alerts" | "rooms" | "room" | "energy" | "lights" | "security";
+  view: "home" | "alerts" | "rooms" | "room" | "energy" | "lights" | "security" | "system";
   room?: string;
   floor?: string;
   atlas: AtlasConfig;

@@ -5,6 +5,17 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- System page (porting plan step 5, sidebar **System**; before: Home Assistant settings). The **Log report** from the log analyzer sensor (`entities.incidents`) shows:
+  - a banner (red with a critical incident, amber with warnings, "waiting" until the sensor reports);
+  - Critical / Warning / Minor counts;
+  - one row per incident, critical first: severity, title, count, detail, sources and recommendation.
+
+  Also on the page:
+  - **Updates**: `update.*` entities with an update available, installed and latest version; tap opens the HA update dialog.
+  - **Unavailable devices**: the entities in the config that are unavailable or missing, with room and entity id.
+  - Links to Settings, Logs, Repairs and Updates.
+  - Own cards (`layout.system_cards`).
+- Own cards on Home (`layout.home_cards`): any Lovelace cards below the Home grid, side by side (stacked on the phone). One card or a list, like the room own cards. Demo house: a note card on Home and a history graph on the System page.
 - Security page (porting plan step 4, sidebar **Security**; the Home Security card title opens it): alarm panel with its state, since when and who changed it, one button per arm mode the panel supports (Home, Away, Night, Vacation, Custom bypass from `supported_features`) and Disarm, all asking first; panels that need a code open the Home Assistant dialog, which asks for it. Doors and windows (room contacts and covers plus the alert door lists, mailbox left out; open first, exterior marked), Locks (room `lock.*` devices and vehicle locks; Unlock asks first, code locks open the HA dialog), Motion and presence, and every camera of the house as 16:9 stills refreshed every 10 s (a camera shared by rooms appears once, private cameras stay hidden, tap opens the room). No new options. The view exists only when there is something to show.
 - Presence on Home: one chip per person in `entities.persons` (picture or initial, name, Home / Away / zone; tap opens the person). Next to the greeting on desktop, below it on the phone. Demo house: two persons and a front door lock.
 - Lights page (porting plan step 3, sidebar **Lights**): every room's lights grouped by floor, "N of M on" and **All off** (asks first). Per room: name (opens the room), "x of y on" and an on / off switch. Light tile: tap toggles, hold opens details, drag left / right dims lights that support brightness (live level on the tile, `light.turn_on` with `brightness_pct` on release); switches used as lights toggle. Uses each room's lights as already configured (`light_entities`, else its `light.*` devices minus excluded status LEDs); no new options. The view exists only when some room has lights. Phone bottom navigation: Lights replaces Climate (Climate stays on Home).
@@ -39,6 +50,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- The "Log report" alert opens the System page and lists the first incident titles.
 - Home Security card: the open count uses the same list as the Security page (alert door lists included, mailbox left out).
 - Sidebar **Security** opens the Security page (before: the alarm details).
 - A button or input_button that was never pressed (state `unknown`) shows "Never pressed" on a normal tile instead of the dashed "Unknown" style used for unavailable devices.
@@ -56,6 +68,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Version is read from `package.json` at build time (single source).
 
 ### Fixed
+- Incident report: counts are read from the `summary` object the log analyzer publishes (then top-level `critical` / `warning` / `minor`, then the incident list). Before, a sensor with only `summary` raised no alert, and the alert text showed "[object Object]".
 - A motion, occupancy or presence sensor whose entity id contains "door" or "window" (e.g. a doorbell's person sensor) no longer counts as a door or window.
 - Room view with own left-column cards (`side_cards`, e.g. a tall remote) on smaller screens: the card was pushed below the window and the Devices card stretched into a large empty photo. From 1200 px wide these cards now get their own third column (side columns scale with the width, device tiles pick their column count); from 1100 to 1200 px they sit below climate and camera while Devices spans the full height; phone and tablet stack them after the camera.
 - Camera-wall floor page with a single room (e.g. an attic) looked lopsided: the one tile used half of the left card. It now fills the whole card and the left side is narrower, so the cameras get more width. With an odd number of rooms the last tile spans the full row.
