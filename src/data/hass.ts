@@ -13,6 +13,10 @@ export interface HomeAssistant {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;
   formatEntityState?(stateObj: HassEntity, state?: string): string;
   hassUrl?(path?: string): string;
+  /** WebSocket connection (home-assistant-js-websocket); used for weather/subscribe_forecast. */
+  connection?: {
+    subscribeMessage<T>(callback: (msg: T) => void, msg: Record<string, unknown>): Promise<() => void>;
+  };
 }
 
 export const UNAVAILABLE = "unavailable";

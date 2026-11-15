@@ -29,6 +29,8 @@ Public, anonymised summary of the approved ATLAS design. House-specific details 
 
 **Own cards on Home:** full-width row of cards below the Home grid (side by side, stacked on the phone).
 
+**Weather (Home):** compact forecast strip right of the greeting, beside the presence chips: Days / Hours toggle, then 5 day pills (or 6 hour pills) with label, icon, high and low, rain chance in blue; the first pill is highlighted. Tap opens the HA weather dialog. Below 1100 px it sits under the greeting and fills the width. Keeps the Home page within 1600 x 1000.
+
 **Presence (Home):** person chips (avatar or initial with a status dot, name, Home / Away / zone) right of the greeting on desktop, below it on the phone.
 
 **Lights:** hero with "N of M on", All off (confirm); one card per floor, a block per room (name opens the room, "x of y on", on / off switch) with light tiles (amber fill showing the brightness, tap toggles, hold for details, horizontal drag dims). Phone: room blocks stacked, tiles 2 per row.

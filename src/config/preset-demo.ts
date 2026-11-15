@@ -30,6 +30,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     interior_doors: ["binary_sensor.office_door", "binary_sensor.bathroom_door"],
     critical: [],
     mailbox: "binary_sensor.mailbox",
+    rain_windows: ["binary_sensor.attic_window", "binary_sensor.kitchen_window", "binary_sensor.bathroom_skylight", "binary_sensor.hallway_skylight"],
     updates: true,
     data_quality: true,
   },

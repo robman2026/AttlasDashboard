@@ -2,9 +2,10 @@
 // Rule: unknown or unavailable is never treated as "clear".
 import type { AtlasConfig } from "../config/types";
 import type { HomeAssistant } from "./hass";
-import { domainOf, friendlyName, isInvalid, isOpen, num, stateObj } from "./hass";
+import { domainOf, friendlyName, isInvalid, isOpen, num, stateObj, formatState } from "./hass";
 import { deviceName, mappedEntities, roomOfEntity } from "./model";
 import { readIncidentReport } from "./incidents";
+import { type ForecastMap, SEVERE_CONDITIONS, WET_CONDITIONS, conditionLabel, fcKey, forecastHasPrecip } from "./weather";
 
 export type Severity = "critical" | "warning" | "info";
 
@@ -29,7 +30,7 @@ const tempActive = new Map<string, boolean>();
 
 const SEV_ORDER: Record<Severity, number> = { critical: 0, warning: 1, info: 2 };
 
-export const evaluateAlerts = (hass: HomeAssistant, c: AtlasConfig): AtlasAlert[] => {
+export const evaluateAlerts = (hass: HomeAssistant, c: AtlasConfig, forecasts: ForecastMap = {}): AtlasAlert[] => {
   const out: AtlasAlert[] = [];
   const a = c.alerts ?? {};
   const roomName = (id: string) => roomOfEntity(c, id)?.name;
@@ -85,6 +86,34 @@ export const evaluateAlerts = (hass: HomeAssistant, c: AtlasConfig): AtlasAlert[
   };
   doors(a.exterior_doors, "warning");
   doors(a.interior_doors, "info");
+
+  // Open window while it rains (porting plan step 6, rule of the owner's Adaptive Room Card):
+  // the weather condition is wet and the hourly forecast does not confirm it is dry.
+  const wxId = a.rain_weather || c.entities?.weather;
+  const wx = stateObj(hass, wxId);
+  if (a.rain_windows?.length && wxId && !isInvalid(wx) && WET_CONDITIONS.includes(wx!.state)) {
+    const min = Number.isFinite(Number(a.rain_min_mm)) && a.rain_min_mm !== undefined ? Number(a.rain_min_mm) : 0.1;
+    if (forecastHasPrecip(forecasts[fcKey(wxId, "hourly")], min) !== false) {
+      const what = formatState(hass, wx!) || conditionLabel(wx!.state); // HA's localized condition
+      for (const id of a.rain_windows) {
+        const s = stateObj(hass, id);
+        if (isInvalid(s) || !isOpen(s)) continue;
+        const room = roomOfEntity(c, id);
+        out.push({ id: `rain-${id}`, severity: "warning", title: `${room ? `${room.name} ` : ""}${label(id).toLowerCase()} open · ${what.toLowerCase()}`,
+          meta: `${friendlyName(hass, id)}${room ? ` · ${room.name}` : ""} · close it, the weather is ${what.toLowerCase()}`,
+          chipTitle: room?.name ?? label(id), chipValue: label(id), badge: what, icon: "door-open", room: room?.id,
+          roomBadge: `${label(id)} open · ${what.toLowerCase()}`, entity: id });
+      }
+    }
+  }
+
+  // Severe weather (lightning, hail, pouring, exceptional).
+  const main = stateObj(hass, c.entities?.weather);
+  if (a.severe_weather !== false && c.entities?.weather && !isInvalid(main) && SEVERE_CONDITIONS.includes(main!.state)) {
+    const what = formatState(hass, main!) || conditionLabel(main!.state);
+    out.push({ id: "severe-weather", severity: "warning", title: `Severe weather: ${what.toLowerCase()}`, meta: "Current condition from the weather entity",
+      chipTitle: "Weather", chipValue: what, badge: "Weather", icon: "alert", entity: c.entities.weather });
+  }
 
   // Data quality: mapped entities that are unavailable or missing.
   if (a.data_quality !== false) {

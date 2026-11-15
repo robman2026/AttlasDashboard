@@ -56,6 +56,8 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/views/security.ts` | Security page: alarm modes, doors and windows, locks, motion, all cameras; `cameraStill` also used by Home |
 | `src/ui/views/presence.ts` | Presence chips on Home (`entities.persons`) |
 | `src/ui/views/system.ts` | System page: log report, updates, unavailable devices, HA links, `layout.system_cards` |
+| `src/data/weather.ts` | Forecast types from `supported_features`, wet and severe conditions, the precipitation guard of the rain rule |
+| `src/ui/views/weather.ts` | Forecast strip on Home (Days / Hours) |
 | `src/data/incidents.ts` | Reads the log analyzer sensor (counts from `summary`, top-level attributes or the incident list) |
 | `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
@@ -114,6 +116,8 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | Log analyzer sensor: state summary text; attributes `generated` (ISO), `summary` (`critical`, `warning`, `minor`), `incidents` (`id`, `severity`, `title`, `detail`, `recommendation`, `count`, `sources`) | System page log report, Log report alert | owner's repositories `ha-log-analyzer-dashboard` (`system-incident-report-card.js` `_readEntity`, README "How the sensor looks", `node-red-analyzer.md`), read 2026-11-15 |
 | `update` entity: state `on` = update available; attributes `title`, `installed_version`, `latest_version`, `in_progress` | System page Updates card | frontend `src/data/update.ts` (dev branch 2026-10-31) |
 | Config routes `/config/system`, `/config/logs`, `/config/repairs`, `/config/updates` | System page links | frontend `src/panels/config/ha-panel-config.ts` (dev branch 2026-10-31) |
+| `weather/subscribe_forecast` websocket subscription (`entity_id`, `forecast_type` daily / hourly / twice_daily) returning `{ type, forecast }`; weather `supported_features` FORECAST_DAILY 1, FORECAST_HOURLY 2, FORECAST_TWICE_DAILY 4; forecast fields `datetime`, `condition`, `temperature`, `templow`, `precipitation`, `precipitation_probability`; the `forecast` attribute is legacy | Home forecast strip, rain rule guard (hourly). `<atlas-view>` keeps one subscription per needed entity and type and ends it when the view is removed | frontend `src/data/weather.ts` (`subscribeForecast`, `getSupportedForecastTypes`, `ForecastAttribute`, dev branch 2026-10-31) |
+| Weather conditions `clear-night`, `cloudy`, `exceptional`, `fog`, `hail`, `lightning`, `lightning-rainy`, `partlycloudy`, `pouring`, `rainy`, `snowy`, `snowy-rainy`, `sunny`, `windy`, `windy-variant` | Rain rule (wet set), severe weather rule | frontend `src/data/weather.ts` (`weatherIcons`); rain guard and condition groups from the owner's Adaptive-Room-Card `room-card.js` (`_computeActiveAlerts`, `_forecastHasPrecip`), read 2026-11-15 |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 

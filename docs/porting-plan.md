@@ -24,8 +24,8 @@ Every ported feature has a fixed scope, and room features appear only where they
 | Room power | Room | `power_*` | any room with a metered circuit |
 | Appliances (oven, dishwasher, washer, dryer) | Room | `appliances` | kitchen, laundry |
 | Presence | Page (Home) | `entities.persons` | Home |
-| Weather forecast and warnings | Page (Home) and alerts | `entities.weather`, alert options | Home, Alerts |
-| Open window while it rains | Alert rule | `alerts.rain_windows` | Alerts, the window's room |
+| Weather forecast and warnings | Page (Home) and alerts | `entities.weather`, `alerts.severe_weather` | Home (strip next to the greeting), Alerts |
+| Open window while it rains | Alert rule | `alerts.rain_windows`, `rain_weather`, `rain_min_mm` | Alerts, the window's room |
 | Own cards on Home | Page (Home) | `layout.home_cards` | Home |
 | Lights page | Page | each room's lights (no new options) | sidebar "Lights" |
 | Security page | Page | alarm, cameras, contacts already in the config | sidebar "Security" |
@@ -70,8 +70,8 @@ Applies to every step, in addition to [development.md](development.md).
 | 2 | Vehicle card (`car_*`) | Room | Done (PR #17) |
 | 3 | Lights page (tap toggles, hold for details, drag to dim) | Page | Done (PR #18) |
 | 4 | Security page, presence on Home | Page | Done (PR #19) |
-| 5 | System page, `layout.home_cards` | Page | Done, in review |
-| 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Planned |
+| 5 | System page, `layout.home_cards` | Page | Done (PR #20) |
+| 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Done, in review |
 | 7 | Fans, mower, salt level, room power | Device and room | Planned |
 | 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Decision needed |
 | 9 | Appliances | Room | Planned |

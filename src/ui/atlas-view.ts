@@ -21,6 +21,7 @@ import { renderEnergy } from "./views/energy";
 import { hasLights, renderLights } from "./views/lights";
 import { renderSecurity } from "./views/security";
 import { renderSystem } from "./views/system";
+import { type ForecastMap, type ForecastType, fcKey, homeForecastTypes, supportedForecastTypes } from "../data/weather";
 
 const MOODS: Record<string, { base: string[]; g: string[]; light: string; tile: string; dark: string }> = {
   graphite: { base: ["#1A1D22", "#14171C", "#0E1014"], g: ["rgba(150,160,180,0.14)", "rgba(130,140,160,0.12)", "rgba(170,180,200,0.16)", "rgba(50,54,62,0.5)"], light: "rgba(220,228,240,0.4)", tile: "120,130,150", dark: "20,23,28" },
@@ -51,6 +52,8 @@ const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 
 
 // Shared across view instances so camera reveal etc. survive view switches in one session.
 const UI_STATE: Record<string, unknown> = {};
+/** Latest weather forecasts ("entity|type"), shared by all atlas-view elements of the dashboard. */
+const FORECASTS: ForecastMap = {};
 
 export class AtlasView extends LitElement {
   static styles = styles;
@@ -96,6 +99,8 @@ export class AtlasView extends LitElement {
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
       ...(c.entities?.persons ?? []),
+      ...(c.alerts?.rain_windows ?? []),
+      ...[c.alerts?.rain_weather].filter((x): x is string => !!x),
       ...meterEntities(c),
       // Optional room sections: re-render only, not part of the data-quality alert
       // (a printer that is switched off reports unavailable).
@@ -147,6 +152,50 @@ export class AtlasView extends LitElement {
     this._sideRo?.disconnect();
     this._side = undefined;
     window.removeEventListener("resize", this._onResize);
+    for (const p of this._fcSubs.values()) p.then((un) => un()).catch(() => undefined);
+    this._fcSubs.clear();
+  }
+
+  // ---- weather forecasts (websocket weather/subscribe_forecast, frontend src/data/weather.ts) ----
+  private _fcSubs = new Map<string, Promise<() => void>>();
+
+  /** Forecast subscriptions this view needs: the Home card's type, and hourly for the rain rule. */
+  private _neededForecasts(): [string, ForecastType][] {
+    const c = this._config?.atlas;
+    if (!c || !this.hass) return [];
+    const out: [string, ForecastType][] = [];
+    const w = c.entities?.weather;
+    if (w && this._config!.view === "home") {
+      const types = homeForecastTypes(this.hass.states[w]);
+      const pick = (UI_STATE.wxType as ForecastType) ?? types[0];
+      if (pick && types.includes(pick)) out.push([w, pick]);
+    }
+    const rw = c.alerts?.rain_weather || w;
+    if (rw && c.alerts?.rain_windows?.length && supportedForecastTypes(this.hass.states[rw]).includes("hourly")) out.push([rw, "hourly"]);
+    return out;
+  }
+
+  private _syncForecasts() {
+    const conn = this.hass?.connection;
+    if (!conn || !this.isConnected) return;
+    const need = new Map(this._neededForecasts().map(([e, t]) => [fcKey(e, t), [e, t] as [string, ForecastType]]));
+    for (const [key, p] of this._fcSubs) {
+      if (need.has(key)) continue;
+      p.then((un) => un()).catch(() => undefined);
+      this._fcSubs.delete(key);
+    }
+    for (const [key, [entity, type]] of need) {
+      if (this._fcSubs.has(key)) continue;
+      const p = conn.subscribeMessage<{ type: string; forecast: ForecastMap[string] }>(
+        (msg) => {
+          FORECASTS[key] = msg.forecast ?? null;
+          this.requestUpdate();
+        },
+        { type: "weather/subscribe_forecast", entity_id: entity, forecast_type: type }
+      );
+      p.catch(() => this._fcSubs.delete(key)); // entity without this forecast type: show without it
+      this._fcSubs.set(key, p);
+    }
   }
 
   /** Rooms page with a camera wall on a wide screen: the page is one window tall, no scrolling. */
@@ -159,6 +208,7 @@ export class AtlasView extends LitElement {
   private _wall?: HTMLElement;
 
   protected updated() {
+    this._syncForecasts();
     this._watchSide();
     const wall = this.renderRoot.querySelector<HTMLElement>(".camwall.fitwall") ?? undefined;
     if (wall === this._wall) return;
@@ -294,6 +344,7 @@ export class AtlasView extends LitElement {
       },
       refresh: () => this.requestUpdate(),
       ui: UI_STATE,
+      forecasts: FORECASTS,
     };
   }
 
@@ -315,7 +366,7 @@ export class AtlasView extends LitElement {
         </section></div></div></div>`;
     }
 
-    const alerts = evaluateAlerts(this.hass, c);
+    const alerts = evaluateAlerts(this.hass, c, FORECASTS);
     const ctx = this._ctx(alerts);
     const view = this._config.view;
     const room = view === "room" ? roomById(c, this._config.room) : undefined;
