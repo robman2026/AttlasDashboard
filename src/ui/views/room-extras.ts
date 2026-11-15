@@ -7,6 +7,7 @@ import { formatState, isInvalid, num, stateObj, domainOf } from "../../data/hass
 import { icon, glyph } from "../icons";
 import { deviceLabel, glyphFor } from "../devices";
 import { roomLightEntities } from "../../data/model";
+import { hasVehicle, vehicleLock } from "./vehicle";
 import { timeAgo } from "../time";
 
 const val = (ctx: Ctx, id?: string) => {
@@ -53,6 +54,16 @@ export const statusStrip = (ctx: Ctx, r: RoomConfig) => {
           ${glyph("printer", 18)}<span><b>${r.printer_name || "3D printer"}</b><small>${val(ctx, r.printer_status)}${p !== undefined ? ` · ${Math.round(p)} %` : ""}</small>
           ${p !== undefined ? html`<i class="sbar"><i style="width:${Math.max(0, Math.min(100, p))}%"></i></i>` : nothing}</span>
         </button>`
+      : nothing}
+    ${hasVehicle(r)
+      ? (() => {
+          const v = vehicleLock(ctx, r);
+          const range = stateObj(ctx.hass, r.car_range);
+          const sub = [v.text, range && !isInvalid(range) ? formatState(ctx.hass, range) : ""].filter(Boolean).join(" · ");
+          return html`<button class="schip ${v.state === "unlocked" || v.state === "jammed" ? "warn" : ""}" @click=${() => (v.entity || r.car_range) && ctx.moreInfo((v.entity || r.car_range)!)}>
+            ${glyph("car", 18)}<span><b>${r.car_name || "Vehicle"}</b><small>${sub || "No data"}</small></span>
+          </button>`;
+        })()
       : nothing}
     ${na ? html`<span class="schip warn"><span><b>${na} unavailable</b><small>device${na > 1 ? "s" : ""} in this room</small></span></span>` : nothing}
   </div>`;

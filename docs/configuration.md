@@ -132,6 +132,23 @@ A list; each item has:
 | `printer_resume` | entity (button) |  | Resume button |
 | `printer_stop` | entity (button) |  | Stop button. Always asks for confirmation. |
 | `printer_picture` | entity (camera, image) |  | Printer picture. Chamber camera or cover image, shown as a still in the card. |
+| `car_name` | text |  | Vehicle name. Title of the vehicle card. The card appears in this room when any vehicle entity below is set. |
+| `car_subtitle` | text |  | Vehicle subtitle. e.g. the model. |
+| `car_image` | file name or URL |  | Vehicle image. File under the image base URL or a full URL (e.g. /local/car.png). Empty: a drawn car outline. |
+| `car_lock` | entity (lock) |  | Lock. Shows locked / unlocked with Lock and Unlock buttons (Unlock asks first). Locks that need a code open the Home Assistant lock dialog. |
+| `car_doors_locked` | entity (sensor, binary_sensor) |  | Doors locked status. Read-only lock status when there is no lock entity. A binary_sensor with device class lock counts off as locked (Home Assistant convention). |
+| `car_doors_locked_when` | text | locked (sensor), off (binary_sensor) | Locked when state is. The state value of the doors status that means locked, if it differs. |
+| `car_range` | entity (sensor) |  | Range |
+| `car_odometer` | entity (sensor) |  | Odometer |
+| `car_location` | entity (device_tracker, sensor) |  | Location. A device_tracker shows its zone (Home, Away or the zone name). |
+| `car_daily_distance` | entity (sensor) |  | Distance today |
+| `car_daily_trips` | entity (sensor) |  | Trips today |
+| `car_monthly_distance` | entity (sensor) |  | Distance this month |
+| `car_monthly_trips` | entity (sensor) |  | Trips this month |
+| `car_last_updated` | entity (sensor, timestamp) |  | Last update. When the car last reported. Empty: the newest update among the vehicle entities. |
+| `car_flash` | entity (button, input_button, script) |  | Flash lights |
+| `car_horn` | entity (button, input_button, script) |  | Honk horn. Asks first. |
+| `car_refresh` | entity (button, input_button, script) |  | Update data. Asks the car to send fresh data. |
 | `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. One card (type: custom:my-card plus its options) or a list of cards (each starting with - type:). |
 | `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). One card or a list of cards. |
 | `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. Per tile you can change the tap action (e.g. press a button) and ask before acting. A cover gets a full-width tile with Open / Stop / Close buttons for the actions it supports. |
@@ -441,6 +458,20 @@ strategy:
       temperature: sensor.garage_temperature
       humidity: sensor.garage_humidity
       camera: camera.garage
+      car_name: Family car
+      car_subtitle: Electric hatchback
+      car_lock: lock.family_car
+      car_range: sensor.family_car_range
+      car_odometer: sensor.family_car_odometer
+      car_location: device_tracker.family_car
+      car_daily_distance: sensor.family_car_distance_today
+      car_daily_trips: sensor.family_car_trips_today
+      car_monthly_distance: sensor.family_car_distance_month
+      car_monthly_trips: sensor.family_car_trips_month
+      car_last_updated: sensor.family_car_last_update
+      car_flash: button.family_car_flash_lights
+      car_horn: button.family_car_honk
+      car_refresh: button.family_car_update_data
       devices:
         - entity: cover.garage_door
           name: Garage door

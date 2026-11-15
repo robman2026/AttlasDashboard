@@ -66,14 +66,16 @@ export const roomImage = (c: AtlasConfig, room?: RoomConfig): string | undefined
   return SHIPPED_IMAGES.includes(auto) ? auto : undefined;
 };
 
-export const imageUrl = (c: AtlasConfig, room?: RoomConfig): string | undefined => {
-  const file = roomImage(c, room);
+/** A file under the image base URL (default: the shipped rooms/ folder), or a full URL / absolute path as is. */
+export const assetUrl = (c: AtlasConfig, file?: string): string | undefined => {
   if (!file) return undefined;
   if (/^(https?:)?\/\//.test(file) || file.startsWith("/")) return file;
   let base = c.appearance?.image_path || DEFAULT_IMAGE_PATH;
   if (!base.endsWith("/")) base += "/";
   return base + file;
 };
+
+export const imageUrl = (c: AtlasConfig, room?: RoomConfig): string | undefined => assetUrl(c, roomImage(c, room));
 
 export const accentOf = (c: AtlasConfig) => {
   const a = c.appearance?.accent ?? "";

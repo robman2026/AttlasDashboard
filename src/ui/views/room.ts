@@ -8,6 +8,7 @@ import { PRESS_DOMAINS, TOGGLE_DOMAINS, confirmCover, coverCan, coverFeatures, d
 import { fmtHum, fmtTemp, lightMood } from "./common";
 import { stamp, stampTitle, timeAgo } from "../time";
 import { automationsCard, climateExtras, printerCard, statusStrip } from "./room-extras";
+import { vehicleCard } from "./vehicle";
 
 const LONG_PRESS_MS = 500;
 
@@ -256,6 +257,7 @@ export const renderRoom = (ctx: Ctx) => {
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
           ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d, mood?.ids ?? []))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
+        ${vehicleCard(ctx, r)}
         ${automationsCard(ctx, r)}
         ${ownCards(ctx, r.cards, "main")}
         ${peers.length > 1

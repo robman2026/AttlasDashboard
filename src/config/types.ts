@@ -110,6 +110,24 @@ export interface RoomConfig {
   printer_resume?: string; // button
   printer_stop?: string; // button, always confirmed
   printer_picture?: string; // camera or image entity (chamber camera, cover image)
+  // Vehicle card (porting plan step 2). Appears in the room whose config sets car_* entities.
+  car_name?: string;
+  car_subtitle?: string; // e.g. model
+  car_image?: string; // file under the image base URL, or a full URL; empty: drawn car outline
+  car_lock?: string; // lock entity: state plus Lock / Unlock
+  car_doors_locked?: string; // read-only lock status (sensor or binary_sensor with device class lock)
+  car_doors_locked_when?: string; // state value that means locked (default: by entity type)
+  car_range?: string;
+  car_odometer?: string;
+  car_location?: string; // device_tracker (zone name, home, not_home) or sensor
+  car_daily_distance?: string;
+  car_daily_trips?: string;
+  car_monthly_distance?: string;
+  car_monthly_trips?: string;
+  car_last_updated?: string; // timestamp sensor; otherwise the newest last_updated of the car entities
+  car_flash?: string; // button / input_button / script
+  car_horn?: string; // button / input_button / script, asks first
+  car_refresh?: string; // button / input_button / script: ask the car for fresh data
   camera?: string; // live stream entity
   camera_hq?: string;
   camera_snapshot?: string;

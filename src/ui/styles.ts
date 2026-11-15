@@ -353,6 +353,29 @@ export const styles = css`
   .tog.on i { left: 23px; background: var(--atlas-accent); }
   .tog:disabled { opacity: 0.4; }
 
+  /* ---------- vehicle card ---------- */
+  .vehicle { gap: 14px; }
+  .vehicle h2 { min-width: 0; }
+  .vname { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
+  .vname small { font-size: 12px; font-weight: 500; }
+  .vlock { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid rgba(188, 200, 222, 0.25); color: var(--atlas-text2); flex: none; }
+  .vlock.locked { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); }
+  .vlock.unlocked, .vlock.jammed { color: var(--atlas-warn); border-color: rgba(255, 191, 87, 0.5); background: rgba(255, 191, 87, 0.12); }
+  .vbody { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 14px; align-items: center; }
+  .vpic { display: flex; align-items: center; justify-content: center; min-height: 120px; border-radius: 14px; background: rgba(0, 0, 0, 0.25); overflow: hidden; }
+  .vpic img { width: 100%; height: 100%; max-height: 220px; object-fit: contain; }
+  .vsvg { width: 92%; height: auto; }
+  .vstats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .vstats > :last-child:nth-child(odd) { grid-column: span 2; }
+  .vstat { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.1); text-align: left; min-width: 0; }
+  .vstat b { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vstat small { font-size: 11px; color: var(--atlas-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vfoot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .vupd { font-size: 12px; }
+  .vacts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .vact { width: auto; padding: 0 12px; gap: 6px; color: var(--atlas-text); font-size: 12px; }
+  .vact:disabled { opacity: 0.4; cursor: default; }
+
   /* ---------- time ago ---------- */
   .ago { font-size: 11px; color: var(--atlas-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dev .txt .ago { margin-top: 1px; }
@@ -438,6 +461,9 @@ export const styles = css`
     .room-grid.has-side { grid-template-areas: "left" "side" "main"; grid-template-rows: auto; }
   }
   @media (max-width: 760px) {
+    .vbody { grid-template-columns: minmax(0, 1fr); }
+    .vact span { display: none; }
+    .vact { width: 44px; padding: 0; }
     .lchip { padding: 2px 7px; font-size: 10px; }
     .tile .name, .tile .hum { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tile .info { flex: 1; }

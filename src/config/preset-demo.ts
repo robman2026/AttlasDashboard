@@ -150,6 +150,14 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     {
       id: "garage", name: "Garage", floor: "ground", icon: "garage", image: "garage.jpg",
       temperature: "sensor.garage_temperature", humidity: "sensor.garage_humidity", camera: "camera.garage",
+      // Vehicle card (fictional car): shown only in this room because these options are set here.
+      car_name: "Family car", car_subtitle: "Electric hatchback",
+      car_lock: "lock.family_car", car_range: "sensor.family_car_range", car_odometer: "sensor.family_car_odometer",
+      car_location: "device_tracker.family_car",
+      car_daily_distance: "sensor.family_car_distance_today", car_daily_trips: "sensor.family_car_trips_today",
+      car_monthly_distance: "sensor.family_car_distance_month", car_monthly_trips: "sensor.family_car_trips_month",
+      car_last_updated: "sensor.family_car_last_update",
+      car_flash: "button.family_car_flash_lights", car_horn: "button.family_car_honk", car_refresh: "button.family_car_update_data",
       devices: [
         { entity: "cover.garage_door", name: "Garage door" },
         { entity: "binary_sensor.garage_side_door", name: "Side door" },

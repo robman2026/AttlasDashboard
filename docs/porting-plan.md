@@ -17,7 +17,7 @@ Every ported feature has a fixed scope, and room features appear only where they
 | --- | --- | --- | --- |
 | Confirm before acting, tap action | Device | `devices[].confirm`, `devices[].tap` | plugs powering servers or network gear |
 | Open / Stop / Close buttons | Device | a `cover.*` entry in `devices` | garage, gate, blinds |
-| Vehicle card | Room | `car_*` | garage |
+| Vehicle card | Room | `car_*` (name, subtitle, image, lock or doors status, range, odometer, location, distance and trips today / this month, last update, flash / horn / update buttons) | garage |
 | Fans with speed and direction | Device | a `fan.*` entry in `devices` | any room with a fan |
 | Mower card | Room | `mower_*` | garden |
 | Salt level | Room | `salt_*` | utility room |
@@ -66,8 +66,8 @@ Applies to every step, in addition to [development.md](development.md).
 
 | Step | Content | Scope | Status |
 | --- | --- | --- | --- |
-| 1 | Safer device tiles (`confirm`, `tap`), cover tiles with Open / Stop / Close | Device | Done, in review |
-| 2 | Vehicle card | Room | Planned |
+| 1 | Safer device tiles (`confirm`, `tap`), cover tiles with Open / Stop / Close | Device | Done (PR #16) |
+| 2 | Vehicle card (`car_*`) | Room | Done, in review |
 | 3 | Lights page | Page | Planned |
 | 4 | Security page, presence on Home | Page | Planned |
 | 5 | System page, `layout.home_cards` | Page | Planned |
