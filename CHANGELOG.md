@@ -5,6 +5,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Room images `garden.jpg` (garden at dusk) and `backup/garden.jpg` (terrace and lawn). Demo house: the Garden room picks `garden.jpg` automatically (room id `garden`).
 - Light mood: room photos follow the room lights. Off: darker, desaturated, cool; on: brighter with a warm glow, brightness following the light level (average brightness over the room's lights); full: amber edge. Room tiles show a light chip ("Off", "1 on · 40 %", "3 on"); in the room view the Devices background follows the same rule and lights that are on get an amber tile. 0.6 s fade. Rooms without lights are unchanged. Option `appearance.light_mood` (default on).
 - Room option `light_entities`: which entities count as the room's lights (light, switch, input_boolean), e.g. Tasmota relays that power lamps. Used by the light mood, the room Lights chip and the Home "Lights off" action. Empty: the room's `light.*` devices minus the excluded status LEDs.
 - Room image `guest-room.jpg` (guest room).
