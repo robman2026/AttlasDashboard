@@ -46,7 +46,7 @@ contact("binary_sensor.kids_room_window_left", false, "window"); contact("binary
 na("binary_sensor.kids_room_motion"); na("light.kids_room_fan_light"); na("fan.kids_room_fan");
 th("office", 23.9, 39); add("switch.office_ceiling_relay", "on", { friendly_name: "Office ceiling relay" }); contact("binary_sensor.office_door", true); contact("binary_sensor.office_window", false, "window");
 na("light.office_fan_light"); add("fan.office_fan", "unknown");
-th("bedroom", 23.3, 49); add("light.bedroom_canopy", "on", { brightness: 102 }); add("light.bedroom_wardrobe", "off");
+th("bedroom", 23.3, 49); add("light.bedroom_canopy", "on", { brightness: 102, supported_color_modes: ["color_temp"] }); add("light.bedroom_wardrobe", "off", { supported_color_modes: ["brightness"] });
 add("media_player.bedroom_tv", "off", { friendly_name: "Bedroom TV", source_list: ["HDMI 1", "Live TV", "Netflix"] });
 th("hallway", 22.8, 43); motion("binary_sensor.hallway_motion"); contact("binary_sensor.stair_window", false, "window"); contact("binary_sensor.hallway_skylight", false, "window");
 contact("binary_sensor.bathroom_door", true); motion("binary_sensor.bathroom_motion"); contact("binary_sensor.bathroom_skylight", false, "window");
@@ -54,11 +54,11 @@ th("guest_room", 23.4, 50); contact("binary_sensor.guest_room_window", false, "w
 // Ground floor
 th("living_room", 23.2, 46); cam("camera.living_room", "Living room camera", "living.jpg");
 contact("binary_sensor.living_room_window_left", false, "window"); contact("binary_sensor.living_room_window_right", false, "window");
-motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_backlight", "off"); add("media_player.living_room_tv", "on", { friendly_name: "Living room TV", app_name: "YouTube", source: "YouTube", source_list: ["HDMI 1", "Live TV", "Netflix", "YouTube"], volume_level: 0.18, is_volume_muted: false });
-add("light.kitchen_cabinet_left", "on", { brightness: 255 }); add("light.kitchen_cabinet_right", "on", { brightness: 255 });
+motion("binary_sensor.living_room_presence", false, "occupancy"); add("light.tv_backlight", "off", { supported_color_modes: ["rgb"] }); add("media_player.living_room_tv", "on", { friendly_name: "Living room TV", app_name: "YouTube", source: "YouTube", source_list: ["HDMI 1", "Live TV", "Netflix", "YouTube"], volume_level: 0.18, is_volume_muted: false });
+add("light.kitchen_cabinet_left", "on", { brightness: 255, supported_color_modes: ["brightness"] }); add("light.kitchen_cabinet_right", "on", { brightness: 255, supported_color_modes: ["brightness"] });
 motion("binary_sensor.kitchen_presence", false, "presence"); contact("binary_sensor.kitchen_window", false, "window");
 add("sensor.oven_temperature", 59, { unit_of_measurement: "°C" }); add("select.dishwasher_program", "unknown");
-contact("binary_sensor.guest_wc_door", false); motion("binary_sensor.guest_wc_motion"); add("light.guest_wc_mirror", "on", { brightness: 160 });
+contact("binary_sensor.guest_wc_door", false); motion("binary_sensor.guest_wc_motion"); add("light.guest_wc_mirror", "on", { brightness: 160, supported_color_modes: ["brightness"] });
 cam("camera.doorbell", "Doorbell", "entrance.jpg");
 contact("binary_sensor.front_door", false); contact("binary_sensor.mailbox", true, "opening");
 motion("binary_sensor.doorbell_person", false, "occupancy"); na("binary_sensor.entrance_motion");
@@ -93,7 +93,7 @@ add("image.3d_printer_cover", "2026-11-01T14:00:00", { entity_picture: "/dist/ro
 add("automation.workshop_eco_mode", "off", { friendly_name: "Workshop eco mode", last_triggered: new Date(NOW - 26 * 3600000).toISOString() });
 add("automation.print_complete_notify", "on", { friendly_name: "3D print complete: notify and light", last_triggered: new Date(NOW - 3 * 3600000).toISOString() });
 add("automation.workshop_door_alarm", "on", { friendly_name: "Workshop door alarm", last_triggered: null });
-add("light.3d_printer_chamber", "on"); motion("binary_sensor.workshop_presence", false, "presence");
+add("light.3d_printer_chamber", "on", { supported_color_modes: ["onoff"] }); // on / off only, no dimming motion("binary_sensor.workshop_presence", false, "presence");
 contact("binary_sensor.utility_room_door", false); cam("camera.utility_room", "Utility room camera", "utility.jpg");
 add("sensor.washer_power", 0, { unit_of_measurement: "W" }); add("sensor.dryer_power", 0, { unit_of_measurement: "W" });
 

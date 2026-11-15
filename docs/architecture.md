@@ -18,6 +18,7 @@ All `customElements.define` calls are guarded against double registration (`src/
 | --- | --- | --- |
 | `home` | Home | first view, default |
 | `alerts` | Alerts | `subview`, `back_path: home` |
+| `lights` | Lights page (only when some room has lights) | subview |
 | `rooms` | Rooms, first floor selected | subview |
 | `floor-<floor id>` | Rooms, that floor selected | subview |
 | `room-<room id>` | Room | subview |
@@ -49,6 +50,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/atlas-view.ts` | Frame: background, sidebar, top bar, phone nav, settings, confirm dialog |
 | `src/ui/views/*.ts` | Home, Alerts, Rooms, Room, Energy renderers |
 | `src/ui/devices.ts` | Device tile icon, state kind, text, tap action, cover control rules |
+| `src/ui/views/lights.ts` | Lights page: rooms grouped by floor, tap / hold / drag-to-dim tiles |
 | `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
 | `src/ui/embedded-card.ts` | `<atlas-hui-card>`: renders own Lovelace cards (room `cards` / `side_cards`) |
@@ -98,6 +100,8 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | `binary_sensor` device class `lock`: `on` = unlocked, `off` = locked | Vehicle doors status without a lock entity | home-assistant.io `source/_integrations/binary_sensor.markdown` (2026-11-15) |
 | `device_tracker` state: zone name, `home`, `not_home` | Vehicle location | home-assistant.io `source/_integrations/device_tracker.markdown` (2026-11-15) |
 | Timestamp sensor state: ISO date-time in UTC | Vehicle last update | home-assistant.io `source/_integrations/sensor.markdown` (2026-11-15) |
+| `supported_color_modes` brightness rule (brightness, color_temp, hs, xy, rgb, rgbw, rgbww, white) | Lights page: which tiles can be dragged to dim | frontend `src/data/light.ts` (`lightSupportsBrightness`, dev branch 2026-10-31) |
+| `light.turn_on` with `brightness_pct` (0 off, 1 minimum, 100 maximum) | Lights page drag to dim | home-assistant.io `source/_actions/light.turn_on.markdown` (2026-11-15) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
