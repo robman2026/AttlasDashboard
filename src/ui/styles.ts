@@ -424,6 +424,22 @@ export const styles = css`
   .ptxt small { font-size: 11px; color: var(--atlas-text2); }
   .pchip.home .ptxt small { color: var(--atlas-accent); }
 
+  /* ---------- weather strip (Home hero) ---------- */
+  .hside { display: flex; align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; gap: 10px; min-width: 0; }
+  .hside .presence { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 6px; }
+  .wxstrip { display: flex; align-items: stretch; gap: 6px; max-width: 100%; }
+  .wxseg { display: flex; flex-direction: column; gap: 4px; }
+  .wxseg button { flex: 1; padding: 0 8px; border-radius: 8px; font-size: 11px; color: var(--atlas-text2); border: 1px solid rgba(188, 200, 222, 0.18); background: var(--atlas-glass-bg); }
+  .wxseg button.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); }
+  .wxfc { display: flex; gap: 4px; padding: 4px; border-radius: 14px; background: var(--atlas-glass-bg); border: 1px solid var(--atlas-glass-border); min-width: 0; }
+  .wxday { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 58px; padding: 4px 2px; border-radius: 10px; }
+  .wxday:first-child { background: rgba(241, 245, 255, 0.06); }
+  .wxday small { font-size: 10px; color: var(--atlas-text2); white-space: nowrap; }
+  .wxday svg { width: 26px; height: 21px; }
+  .wxday b { font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; gap: 3px; }
+  .wxday .wxpp { color: #5ec8ff; }
+  .wxnone { padding: 8px 12px; font-size: 12px; align-self: center; }
+
   /* ---------- system page ---------- */
   .syslinks { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 6px; }
   .sys-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr); gap: 16px; align-items: start; }
@@ -568,8 +584,17 @@ export const styles = css`
     .home-grid, .room-grid, .room-grid.has-side, .energy-top, .sec-grid, .sys-grid { grid-template-columns: minmax(0, 1fr); }
     .room-grid { grid-template-areas: "left" "main"; }
     .room-grid.has-side { grid-template-areas: "left" "side" "main"; grid-template-rows: auto; }
+    /* Greeting above the forecast strip and presence chips. */
+    .hero.split { flex-direction: column; align-items: stretch; gap: 8px; }
+    .presence { justify-content: flex-start; }
+    .hside { justify-content: flex-start; align-items: stretch; flex-wrap: nowrap; }
+    .wxstrip { flex: 1; }
+    .wxfc { flex: 1; justify-content: space-between; }
+    .wxday { width: auto; flex: 1; min-width: 0; }
   }
   @media (max-width: 760px) {
+    .hside { flex-direction: column; }
+    .hside .presence { flex-direction: row; flex-wrap: wrap; }
     .lrooms { grid-template-columns: minmax(0, 1fr); }
     .scams { grid-template-columns: minmax(0, 1fr); }
     .inc { grid-template-columns: minmax(0, 1fr); gap: 10px; }
@@ -597,8 +622,6 @@ export const styles = css`
     .clock { display: none; }
     .tools { gap: 6px; }
     .hero { padding: 4px 6px 0; }
-    .hero.split { flex-direction: column; align-items: stretch; gap: 8px; }
-    .presence { justify-content: flex-start; }
     .hero h1, .hero h1.sm { font-size: 34px; }
     .hero p { font-size: 14px; }
     .banner { padding: 10px 10px 10px 12px; gap: 12px; }

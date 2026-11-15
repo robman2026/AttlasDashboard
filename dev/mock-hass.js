@@ -25,7 +25,8 @@ const na = (id) => add(id, "unavailable");
 add("alarm_control_panel.home_alarm", "disarmed", { friendly_name: "Home alarm", supported_features: 39, code_format: null, changed_by: null });
 add("person.alex", "home", { friendly_name: "Alex" });
 add("person.sam", "not_home", { friendly_name: "Sam" });
-add("weather.home", "cloudy", { temperature: 5.5 });
+// supported_features 3 = FORECAST_DAILY 1 + FORECAST_HOURLY 2 (forecasts via connection.subscribeMessage below)
+add("weather.home", "cloudy", { friendly_name: "Home weather", temperature: 5.5, temperature_unit: "°C", humidity: 81, wind_speed: 14, wind_speed_unit: "km/h", wind_bearing: 225, supported_features: 3 });
 add("sensor.outdoor_temperature", 5.5, { unit_of_measurement: "°C" });
 add("climate.heat_pump", "heat", { current_temperature: 18.2, temperature: 17, hvac_action: "heating", friendly_name: "Heat pump" });
 add("sensor.heat_pump_outdoor_temperature", 9.3, { unit_of_measurement: "°C" });
@@ -131,6 +132,17 @@ add("sensor.circuit_cooking_power_factor", 98, { unit_of_measurement: "%" }); ad
   add(`sensor.circuit_cooking_power_${p}`, w, W); add(`sensor.circuit_cooking_current_${p}`, a, { unit_of_measurement: "A" }); add(`sensor.circuit_cooking_voltage_${p}`, v, { unit_of_measurement: "V" });
 });
 
+// Fictional forecasts (daily and hourly) for the Home weather card and the rain rule.
+const day = (i) => new Date(NOW + i * 86400000).toISOString();
+const hour = (i) => new Date(Math.floor(NOW / 3600000) * 3600000 + i * 3600000).toISOString();
+const FC = {
+  daily: [["cloudy", 7, 2, 10], ["rainy", 6, 3, 80], ["partlycloudy", 9, 1, 20], ["sunny", 11, 0, 0], ["snowy-rainy", 3, -1, 60]]
+    .map(([condition, temperature, templow, p], i) => ({ datetime: day(i), condition, temperature, templow, precipitation_probability: p })),
+  hourly: [["cloudy", 6, 0, 10], ["cloudy", 6, 0, 20], ["rainy", 5, 0.6, 70], ["rainy", 5, 1.2, 80], ["cloudy", 4, 0, 30], ["clear-night", 3, 0, 0]]
+    .map(([condition, temperature, precipitation, p], i) => ({ datetime: hour(i), condition, temperature, precipitation, precipitation_probability: p })),
+};
+export const mockForecast = (type, list) => { FC[type] = list; for (const s of window.__fcSubs ?? []) if (s.type === type) s.cb({ type, forecast: list }); };
+
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const fmt = (s) => {
   if (s.state === "unavailable") return "Unavailable";
@@ -139,6 +151,7 @@ const fmt = (s) => {
     if (["door", "window", "opening", "garage_door"].includes(dc)) return s.state === "on" ? "Open" : "Closed";
     return s.state === "on" ? "Detected" : "Clear";
   }
+  if (s.entity_id.startsWith("weather.")) return ({ partlycloudy: "Partly cloudy", "clear-night": "Clear, night", "lightning-rainy": "Lightning, rainy", "snowy-rainy": "Snowy, rainy", "windy-variant": "Windy, cloudy" })[s.state] ?? cap(s.state);
   if (s.entity_id.startsWith("person.")) return s.state === "home" ? "Home" : s.state === "not_home" ? "Away" : cap(s.state.replace(/_/g, " "));
   const u = s.attributes.unit_of_measurement;
   return u ? `${s.state} ${u}` : cap(s.state.replace(/_/g, " "));
@@ -153,4 +166,16 @@ export const mockHass = {
   formatEntityState: fmt,
   callService: async (d, s, data) => console.log("callService", d, s, JSON.stringify(data)),
   callWS: async () => ({}),
+  // Minimal websocket stand-in: weather/subscribe_forecast answers with fictional forecasts.
+  // Tests can push new ones with mockForecast(type, list).
+  connection: {
+    subscribeMessage: async (cb, msg) => {
+      if (msg.type !== "weather/subscribe_forecast") throw new Error("not supported in the mock");
+      const subs = (window.__fcSubs ??= []);
+      const sub = { cb, type: msg.forecast_type };
+      subs.push(sub);
+      setTimeout(() => cb({ type: msg.forecast_type, forecast: FC[msg.forecast_type] ?? null }), 50);
+      return () => subs.splice(subs.indexOf(sub), 1);
+    },
+  },
 };

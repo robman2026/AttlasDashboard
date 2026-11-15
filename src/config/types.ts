@@ -53,6 +53,10 @@ export interface AlertsConfig {
   mailbox_ack?: string; // optional input_boolean: alert stays until turned off
   updates?: boolean; // info for update.* entities that are "on"
   data_quality?: boolean; // warning listing mapped entities that are unavailable
+  rain_windows?: string[]; // warning when open while the weather is wet (rain, snow, lightning, hail)
+  rain_weather?: string; // weather entity for that rule (default: entities.weather)
+  rain_min_mm?: number; // hourly forecast precipitation that confirms rain (default 0.1 mm)
+  severe_weather?: boolean; // warning for lightning, hail, pouring, exceptional (default true)
 }
 
 export interface FloorConfig {

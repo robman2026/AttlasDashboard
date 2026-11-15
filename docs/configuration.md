@@ -70,6 +70,10 @@ Editor tab: **Alerts**. Rules for the attention banner and Alerts view. See docs
 | `exterior_doors` | list of entity (binary_sensor, cover) |  | Exterior doors (warning when open) |
 | `interior_doors` | list of entity (binary_sensor, cover) |  | Interior doors (info when open) |
 | `critical` | list of entity (binary_sensor) |  | Critical detectors (leak, smoke). Critical when on. Warning when the detector itself is unavailable. |
+| `rain_windows` | list of entity (binary_sensor, cover) |  | Windows to close when it rains (warning). Warning when one is open while the weather is rainy, pouring, snowy, hail or a thunderstorm. With an hourly forecast, the rule waits until the current or next hour confirms precipitation (stops false alarms from a wrong rainy state). |
+| `rain_weather` | entity (weather) | entities.weather | Weather entity for the rain rule. Optional, e.g. a local weather service that reports rain more reliably. |
+| `rain_min_mm` | number | 0.1 | Precipitation that confirms rain (mm). Hourly forecast amount for the current or next hour. A probability of 50 % or more also confirms it. |
+| `severe_weather` | boolean | true | Severe weather warning. Warning while the weather is lightning, hail, pouring or exceptional. |
 | `mailbox` | entity (binary_sensor) |  | Mailbox contact. Info while open (or while the acknowledge helper is on). |
 | `mailbox_ack` | entity (input_boolean) |  | Mailbox acknowledge helper. Optional. If set, the alert stays until this helper is turned off (Acknowledge button). An automation must turn it on when the mailbox opens. |
 | `updates` | boolean | true | Show available updates (info) |
@@ -258,6 +262,11 @@ strategy:
       - binary_sensor.bathroom_door
     critical: []
     mailbox: binary_sensor.mailbox
+    rain_windows:
+      - binary_sensor.attic_window
+      - binary_sensor.kitchen_window
+      - binary_sensor.bathroom_skylight
+      - binary_sensor.hallway_skylight
     updates: true
     data_quality: true
   floors:

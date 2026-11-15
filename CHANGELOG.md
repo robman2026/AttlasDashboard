@@ -5,6 +5,9 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Weather forecast on Home (porting plan step 6): a compact strip next to the greeting with five days (high / low, rain chance) or six hours, a Days / Hours toggle for the forecast types the weather entity supports, and tap for the HA weather dialog. On narrower screens and the phone it sits below the greeting. Uses the Home Assistant forecast subscription (`weather/subscribe_forecast`); hidden while the weather entity is unavailable.
+- Alert rule **open window while it rains** (`alerts.rain_windows`, Edit dashboard > Alerts > Weather): warning for each listed window that is open while the weather is rainy, pouring, snowy, snowy-rainy, hail or a thunderstorm with rain, with a room badge. When the weather entity has an hourly forecast, the current and next hour must confirm precipitation (`alerts.rain_min_mm`, default 0.1 mm, or a 50 % chance); this stops false alarms from a wrong "rainy" state. Optional `alerts.rain_weather` uses another weather entity for the rule. Behaviour from the owner's Adaptive Room Card.
+- Alert rule **severe weather** (`alerts.severe_weather`, default on): warning while the weather is lightning, thunderstorm with rain, hail, pouring or exceptional.
 - System page (porting plan step 5, sidebar **System**; before: Home Assistant settings). The **Log report** from the log analyzer sensor (`entities.incidents`) shows:
   - a banner (red with a critical incident, amber with warnings, "waiting" until the sensor reports);
   - Critical / Warning / Minor counts;

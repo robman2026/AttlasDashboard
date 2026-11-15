@@ -6,6 +6,7 @@ import { icon } from "../icons";
 import { fmtTemp, ownCards, roomTile } from "./common";
 import { cameraStill, securityContacts } from "./security";
 import { presenceRow } from "./presence";
+import { weatherStrip } from "./weather";
 
 const greeting = () => {
   const h = new Date().getHours();
@@ -193,7 +194,7 @@ export const renderHome = (ctx: Ctx) => {
   const alarmTxt = alarm ? (isInvalid(alarm) ? "Alarm unavailable" : `Alarm ${formatState(ctx.hass, alarm).toLowerCase()}`) : "";
   const alarmWarn = alarm && (isInvalid(alarm) || ["triggered", "pending"].includes(alarm.state));
   return html`
-    <section class="hero ${e.persons?.length ? "split" : ""}" aria-label="Greeting">
+    <section class="hero ${e.persons?.length || e.weather ? "split" : ""}" aria-label="Greeting">
       <div class="hgreet">
       <h1>${greeting()}</h1>
       <p class="n">
@@ -201,7 +202,7 @@ export const renderHome = (ctx: Ctx) => {
         ${alarmTxt ? html`<span style="opacity:.5"> · </span><span style="color:${alarmWarn ? "var(--atlas-warn)" : "var(--atlas-accent)"};font-weight:600">${alarmTxt}</span>` : nothing}
       </p>
       </div>
-      ${presenceRow(ctx)}
+      <div class="hside">${weatherStrip(ctx)}${presenceRow(ctx)}</div>
     </section>
     ${attentionBanner(ctx, ctx.narrow)}
     <div class="home-grid">
