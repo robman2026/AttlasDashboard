@@ -9,6 +9,8 @@ import { fmtHum, fmtTemp, lightMood, ownCards } from "./common";
 import { stamp, stampTitle, timeAgo } from "../time";
 import { automationsCard, climateExtras, printerCard, statusStrip } from "./room-extras";
 import { vehicleCard } from "./vehicle";
+import { fanTile } from "./fan";
+import { mowerCard, powerCard, saltCard } from "./room-more";
 
 const LONG_PRESS_MS = 500;
 
@@ -107,6 +109,7 @@ const deviceTile = (ctx: Ctx, d: RoomDeviceConfig, lights: string[] = []) => {
   const ago = timeAgo(ctx.hass, stamp(s, ctx.config.appearance?.time_display));
   const f = coverFeatures(s);
   if (domainOf(d.entity) === "cover" && (f.open || f.close || f.stop)) return coverTile(ctx, d, ago);
+  if (domainOf(d.entity) === "fan" && tapAction(d) === "toggle") return fanTile(ctx, d, ago, () => runTap(ctx, d), tileIcon(d, s));
   // A room light that is on gets the warm "lit" style, matching the photo glow.
   const k = kindOf(s) === "on" && lights.includes(d.entity) ? "on lit" : kindOf(s);
   const h = pressHandlers(ctx, d);
@@ -238,6 +241,8 @@ export const renderRoom = (ctx: Ctx) => {
             : html`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
           ${climateExtras(ctx, r)}
         </section>
+        ${powerCard(ctx, r)}
+        ${saltCard(ctx, r)}
         ${cameraCard(ctx, r)}
         ${printerCard(ctx, r)}
       </div>
@@ -249,6 +254,7 @@ export const renderRoom = (ctx: Ctx) => {
           ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d, mood?.ids ?? []))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
         ${vehicleCard(ctx, r)}
+        ${mowerCard(ctx, r)}
         ${automationsCard(ctx, r)}
         ${ownCards(ctx, r.cards, "main")}
         ${peers.length > 1

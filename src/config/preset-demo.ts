@@ -83,6 +83,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       devices: [
         { entity: "light.bedroom_canopy", name: "Canopy LEDs" },
         { entity: "light.bedroom_wardrobe", name: "Wardrobe LEDs" },
+        { entity: "fan.bedroom_ceiling_fan", name: "Ceiling fan" },
         { entity: "media_player.bedroom_tv", name: "TV" },
       ],
     },
@@ -122,6 +123,8 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "kitchen", name: "Kitchen", floor: "ground", icon: "kitchen", image: "kitchen.jpg",
+      // Room power card from the kitchen circuit meter.
+      power: "sensor.circuit_kitchen_power", power_energy: "sensor.circuit_kitchen_energy", power_current: "sensor.circuit_kitchen_current", power_max: 3000,
       devices: [
         { entity: "light.kitchen_cabinet_left", name: "Cabinet light left" },
         { entity: "light.kitchen_cabinet_right", name: "Cabinet light right" },
@@ -169,10 +172,11 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "garden", name: "Garden", floor: "ground", icon: "eco",
+      // Mower card: only here, because this room sets mower_*.
+      mower: "lawn_mower.garden_mower", mower_battery: "sensor.garden_mower_battery", mower_name: "Mower",
       devices: [
         { entity: "binary_sensor.garden_door", name: "Garden door" },
         { entity: "switch.garden_irrigation", name: "Irrigation valve" },
-        { entity: "sensor.lawn_mower_status", name: "Lawn mower" },
       ],
     },
     {
@@ -224,6 +228,8 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "utility", name: "Utility room", floor: "basement", icon: "system", image: "utility.jpg", camera: "camera.utility_room",
+      // Water softener salt level (card, status chip, info alert below 30 %).
+      salt_level: "sensor.water_softener_salt", salt_distance: "sensor.water_softener_salt_distance",
       devices: [
         { entity: "binary_sensor.utility_room_door", name: "Door" },
         { entity: "climate.heat_pump", name: "Heat pump" },

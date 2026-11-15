@@ -8,6 +8,7 @@ import { icon, glyph } from "../icons";
 import { deviceLabel, glyphFor } from "../devices";
 import { roomLightEntities } from "../../data/model";
 import { hasVehicle, vehicleLock } from "./vehicle";
+import { fmtW, loadColor, roomWatts, saltPct, saltWarnBelow } from "./room-more";
 import { timeAgo } from "../time";
 
 const val = (ctx: Ctx, id?: string) => {
@@ -63,6 +64,28 @@ export const statusStrip = (ctx: Ctx, r: RoomConfig) => {
           return html`<button class="schip ${v.state === "unlocked" || v.state === "jammed" ? "warn" : ""}" @click=${() => (v.entity || r.car_range) && ctx.moreInfo((v.entity || r.car_range)!)}>
             ${glyph("car", 18)}<span><b>${r.car_name || "Vehicle"}</b><small>${sub || "No data"}</small></span>
           </button>`;
+        })()
+      : nothing}
+    ${r.power
+      ? (() => {
+          const w = roomWatts(ctx, r);
+          const max = Number(r.power_max) > 0 ? Number(r.power_max) : 3000;
+          return html`<button class="schip" @click=${() => ctx.moreInfo(r.power!)}>${glyph("power", 18)}<span><b style="color:${loadColor(w, max)}">${fmtW(w)}</b><small>Power</small></span></button>`;
+        })()
+      : nothing}
+    ${r.mower
+      ? (() => {
+          const m = stateObj(ctx.hass, r.mower);
+          const b = num(ctx.hass, r.mower_battery);
+          const bad = !m || isInvalid(m) || m.state === "error";
+          return html`<button class="schip ${bad ? "warn" : m!.state === "mowing" ? "on" : ""}" @click=${() => ctx.moreInfo(r.mower!)}>${glyph("mower", 18)}<span><b>${r.mower_name || "Mower"}</b><small>${!m ? "Not found" : formatState(ctx.hass, m)}${b !== undefined ? ` · ${Math.round(b)} %` : ""}</small></span></button>`;
+        })()
+      : nothing}
+    ${r.salt_level
+      ? (() => {
+          const p = saltPct(ctx, r);
+          const low = p !== undefined && p < saltWarnBelow(r);
+          return html`<button class="schip ${low ? "warn" : ""}" @click=${() => ctx.moreInfo(r.salt_level!)}>${glyph("drop", 18)}<span><b>${p === undefined ? "–" : `${Math.round(p)} %`}</b><small>${low ? "Buy salt" : r.salt_name || "Salt level"}</small></span></button>`;
         })()
       : nothing}
     ${na ? html`<span class="schip warn"><span><b>${na} unavailable</b><small>device${na > 1 ? "s" : ""} in this room</small></span></span>` : nothing}

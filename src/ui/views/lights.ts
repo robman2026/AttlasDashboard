@@ -9,9 +9,7 @@ import type { HassEntity } from "../../data/hass";
 import { domainOf, isInvalid } from "../../data/hass";
 import { deviceName, floorById, floors, roomLightEntities, rooms, roomsOnFloor } from "../../data/model";
 import { glyph } from "../icons";
-
-const HOLD_MS = 500;
-const DRAG_PX = 8;
+import { dragHandlers } from "../drag";
 
 // Same rule as the HA frontend (src/data/light.ts, lightSupportsBrightness).
 const BRIGHTNESS_MODES = ["brightness", "color_temp", "hs", "xy", "rgb", "rgbw", "rgbww", "white"];
@@ -31,72 +29,25 @@ const stateLabel = (s?: HassEntity) =>
 
 /** Pointer handling for one tile: tap toggles, hold opens details, horizontal drag dims. */
 const tileHandlers = (ctx: Ctx, id: string) => {
-  let startX = 0;
-  let startPct = 0;
-  let pct = 0;
-  let dragging = false;
-  let held = false;
-  let timer: number | undefined;
-  let width = 1;
   const s = () => ctx.hass.states[id];
-  const show = (el: HTMLElement, p: number) => {
-    el.style.setProperty("--pct", `${p}%`);
-    const lbl = el.querySelector(".lstate");
-    if (lbl) lbl.textContent = `${p} %`;
-  };
-  return {
-    down: (e: PointerEvent) => {
-      const el = e.currentTarget as HTMLElement;
-      startX = e.clientX;
-      startPct = pctOf(s());
-      pct = startPct;
-      dragging = false;
-      held = false;
-      width = el.getBoundingClientRect().width || 1;
-      el.setPointerCapture?.(e.pointerId);
-      timer = window.setTimeout(() => {
-        held = true;
-        ctx.moreInfo(id);
-      }, HOLD_MS);
+  return dragHandlers({
+    start: () => pctOf(s()),
+    canDrag: () => supportsBrightness(s()) && !isInvalid(s()),
+    preview: (el, p) => {
+      el.style.setProperty("--pct", `${p}%`);
+      // Write into the static preview span: the label itself holds Lit parts and must not be replaced.
+      const lbl = el.querySelector(".lprev");
+      if (lbl) lbl.textContent = `${p} %`;
     },
-    move: (e: PointerEvent) => {
-      if (held || !e.buttons && e.pointerType === "mouse") return;
-      const dx = e.clientX - startX;
-      if (!dragging && Math.abs(dx) < DRAG_PX) return;
-      if (!supportsBrightness(s()) || isInvalid(s())) return;
-      dragging = true;
-      window.clearTimeout(timer);
-      pct = Math.max(1, Math.min(100, Math.round(startPct + (dx / width) * 100)));
-      const el = e.currentTarget as HTMLElement;
-      el.classList.add("dragging");
-      show(el, pct);
-    },
-    up: (e: PointerEvent) => {
-      window.clearTimeout(timer);
-      const el = e.currentTarget as HTMLElement;
-      el.classList.remove("dragging");
-      if (held) return;
-      if (dragging) {
-        ctx.call("light", "turn_on", { entity_id: id, brightness_pct: pct });
-        return;
-      }
+    commit: (p) => ctx.call("light", "turn_on", { entity_id: id, brightness_pct: p }),
+    tap: () => {
       const st = s();
       if (!st || isInvalid(st)) return ctx.moreInfo(id);
       const d = domainOf(id);
       ctx.call(["light", "switch", "input_boolean"].includes(d) ? d : "homeassistant", "toggle", { entity_id: id });
     },
-    cancel: (e: PointerEvent) => {
-      window.clearTimeout(timer);
-      (e.currentTarget as HTMLElement).classList.remove("dragging");
-      dragging = false;
-    },
-    context: (e: Event) => {
-      e.preventDefault();
-      window.clearTimeout(timer);
-      held = true;
-      ctx.moreInfo(id);
-    },
-  };
+    hold: () => ctx.moreInfo(id),
+  });
 };
 
 const lightTile = (ctx: Ctx, r: RoomConfig, id: string) => {
@@ -112,7 +63,7 @@ const lightTile = (ctx: Ctx, r: RoomConfig, id: string) => {
     @keydown=${(e: KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ctx.call(domainOf(id) === "light" ? "light" : "homeassistant", "toggle", { entity_id: id }); } }}>
     <span class="lfill" aria-hidden="true"></span>
     <span class="lic">${glyph(domainOf(id) === "light" ? "bulb" : "power", 20)}</span>
-    <span class="ltxt"><b>${name}</b><span class="lstate">${stateLabel(st)}</span></span>
+    <span class="ltxt"><b>${name}</b><span class="lstate">${stateLabel(st)}</span><span class="lstate lprev"></span></span>
   </button>`;
 };
 

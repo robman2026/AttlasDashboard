@@ -11,6 +11,7 @@ import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
 import type { AtlasHuiCard } from "./embedded-card";
 import { vehicleEntities } from "./views/vehicle";
+import { roomMoreEntities } from "./views/room-more";
 import { icon, weatherIcon } from "./icons";
 import type { Ctx } from "./context";
 import { renderHome } from "./views/home";
@@ -111,6 +112,7 @@ export class AtlasView extends LitElement {
         r.printer_status, r.printer_progress, r.printer_remaining, r.printer_nozzle, r.printer_bed,
         r.printer_chamber, r.printer_light, r.printer_picture,
         ...vehicleEntities(r),
+        ...roomMoreEntities(r),
       ]).filter((x): x is string => !!x),
     ]);
     if (config.view === "room") this._prepareCamera(cameraOf(roomById(c, config.room)));

@@ -376,6 +376,9 @@ export const styles = css`
   .ltile.on .lstate { color: var(--atlas-warn); }
   .ltile.na { border-style: dashed; border-color: rgba(255, 191, 87, 0.35); }
   .ltile.na .lstate { color: var(--atlas-warn); }
+  .lprev { display: none; }
+  .dragging .lprev { display: inline; }
+  .dragging .lstate:not(.lprev), .dragging .fstate { display: none; }
   .ltile.dim::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 5px; height: 2px; border-radius: 1px; background: rgba(241, 245, 255, 0.1); }
 
   /* ---------- security page and presence ---------- */
@@ -423,6 +426,43 @@ export const styles = css`
   .ptxt b { font-size: 13px; font-weight: 600; }
   .ptxt small { font-size: 11px; color: var(--atlas-text2); }
   .pchip.home .ptxt small { color: var(--atlas-accent); }
+
+  /* ---------- fan tile, room power, mower, salt (step 7) ---------- */
+  .dev.fan { position: relative; overflow: hidden; padding: 0 8px 0 0; gap: 6px; }
+  .dev.fan .dmain { flex: 1; align-self: stretch; display: flex; align-items: center; gap: 12px; padding: 12px 0 12px 14px; min-width: 0; text-align: left; touch-action: pan-y; }
+  .dev.fan .dmain > :not(.ffill) { position: relative; }
+  .dev.fan .ffill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--atlas-accent-soft), rgba(86, 231, 192, 0.06)); pointer-events: none; transition: width 0.25s ease; }
+  .dev.fan.on .ffill { width: var(--pct, 0%); }
+  .dev.fan.on, .devcard.has-img .dev.fan.on { background: rgba(14, 16, 20, 0.58); }
+  .dev.fan .dragging .ffill { width: var(--pct, 0%); transition: none; }
+  .dev.fan.on .fspin svg { animation: atlas-spin 1.6s linear infinite; }
+  @keyframes atlas-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .dev.fan.on .fspin svg { animation: none; } }
+  .fdir { position: relative; flex: none; height: 32px; padding: 0 8px; border-radius: 10px; font-size: 11px; border: 1px solid rgba(188, 200, 222, 0.2); background: rgba(241, 245, 255, 0.06); color: var(--atlas-text); white-space: nowrap; }
+  .fdir:disabled { opacity: 0.4; }
+  .rpbody, .saltbody { display: flex; align-items: center; gap: 16px; text-align: left; }
+  .rpring { position: relative; width: 96px; height: 96px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .rpring svg { position: absolute; inset: 0; }
+  .rpring b { position: relative; font-size: 16px; font-weight: 700; }
+  .rptxt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .rptxt > b { font-size: 16px; }
+  .rptxt small { font-size: 12px; }
+  .mower { gap: 10px; }
+  .mbadge { flex: none; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: rgba(241, 245, 255, 0.08); color: var(--atlas-text2); }
+  .mbadge.on { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .mbadge.mid { background: rgba(255, 191, 87, 0.16); color: var(--atlas-warn); }
+  .mbadge.bad { background: rgba(255, 114, 125, 0.18); color: var(--atlas-crit); }
+  .mbatt { display: flex; align-items: center; gap: 10px; }
+  .mbatt small { font-size: 12px; flex: none; }
+  .mbar { flex: 1; height: 8px; border-radius: 4px; background: rgba(241, 245, 255, 0.08); overflow: hidden; display: block; }
+  .mbar > i { display: block; height: 100%; border-radius: 4px; }
+  .mbatt b { font-size: 13px; flex: none; min-width: 42px; text-align: right; }
+  .mbtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+  .mbtns .sq { color: var(--atlas-text); padding: 0 10px; }
+  .mbtns .sq.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); }
+  .mbtns .sq:disabled { opacity: 0.4; }
+  .salttank { position: relative; width: 44px; height: 84px; flex: none; border-radius: 10px 10px 14px 14px; border: 2px solid rgba(188, 200, 222, 0.3); overflow: hidden; display: flex; align-items: flex-end; background: rgba(0, 0, 0, 0.25); }
+  .salttank > i { display: block; width: 100%; opacity: 0.85; transition: height 0.4s ease; }
 
   /* ---------- weather strip (Home hero) ---------- */
   .hside { display: flex; align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; gap: 10px; min-width: 0; }

@@ -28,6 +28,8 @@ The Home banner counts critical + warning as "things need attention" and lists i
 | Incident report unreadable | sensor unavailable or unknown | Warning | more-info |
 | Open window while it rains | a window in `rain_windows` is open (binary_sensor `on`, cover `open` / `opening`) while the weather (`rain_weather`, else `entities.weather`) is `rainy`, `pouring`, `lightning-rainy`, `snowy`, `snowy-rainy` or `hail`; with an hourly forecast, the current or next hour must have precipitation >= `rain_min_mm` (default 0.1) or a probability >= 50 %. If the forecast has no precipitation fields or is not available, the condition alone counts | Warning, room badge "<name> open · <condition>" | Room |
 | Severe weather | `entities.weather` is `lightning`, `lightning-rainy`, `hail`, `pouring` or `exceptional` (off with `severe_weather: false`) | Warning | more-info of the weather entity |
+| Lawn mower error | a room's `mower` is in state `error` | Warning, room badge "Mower error" | Room |
+| Salt low | a room's `salt_level` (0-100, or 0-1 as a fraction) is below `salt_warn_below` (default 30); unavailable raises nothing (the data shows "-") | Info, room badge "Salt low" | Room |
 | Mailbox | contact `on`; or, with `mailbox_ack` set, while the helper is `on` | Info, Acknowledge button turns the helper off | Room |
 | Updates | any `update.*` entity `on` | Info | `/config/updates` |
 | Critical detector | `on` | Critical | Room |

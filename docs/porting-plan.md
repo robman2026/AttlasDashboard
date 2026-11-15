@@ -71,8 +71,8 @@ Applies to every step, in addition to [development.md](development.md).
 | 3 | Lights page (tap toggles, hold for details, drag to dim) | Page | Done (PR #18) |
 | 4 | Security page, presence on Home | Page | Done (PR #19) |
 | 5 | System page, `layout.home_cards` | Page | Done (PR #20) |
-| 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Done, in review |
-| 7 | Fans, mower, salt level, room power | Device and room | Planned |
+| 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Done (PR #21) |
+| 7 | Fans, mower, salt level, room power | Device and room | Done, in review |
 | 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Decision needed |
 | 9 | Appliances | Room | Planned |
 | 10 | Solar and heat pump views | Page | Decision needed |
