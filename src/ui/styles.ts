@@ -378,6 +378,52 @@ export const styles = css`
   .ltile.na .lstate { color: var(--atlas-warn); }
   .ltile.dim::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 5px; height: 2px; border-radius: 1px; background: rgba(241, 245, 255, 0.1); }
 
+  /* ---------- security page and presence ---------- */
+  .sec-grid { display: grid; grid-template-columns: minmax(340px, 1fr) minmax(0, 1.35fr); gap: 16px; align-items: start; }
+  .sec-grid > .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .scams { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .alarm { gap: 12px; }
+  .astate { display: flex; align-items: center; gap: 14px; text-align: left; padding: 6px 4px; }
+  .aico { width: 56px; height: 56px; flex: none; border-radius: 28px; display: flex; align-items: center; justify-content: center; background: rgba(241, 245, 255, 0.06); color: var(--atlas-text2); }
+  .astate b { font-size: 22px; font-weight: 700; }
+  .alarm.armed .aico { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .alarm.armed .astate b { color: var(--atlas-accent); }
+  .alarm.warn .aico, .alarm.na .aico { background: rgba(255, 191, 87, 0.14); color: var(--atlas-warn); }
+  .alarm.warn .astate b, .alarm.na .astate b { color: var(--atlas-warn); }
+  .alarm.crit { border-color: rgba(255, 114, 125, 0.6); }
+  .alarm.crit .aico { background: rgba(255, 114, 125, 0.18); color: var(--atlas-crit); }
+  .alarm.crit .astate b { color: var(--atlas-crit); }
+  .amodes { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+  .amodes .sq { gap: 6px; color: var(--atlas-text); padding: 0 8px; }
+  .amodes .sq.on { color: var(--atlas-accent); border-color: var(--atlas-accent-glow); background: var(--atlas-accent-soft); opacity: 1; }
+  .amodes .sq.dis { color: var(--atlas-warn); }
+  .amodes .sq:disabled:not(.on) { opacity: 0.4; }
+  .slist { display: flex; flex-direction: column; }
+  .srow { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid rgba(188, 200, 222, 0.08); }
+  .srow:first-child { border-top: 0; }
+  .smain { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; text-align: left; }
+  .sic { width: 34px; height: 34px; flex: none; border-radius: 17px; display: flex; align-items: center; justify-content: center; background: rgba(241, 245, 255, 0.06); color: var(--atlas-text2); }
+  .srow.open .sic { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .srow.warn .sic, .srow.na .sic { background: rgba(255, 191, 87, 0.14); color: var(--atlas-warn); }
+  .srow.warn small, .srow.na small { color: var(--atlas-warn); }
+  .sbtn { flex: none; gap: 6px; padding: 0 12px; height: 36px; color: var(--atlas-text); }
+  .sbtn:disabled { opacity: 0.4; }
+  .h2btn { text-align: left; }
+  .h2btn:hover h2 { color: var(--atlas-accent); }
+  .hgreet { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .hero.split { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .presence { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+  .pchip { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px 0 4px; border-radius: 20px; background: var(--atlas-glass-bg); border: 1px solid var(--atlas-glass-border); }
+  .pav { position: relative; width: 32px; height: 32px; flex: none; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; background: rgba(241, 245, 255, 0.1); }
+  .pav img { width: 100%; height: 100%; border-radius: 16px; object-fit: cover; }
+  .pav i { position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 5px; background: var(--atlas-dim); border: 2px solid #1c1f24; }
+  .pchip.home .pav i { background: var(--atlas-accent); }
+  .pchip.na .pav i { background: var(--atlas-warn); }
+  .ptxt { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+  .ptxt b { font-size: 13px; font-weight: 600; }
+  .ptxt small { font-size: 11px; color: var(--atlas-text2); }
+  .pchip.home .ptxt small { color: var(--atlas-accent); }
+
   /* ---------- vehicle card ---------- */
   .vehicle { gap: 14px; }
   .vehicle h2 { min-width: 0; }
@@ -481,12 +527,14 @@ export const styles = css`
     .logo .lt, .nav .lbl, .user .lbl { display: none; }
     .logo { padding: 0 0 26px; justify-content: center; }
     .nav button { justify-content: center; padding: 0; }
-    .home-grid, .room-grid, .room-grid.has-side, .energy-top { grid-template-columns: minmax(0, 1fr); }
+    .home-grid, .room-grid, .room-grid.has-side, .energy-top, .sec-grid { grid-template-columns: minmax(0, 1fr); }
     .room-grid { grid-template-areas: "left" "main"; }
     .room-grid.has-side { grid-template-areas: "left" "side" "main"; grid-template-rows: auto; }
   }
   @media (max-width: 760px) {
     .lrooms { grid-template-columns: minmax(0, 1fr); }
+    .scams { grid-template-columns: minmax(0, 1fr); }
+    .amodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .ltiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .vbody { grid-template-columns: minmax(0, 1fr); }
     .vact span { display: none; }
@@ -509,6 +557,8 @@ export const styles = css`
     .clock { display: none; }
     .tools { gap: 6px; }
     .hero { padding: 4px 6px 0; }
+    .hero.split { flex-direction: column; align-items: stretch; gap: 8px; }
+    .presence { justify-content: flex-start; }
     .hero h1, .hero h1.sm { font-size: 34px; }
     .hero p { font-size: 14px; }
     .banner { padding: 10px 10px 10px 12px; gap: 12px; }

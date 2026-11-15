@@ -68,8 +68,8 @@ Applies to every step, in addition to [development.md](development.md).
 | --- | --- | --- | --- |
 | 1 | Safer device tiles (`confirm`, `tap`), cover tiles with Open / Stop / Close | Device | Done (PR #16) |
 | 2 | Vehicle card (`car_*`) | Room | Done (PR #17) |
-| 3 | Lights page (tap toggles, hold for details, drag to dim) | Page | Done, in review |
-| 4 | Security page, presence on Home | Page | Planned |
+| 3 | Lights page (tap toggles, hold for details, drag to dim) | Page | Done (PR #18) |
+| 4 | Security page, presence on Home | Page | Done, in review |
 | 5 | System page, `layout.home_cards` | Page | Planned |
 | 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Planned |
 | 7 | Fans, mower, salt level, room power | Device and room | Planned |

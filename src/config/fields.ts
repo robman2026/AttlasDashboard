@@ -81,7 +81,7 @@ export const SECTIONS: SectionDef[] = [
     intro: "House-wide entities used by the greeting, top bar, Climate, Energy, Security and Quick actions. Leave a field empty to hide what depends on it.",
     shape: "object",
     fields: [
-      { name: "alarm", label: "Alarm panel", type: `entity (${dom("alarm_control_panel")})`, help: "Greeting line, Security card, Arm away quick action.", selector: ent("alarm_control_panel") },
+      { name: "alarm", label: "Alarm panel", type: `entity (${dom("alarm_control_panel")})`, help: "Greeting line, Security card, Security page (arm modes the panel supports, Disarm), Arm away quick action. Panels that need a code open the Home Assistant dialog, which asks for it.", selector: ent("alarm_control_panel") },
       { name: "weather", label: "Weather", type: "entity (weather)", help: "Top bar condition and icon.", selector: ent("weather") },
       { name: "outdoor_temperature", label: "Outdoor temperature", type: "entity (sensor)", help: "Top bar temperature. Falls back to the weather entity's temperature.", selector: ent("sensor") },
       { name: "heat_pump", label: "Heat pump (climate)", type: "entity (climate)", help: "Greeting indoor reading and Climate card ring (current and target).", selector: ent("climate"), group: "Heat pump" },
@@ -95,7 +95,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "garage_cover", label: "Garage door (cover)", type: "entity (cover)", help: "Garage quick action (open or close, always confirmed).", selector: ent("cover"), group: "Quick actions and system" },
       { name: "wake_pc", label: "Wake PC", type: "entity (input_button, button, script)", help: "Wake PC quick action (press, or script.turn_on).", selector: ent(["input_button", "button", "script"]), group: "Quick actions and system" },
       { name: "incidents", label: "Incident report sensor", type: "entity (sensor)", help: "Optional log analysis sensor with attributes critical, warning, minor (numbers or lists) and summary.", selector: ent("sensor"), group: "Quick actions and system" },
-      { name: "persons", label: "Persons", type: "list of entity (person)", help: "Reserved for presence display (not shown yet).", selector: ent("person", true), group: "Quick actions and system" },
+      { name: "persons", label: "Persons", type: "list of entity (person)", help: "Presence chips on Home (picture, name, Home / Away / zone). Tap opens the person details.", selector: ent("person", true), group: "Quick actions and system" },
       { name: "exclude_lights", label: "Lights never counted as room lights", type: "list of entity (light)", help: "Camera status LEDs etc. Excluded from Lights off.", selector: ent("light", true), group: "Quick actions and system" },
     ],
   },

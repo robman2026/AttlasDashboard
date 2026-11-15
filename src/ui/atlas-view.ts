@@ -6,7 +6,7 @@ import { ACCENT_PRESETS } from "../config/constants";
 import type { HomeAssistant } from "../data/hass";
 import { isInvalid, num, stateObj, formatState } from "../data/hass";
 import { evaluateAlerts, roomBadges, type AtlasAlert } from "../data/alerts";
-import { accentOf, cameraOf, energyMeters, floorById, floorCameraGroups, floors, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
+import { accentOf, cameraOf, energyMeters, floorById, floorCameraGroups, floors, hasSecurity, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
 import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
 import type { AtlasHuiCard } from "./embedded-card";
@@ -19,6 +19,7 @@ import { renderRooms } from "./views/rooms";
 import { renderRoom } from "./views/room";
 import { renderEnergy } from "./views/energy";
 import { hasLights, renderLights } from "./views/lights";
+import { renderSecurity } from "./views/security";
 
 const MOODS: Record<string, { base: string[]; g: string[]; light: string; tile: string; dark: string }> = {
   graphite: { base: ["#1A1D22", "#14171C", "#0E1014"], g: ["rgba(150,160,180,0.14)", "rgba(130,140,160,0.12)", "rgba(170,180,200,0.16)", "rgba(50,54,62,0.5)"], light: "rgba(220,228,240,0.4)", tile: "120,130,150", dark: "20,23,28" },
@@ -93,6 +94,7 @@ export class AtlasView extends LitElement {
       ...(c.alerts?.critical ?? []),
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
+      ...(c.entities?.persons ?? []),
       ...meterEntities(c),
       // Optional room sections: re-render only, not part of the data-quality alert
       // (a printer that is switched off reports unavailable).
@@ -126,9 +128,9 @@ export class AtlasView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    // Home refreshes camera stills every 10 s (same interval as HA's picture cards); other views only need the clock.
+    // Home and Security refresh camera stills every 10 s (same interval as HA's picture cards); other views only need the clock.
     // Floor camera walls with snapshots refresh at the same 10 s.
-    const every = this._config?.view === "home" || this._floorCameras().mode !== "off" ? 10_000 : 30_000;
+    const every = this._config?.view === "home" || this._config?.view === "security" || this._floorCameras().mode !== "off" ? 10_000 : 30_000;
     this._timer = window.setInterval(() => (this._tick = Date.now()), every);
     this._mq = window.matchMedia("(max-width: 760px)");
     this._narrow = this._mq.matches;
@@ -321,6 +323,7 @@ export class AtlasView extends LitElement {
     else if (view === "rooms") body = renderRooms(ctx);
     else if (view === "energy") body = renderEnergy(ctx);
     else if (view === "lights") body = renderLights(ctx);
+    else if (view === "security") body = renderSecurity(ctx);
     else body = renderRoom(ctx);
 
     return html`<div class="root v-${variant}" style=${style}>
@@ -359,7 +362,7 @@ export class AtlasView extends LitElement {
       ...(hasLights(ctx) ? [["Lights", "light", v === "lights", () => ctx.go("lights")] as [string, string, boolean, () => void]] : []),
       ["Energy", "energy", v === "energy", energyNav],
       ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
-      ["Security", "security", false, () => (e.alarm ? ctx.moreInfo(e.alarm) : undefined)],
+      ["Security", "security", v === "security", () => (hasSecurity(ctx.config) ? ctx.go("security") : e.alarm ? ctx.moreInfo(e.alarm) : undefined)],
       ["Automations", "automations", false, () => ctx.href("/config/automation/dashboard")],
       ["System", "system", false, () => ctx.href("/config/system")],
     ];

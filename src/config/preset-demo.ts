@@ -134,6 +134,7 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
       id: "entrance", name: "Entrance", floor: "ground", icon: "door", image: "entrance.jpg", camera: "camera.doorbell",
       devices: [
         { entity: "binary_sensor.front_door", name: "Front door" },
+        { entity: "lock.front_door", name: "Front door lock" },
         { entity: "binary_sensor.mailbox", name: "Mailbox" },
         { entity: "binary_sensor.doorbell_person", name: "Doorbell person" },
         { entity: "binary_sensor.entrance_motion", name: "Motion" },
