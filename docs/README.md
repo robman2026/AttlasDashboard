@@ -10,5 +10,6 @@
 | [../CHANGELOG.md](../CHANGELOG.md) | What changed in each version | Required for every change to `src/` (CI check on PRs) |
 | [screenshots/](screenshots/) | Current UI with mocked states | `npm run screenshots` after UI changes |
 | [design.md](design.md) | Design brief (anonymised) and milestones | Updated when a milestone is reached or the design changes |
+| [porting-plan.md](porting-plan.md) | Plan for moving the owner's separate cards into ATLAS: placement rule, porting rules, steps and status | Updated at the end of every porting step |
 
 Privacy: nothing in this repository may identify a real house (room names, entity IDs, people, hostnames, locations). Examples and screenshots use the fictional demo house in `src/config/preset-demo.ts`.

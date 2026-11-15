@@ -63,7 +63,7 @@ cam("camera.doorbell", "Doorbell", "entrance.jpg");
 contact("binary_sensor.front_door", false); contact("binary_sensor.mailbox", true, "opening");
 motion("binary_sensor.doorbell_person", false, "occupancy"); na("binary_sensor.entrance_motion");
 th("garage", 11.4, 58); cam("camera.garage", "Garage camera", "garage.jpg");
-add("cover.garage_door", "closed", { device_class: "garage" }); contact("binary_sensor.garage_side_door", false);
+add("cover.garage_door", "closed", { device_class: "garage", supported_features: 11 }); /* open, close, stop */ contact("binary_sensor.garage_side_door", false);
 na("binary_sensor.garage_window"); na("binary_sensor.garage_motion");
 contact("binary_sensor.garden_door", false); add("switch.garden_irrigation", "off"); add("sensor.lawn_mower_status", "docked");
 // Basement
@@ -71,6 +71,7 @@ th("basement", 20.4, 48); cam("camera.basement", "Basement camera", "basement.jp
 contact("binary_sensor.basement_door", true); motion("binary_sensor.basement_hall_motion"); motion("binary_sensor.basement_stairs_motion"); na("media_player.basement_tv");
 th("shelter", 19.4, 50);
 th("server_room", 37.3, 9); cam("camera.server_room", "Server room camera", "server.jpg");
+add("switch.server_rack_power", "on"); add("button.router_restart", "unknown"); // never pressed yet
 cam("camera.workshop", "Workshop camera", "workshop.jpg"); add("sensor.3d_printer_status", "printing"); add("sensor.3d_printer_progress", 67, { unit_of_measurement: "%" });
 th("workshop", 18.2, 52);
 add("sensor.workshop_co2", 480, { unit_of_measurement: "ppm", device_class: "carbon_dioxide" });

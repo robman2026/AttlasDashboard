@@ -43,10 +43,18 @@ const sel = (options: string[] | { value: string; label: string }[] | DynamicOpt
 });
 const dom = (d: string | string[]) => (Array.isArray(d) ? d.join(", ") : d);
 
-export const DEVICE_FIELDS: FieldDef[] = [
+/** A value shown in a card (extra climate values): entity, label, icon. */
+export const VALUE_FIELDS: FieldDef[] = [
   { name: "entity", label: "Entity", type: "entity (any)", required: true, selector: ent() },
   { name: "name", label: "Name", type: "text", help: "Label on the tile. Default: the entity's friendly name.", selector: text },
   { name: "icon", label: "Icon override", type: "mdi icon", help: "Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class.", selector: { icon: {} } },
+];
+
+/** A device tile in a room's Devices card: a value plus what a tap does. */
+export const DEVICE_FIELDS: FieldDef[] = [
+  ...VALUE_FIELDS,
+  { name: "tap", label: "Tap action", type: "toggle | more-info | press", default: "toggle for light, switch, fan, input_boolean; more-info otherwise", help: "press: presses a button or input_button, or runs a script. Hold or right click always opens the details. Covers ignore this and show Open / Stop / Close buttons.", selector: sel([{ value: "toggle", label: "Toggle" }, { value: "more-info", label: "Open details" }, { value: "press", label: "Press button / run script" }]) },
+  { name: "confirm", label: "Ask before acting", type: "boolean", default: "false (true for covers with device class garage or gate)", help: "Asks for confirmation before the tap action, and before Open / Close on a cover (Stop never asks). Use it for plugs that power servers or network gear.", selector: bool },
 ];
 
 export const SECTIONS: SectionDef[] = [
@@ -146,7 +154,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "camera_snapshot", label: "Snapshot camera", type: "entity (camera)", help: "Optional. Snapshot uses this entity's picture, else the live camera's.", selector: ent("camera"), group: "Camera" },
       { name: "camera_private", label: "Private camera", type: "boolean", default: "false", help: "Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens.", selector: bool, group: "Camera" },
       { name: "light_entities", label: "Light entities", type: "list of entity (light, switch, input_boolean)", help: "What counts as this room's lights for the photo effect, the Lights chip and Lights off, e.g. Tasmota relays (switch.*) that power lamps. Empty: the room's light.* devices, minus the excluded status LEDs.", selector: ent(["light", "switch", "input_boolean"], true), group: "Lights" },
-      { name: "climate_extra", label: "Extra climate values", type: "list", help: "More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history.", selector: { object: {} }, fields: DEVICE_FIELDS, group: "Climate and automations" },
+      { name: "climate_extra", label: "Extra climate values", type: "list", help: "More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history.", selector: { object: {} }, fields: VALUE_FIELDS, group: "Climate and automations" },
       { name: "automations", label: "Automations", type: "list of entity (automation)", help: "Shows an Automations card with an on/off switch and the last run time for each.", selector: ent("automation", true), group: "Climate and automations" },
       { name: "printer_name", label: "Printer name", type: "text", help: "Title of the 3D printer card. The card appears when a status or progress sensor is set.", selector: text, group: "3D printer" },
       { name: "printer_status", label: "Print status", type: "entity (sensor)", help: "e.g. sensor.<printer>_print_status (Bambu Lab).", selector: ent("sensor"), group: "3D printer" },
@@ -162,7 +170,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "printer_picture", label: "Printer picture", type: "entity (camera, image)", help: "Chamber camera or cover image, shown as a still in the card.", selector: ent(["camera", "image"]), group: "3D printer" },
       { name: "side_cards", label: "Own cards, left column", type: "list of card configs (YAML)", help: "Any Lovelace cards (built-in or custom:...) shown below the camera, e.g. your own remote card. One card (type: custom:my-card plus its options) or a list of cards (each starting with - type:).", selector: { object: {} }, group: "Own cards" },
       { name: "cards", label: "Own cards, below Devices", type: "list of card configs (YAML)", help: "Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). One card or a list of cards.", selector: { object: {} }, group: "Own cards" },
-      { name: "devices", label: "Devices", type: "list", help: "Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info.", selector: { object: {} }, fields: DEVICE_FIELDS },
+      { name: "devices", label: "Devices", type: "list", help: "Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. Per tile you can change the tap action (e.g. press a button) and ask before acting. A cover gets a full-width tile with Open / Stop / Close buttons for the actions it supports.", selector: { object: {} }, fields: DEVICE_FIELDS },
     ],
   },
   {

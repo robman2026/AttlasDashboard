@@ -235,6 +235,12 @@ export const styles = css`
   .dev.open .txt span, .dev.na .txt span { color: var(--atlas-warn); }
   .dev.na { background: rgba(255, 191, 87, 0.05); border: 1px dashed rgba(255, 191, 87, 0.35); }
   .dev.na .chipi { background: rgba(241, 245, 255, 0.06); color: var(--atlas-dim); }
+  /* Cover tile: full row, tap area on the left, Open / Stop / Close on the right. */
+  .dev.cover { grid-column: 1 / -1; padding: 0 14px 0 0; gap: 10px; }
+  .dev.cover .dmain { flex: 1; align-self: stretch; display: flex; align-items: center; gap: 12px; padding: 12px 0 12px 14px; min-width: 0; }
+  .dev.cover .cbtns { display: flex; gap: 8px; flex: none; }
+  .dev.cover .cbtns .sq { width: 76px; color: var(--atlas-text); }
+  .dev.cover .cbtns .sq:disabled { opacity: 0.4; cursor: default; }
   /* Room image is only the backdrop of the Devices card. */
   .devcard { position: relative; overflow: hidden; }
   .devcard > :not(.devbg):not(.devshade):not(.devglow) { position: relative; }
@@ -465,6 +471,9 @@ export const styles = css`
     .crumb, .rhead { padding: 0 6px; }
     .rhead h1 { font-size: 30px; }
     .devs, .room-grid.has-side .devs { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 76px; }
+    .dev.cover { grid-row: span 2; flex-direction: column; align-items: stretch; gap: 6px; padding: 0 12px 12px; }
+    .dev.cover .dmain { padding: 10px 0 0; }
+    .dev.cover .cbtns .sq { flex: 1; width: auto; }
     .egrid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .ecard { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 8px 12px; padding: 12px; }
     .ecard > .row, .ecard > .eextra, .ecard > .ephases { grid-column: 1 / -1; }

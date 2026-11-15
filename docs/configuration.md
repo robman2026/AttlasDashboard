@@ -134,7 +134,7 @@ A list; each item has:
 | `printer_picture` | entity (camera, image) |  | Printer picture. Chamber camera or cover image, shown as a still in the card. |
 | `side_cards` | list of card configs (YAML) |  | Own cards, left column. Any Lovelace cards (built-in or custom:..) shown below the camera, e.g. your own remote card. One card (type: custom:my-card plus its options) or a list of cards (each starting with - type:). |
 | `cards` | list of card configs (YAML) |  | Own cards, below Devices. Any Lovelace cards shown below the Devices card, side by side when there is room (e.g. a washer and a dryer card). One card or a list of cards. |
-| `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. |
+| `devices` | list |  | Devices. Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. Per tile you can change the tap action (e.g. press a button) and ask before acting. A cover gets a full-width tile with Open / Stop / Close buttons for the actions it supports. |
 
 Items of `climate_extra`:
 
@@ -151,6 +151,8 @@ Items of `devices`:
 | `entity` (required) | entity (any) |  | Entity |
 | `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
 | `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+| `tap` | toggle \| more-info \| press | toggle for light, switch, fan, input_boolean; more-info otherwise | Tap action. press: presses a button or input_button, or runs a script. Hold or right click always opens the details. Covers ignore this and show Open / Stop / Close buttons. |
+| `confirm` | boolean | false (true for covers with device class garage or gate) | Ask before acting. Asks for confirmation before the tap action, and before Open / Close on a cover (Stop never asks). Use it for plugs that power servers or network gear. |
 
 ## Layout (`layout`)
 
@@ -492,7 +494,14 @@ strategy:
       temperature: sensor.server_room_temperature
       humidity: sensor.server_room_humidity
       camera: camera.server_room
-      devices: []
+      devices:
+        - entity: switch.server_rack_power
+          name: Rack power
+          confirm: true
+        - entity: button.router_restart
+          name: Restart router
+          tap: press
+          confirm: true
     - id: workshop
       name: Workshop
       floor: basement

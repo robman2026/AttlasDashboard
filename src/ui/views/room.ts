@@ -1,54 +1,117 @@
 import { html, nothing } from "lit";
-import type { RoomConfig } from "../../config/types";
+import type { RoomConfig, RoomDeviceConfig } from "../../config/types";
 import type { Ctx } from "../context";
 import { isInvalid, num, stateObj, domainOf } from "../../data/hass";
 import { floorById, imageUrl, roomById, roomsOnFloor, rooms } from "../../data/model";
 import { icon, glyph } from "../icons";
-import { TOGGLE_DOMAINS, deviceLabel, glyphFor, kindOf, stateText } from "../devices";
+import { PRESS_DOMAINS, TOGGLE_DOMAINS, confirmCover, coverCan, coverFeatures, deviceLabel, glyphFor, kindOf, stateText, tapAction } from "../devices";
 import { fmtHum, fmtTemp, lightMood } from "./common";
 import { stamp, stampTitle, timeAgo } from "../time";
 import { automationsCard, climateExtras, printerCard, statusStrip } from "./room-extras";
 
 const LONG_PRESS_MS = 500;
 
-/** Tap: toggle for lights/switches/fans/input_boolean, else more-info. Long press or right click: more-info. */
-const pressHandlers = (ctx: Ctx, entity: string) => {
+/**
+ * Tap on a device tile: the tile's tap action (default: toggle for light, switch, fan,
+ * input_boolean, details otherwise), asked first when the tile has confirm: true.
+ */
+const runTap = (ctx: Ctx, d: RoomDeviceConfig) => {
+  const s = ctx.hass.states[d.entity];
+  const dom = domainOf(d.entity);
+  const name = deviceLabel(ctx.hass, d);
+  const action = tapAction(d);
+  let run: (() => unknown) | undefined;
+  let title = "";
+  let text = "";
+  let ok = "";
+  if (action === "toggle" && TOGGLE_DOMAINS.includes(dom) && !isInvalid(s)) {
+    const on = s!.state === "on";
+    run = () => ctx.call(dom, "toggle", { entity_id: d.entity });
+    title = `Turn ${on ? "off" : "on"} ${name}?`;
+    text = `${name} is ${stateText(ctx.hass, s).toLowerCase()}.`;
+    ok = on ? "Turn off" : "Turn on";
+  } else if (action === "press" && PRESS_DOMAINS.includes(dom) && s && s.state !== "unavailable") {
+    // A button that was never pressed reports "unknown", so only unavailable blocks it.
+    const script = dom === "script";
+    run = () => ctx.call(dom, script ? "turn_on" : "press", { entity_id: d.entity });
+    title = `${script ? "Run" : "Press"} ${name}?`;
+    text = script ? "The script will run now." : "The button will be pressed now.";
+    ok = script ? "Run" : "Press";
+  }
+  if (!run) ctx.moreInfo(d.entity);
+  else if (d.confirm) ctx.confirm(title, text, run, ok);
+  else run();
+};
+
+/** Tap runs the tile's action. Long press or right click: more-info. */
+const pressHandlers = (ctx: Ctx, d: RoomDeviceConfig) => {
   let timer: number | undefined;
   let long = false;
-  const toggleable = TOGGLE_DOMAINS.includes(domainOf(entity));
   return {
     down: () => {
       long = false;
       timer = window.setTimeout(() => {
         long = true;
-        ctx.moreInfo(entity);
+        ctx.moreInfo(d.entity);
       }, LONG_PRESS_MS);
     },
     up: () => window.clearTimeout(timer),
     click: () => {
-      if (long) return;
-      const s = ctx.hass.states[entity];
-      if (toggleable && !isInvalid(s)) ctx.call(domainOf(entity), "toggle", { entity_id: entity });
-      else ctx.moreInfo(entity);
+      if (!long) runTap(ctx, d);
     },
     context: (e: Event) => {
       e.preventDefault();
       window.clearTimeout(timer);
       long = true;
-      ctx.moreInfo(entity);
+      ctx.moreInfo(d.entity);
     },
   };
 };
 
-const deviceTile = (ctx: Ctx, d: NonNullable<RoomConfig["devices"]>[number], lights: string[] = []) => {
+const tileIcon = (d: RoomDeviceConfig, s: ReturnType<typeof stateObj>) =>
+  d.icon ? html`<ha-icon .icon=${d.icon} style="--mdc-icon-size:20px"></ha-icon>` : glyph(glyphFor(d.entity, s));
+
+/**
+ * Cover tile (full width): state with position, plus Open / Stop / Close for the actions
+ * the cover supports. Open and Close ask first for garage doors and gates (or confirm: true).
+ * Tapping the tile itself opens the details.
+ */
+const coverTile = (ctx: Ctx, d: RoomDeviceConfig, ago: string) => {
   const s = ctx.hass.states[d.entity];
+  const f = coverFeatures(s);
+  const can = coverCan(s);
+  const name = deviceLabel(ctx.hass, d);
+  const p = s?.attributes.current_position;
+  const pos = typeof p === "number" && s && ["open", "opening", "closing"].includes(s.state) ? ` · ${p} %` : "";
+  const act = (service: "open_cover" | "close_cover" | "stop_cover", verb: string) => {
+    const run = () => ctx.call("cover", service, { entity_id: d.entity });
+    if (service !== "stop_cover" && confirmCover(d, s)) ctx.confirm(`${verb} ${name}?`, `${name} is ${stateText(ctx.hass, s).toLowerCase()}.`, run, verb);
+    else run();
+  };
+  const btn = (show: boolean, enabled: boolean, service: "open_cover" | "close_cover" | "stop_cover", verb: string) =>
+    show ? html`<button class="sq" aria-label="${verb} ${name}" ?disabled=${!enabled} @click=${() => act(service, verb)}>${verb}</button>` : nothing;
+  return html`<div class="dev cover ${kindOf(s)}" title=${stampTitle(ctx.hass, s) || d.entity}>
+    <button class="dmain" @click=${() => ctx.moreInfo(d.entity)} @contextmenu=${(e: Event) => { e.preventDefault(); ctx.moreInfo(d.entity); }}>
+      <span class="chipi">${tileIcon(d, s)}</span>
+      <span class="txt"><b>${name}</b><span>${stateText(ctx.hass, s)}${pos}</span>${ago ? html`<small class="ago n">${ago}</small>` : nothing}</span>
+    </button>
+    <span class="cbtns">
+      ${btn(f.open, can.open, "open_cover", "Open")}${btn(f.stop, can.stop, "stop_cover", "Stop")}${btn(f.close, can.close, "close_cover", "Close")}
+    </span>
+  </div>`;
+};
+
+const deviceTile = (ctx: Ctx, d: RoomDeviceConfig, lights: string[] = []) => {
+  const s = ctx.hass.states[d.entity];
+  const ago = timeAgo(ctx.hass, stamp(s, ctx.config.appearance?.time_display));
+  const f = coverFeatures(s);
+  if (domainOf(d.entity) === "cover" && (f.open || f.close || f.stop)) return coverTile(ctx, d, ago);
   // A room light that is on gets the warm "lit" style, matching the photo glow.
   const k = kindOf(s) === "on" && lights.includes(d.entity) ? "on lit" : kindOf(s);
-  const h = pressHandlers(ctx, d.entity);
-  const ago = timeAgo(ctx.hass, stamp(s, ctx.config.appearance?.time_display));
+  const h = pressHandlers(ctx, d);
   return html`<button class="dev ${k}" title=${stampTitle(ctx.hass, s) || d.entity}
     @pointerdown=${h.down} @pointerup=${h.up} @pointerleave=${h.up} @click=${h.click} @contextmenu=${h.context}>
-    <span class="chipi">${d.icon ? html`<ha-icon .icon=${d.icon} style="--mdc-icon-size:20px"></ha-icon>` : glyph(glyphFor(d.entity, s))}</span>
+    <span class="chipi">${tileIcon(d, s)}</span>
     <span class="txt"><b>${deviceLabel(ctx.hass, d)}</b><span>${stateText(ctx.hass, s)}</span>${ago ? html`<small class="ago n">${ago}</small>` : nothing}</span>
   </button>`;
 };

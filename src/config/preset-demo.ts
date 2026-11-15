@@ -181,7 +181,13 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     },
     {
       id: "server", name: "Server room", floor: "basement", icon: "server", image: "server.jpg",
-      temperature: "sensor.server_room_temperature", humidity: "sensor.server_room_humidity", camera: "camera.server_room", devices: [],
+      temperature: "sensor.server_room_temperature", humidity: "sensor.server_room_humidity", camera: "camera.server_room",
+      devices: [
+        // Risky to switch by accident: asks first.
+        { entity: "switch.server_rack_power", name: "Rack power", confirm: true },
+        // A button only acts on tap when told to; here it also asks first.
+        { entity: "button.router_restart", name: "Restart router", tap: "press", confirm: true },
+      ],
     },
     {
       id: "workshop", name: "Workshop", floor: "basement", icon: "settings", image: "workshop.jpg", camera: "camera.workshop",

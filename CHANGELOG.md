@@ -6,6 +6,10 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 
 ### Added
 - Room images `garden.jpg` (garden at dusk) and `backup/garden.jpg` (terrace and lawn). Demo house: the Garden room picks `garden.jpg` automatically (room id `garden`).
+- Device tile options `tap` and `confirm` (Edit dashboard > Rooms > Devices). `tap`: `toggle` (default for light, switch, fan, input_boolean), `more-info` (default otherwise) or `press` (presses a button or input_button, runs a script). `confirm: true` asks before the tap action, e.g. for a plug that powers a server. Hold or right click still opens the details. Extra climate values keep only entity, name and icon.
+- Cover tiles: a `cover.*` device gets a full-width tile with Open / Stop / Close buttons for the actions the cover supports (`supported_features`), disabled when not possible (fully open, already closing, unavailable), with the position while open or moving. Open and Close ask first for garage doors and gates (or with `confirm: true`); Stop never asks. Tapping the tile opens the details. On the phone the buttons sit below the name.
+- Demo house: the garage door supports open, close and stop; the server room has a rack power switch that asks first and a router restart button (`tap: press`).
+- `docs/porting-plan.md`: plan for moving the owner's separate cards into ATLAS (placement rule, porting rules, steps and status).
 - Light mood: room photos follow the room lights. Off: darker, desaturated, cool; on: brighter with a warm glow, brightness following the light level (average brightness over the room's lights); full: amber edge. Room tiles show a light chip ("Off", "1 on · 40 %", "3 on"); in the room view the Devices background follows the same rule and lights that are on get an amber tile. 0.6 s fade. Rooms without lights are unchanged. Option `appearance.light_mood` (default on).
 - Room option `light_entities`: which entities count as the room's lights (light, switch, input_boolean), e.g. Tasmota relays that power lamps. Used by the light mood, the room Lights chip and the Home "Lights off" action. Empty: the room's `light.*` devices minus the excluded status LEDs.
 - Room image `guest-room.jpg` (guest room).
@@ -31,6 +35,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- A button or input_button that was never pressed (state `unknown`) shows "Never pressed" on a normal tile instead of the dashed "Unknown" style used for unavailable devices.
 - Room view, wide screens: if the own-cards column (e.g. a tall remote) is taller than the space left in the window, it is scaled down to fit (CSS `zoom`, not below 75 %, only shrinks). Recalculated on resize and when the cards change size.
 - Room view header is compact: a small breadcrumb line, then icon, title (40 px instead of 56 px) and summary, the status chips and previous / next on one row. The room content starts about 100 px higher, so tall cards such as a remote fit on smaller laptops.
 - Room Lights chip and Home "Lights off" use `homeassistant.turn_on` / `turn_off`, so switches used as lights work too.
