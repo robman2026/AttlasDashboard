@@ -87,6 +87,24 @@ export interface RoomDeviceConfig extends DeviceConfig {
   confirm?: boolean; // ask before the tap action and before cover Open / Close (default: true for garage doors and gates)
 }
 
+/** One appliance in a room's Appliances card (porting plan step 9). Only `name` is required. */
+export interface ApplianceConfig {
+  name: string;
+  entity?: string; // main state: switch, binary_sensor, sensor (on = running)
+  icon?: string; // mdi:* when no temperature is set
+  operation?: string; // operation state (Ready, Run, Finished ...)
+  program?: string; // active program
+  door?: string; // door sensor
+  temperature?: string; // current temperature: arc gauge instead of the icon
+  temperature_max?: number; // full scale of the arc (default 300)
+  setpoint?: string; // target temperature
+  progress?: string; // program progress in %
+  finish?: string; // finish time (timestamp sensor) or remaining time
+  remote?: string; // remote start allowed
+  controls?: string[]; // switches / buttons / scripts shown while running (e.g. Extra dry, Pause)
+  stop?: string; // button or script, always asks first
+}
+
 export interface RoomConfig {
   id: string;
   name: string;
@@ -132,6 +150,7 @@ export interface RoomConfig {
   car_flash?: string; // button / input_button / script
   car_horn?: string; // button / input_button / script, asks first
   car_refresh?: string; // button / input_button / script: ask the car for fresh data
+  appliances?: ApplianceConfig[]; // Appliances card (oven, dishwasher, washer, dryer ...)
   // Room power (porting plan step 7): metered circuit of this room
   power?: string; // power sensor (W or kW)
   power_energy?: string; // energy sensor (kWh)

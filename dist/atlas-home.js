@@ -42,7 +42,7 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 	composed: !0
 })), p = (e, t) => f(e, "hass-more-info", { entityId: t }), m = (e, t) => {
 	customElements.get(e) || customElements.define(e, t);
-}, ee = [
+}, h = [
 	"attic.jpg",
 	"backup/attic-lounge.jpg",
 	"backup/bedroom.jpg",
@@ -68,7 +68,7 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 	"shelter.jpg",
 	"utility.jpg",
 	"workshop.jpg"
-], h = (e) => e.rooms ?? [], g = (e) => (e.energy_meters ?? []).filter((e) => e?.power), te = [
+], g = (e) => e.rooms ?? [], _ = (e) => (e.energy_meters ?? []).filter((e) => e?.power), ee = [
 	"power",
 	"energy",
 	"current",
@@ -84,36 +84,36 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 	"voltage_a",
 	"voltage_b",
 	"voltage_c"
-], ne = (e) => g(e).flatMap((e) => te.map((t) => e[t]).filter((e) => !!e)), _ = (e) => e.floors ?? [], v = (e, t) => h(e).find((e) => e.id === t), re = (e, t) => _(e).find((e) => e.id === t), y = (e, t) => h(e).filter((e) => e.floor === t), b = (e) => e && e.show_camera !== !1 && e.camera || void 0, ie = (e, t) => {
+], te = (e) => _(e).flatMap((e) => ee.map((t) => e[t]).filter((e) => !!e)), v = (e) => e.floors ?? [], y = (e, t) => g(e).find((e) => e.id === t), b = (e, t) => v(e).find((e) => e.id === t), x = (e, t) => g(e).filter((e) => e.floor === t), S = (e) => e && e.show_camera !== !1 && e.camera || void 0, ne = (e, t) => {
 	let n = /* @__PURE__ */ new Map();
-	for (let r of y(e, t)) {
-		let e = b(r);
+	for (let r of x(e, t)) {
+		let e = S(r);
 		e && n.set(e, [...n.get(e) ?? [], r]);
 	}
 	return [...n].map(([e, t]) => ({
 		camera: e,
 		rooms: t
 	}));
-}, x = (e, t) => h(e).find((e) => e.temperature === t || e.humidity === t || b(e) === t || (e.devices ?? []).some((e) => e.entity === t)), ae = (e, t) => {
-	for (let n of h(e)) {
+}, C = (e, t) => g(e).find((e) => e.temperature === t || e.humidity === t || S(e) === t || (e.devices ?? []).some((e) => e.entity === t)), re = (e, t) => {
+	for (let n of g(e)) {
 		let e = (n.devices ?? []).find((e) => e.entity === t);
 		if (e?.name) return e.name;
 	}
-}, oe = (e, t) => {
+}, ie = (e, t) => {
 	if (!t) return;
 	if (t.image) return t.image === "none" ? void 0 : t.image;
 	if (e.appearance?.image_path) return;
 	let n = `${t.id.replace(/_/g, "-")}.jpg`;
-	return ee.includes(n) ? n : void 0;
-}, se = (e, t) => {
+	return h.includes(n) ? n : void 0;
+}, ae = (e, t) => {
 	if (!t) return;
 	if (/^(https?:)?\/\//.test(t) || t.startsWith("/")) return t;
 	let n = e.appearance?.image_path || s;
 	return n.endsWith("/") || (n += "/"), n + t;
-}, ce = (e, t) => se(e, oe(e, t)), le = (e) => {
+}, oe = (e, t) => ae(e, ie(e, t)), se = (e) => {
 	let t = e.appearance?.accent ?? "";
 	return /^#[0-9a-fA-F]{6}$/.test(t) ? t : a;
-}, ue = (e) => {
+}, ce = (e) => {
 	let t = /* @__PURE__ */ new Set(), n = (e) => e && t.add(e), r = e.entities ?? {};
 	[
 		r.alarm,
@@ -131,28 +131,28 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 		r.wake_pc,
 		r.garage_cover
 	].forEach(n);
-	for (let t of h(e)) n(t.temperature), n(t.humidity), n(b(t)), (t.devices ?? []).forEach((e) => n(e.entity));
+	for (let t of g(e)) n(t.temperature), n(t.humidity), n(S(t)), (t.devices ?? []).forEach((e) => n(e.entity));
 	return [...t];
-}, de = (e) => {
+}, le = (e) => {
 	let t = /* @__PURE__ */ new Map();
-	for (let n of h(e)) {
-		let e = b(n);
+	for (let n of g(e)) {
+		let e = S(n);
 		e && t.set(e, [...t.get(e) ?? [], n]);
 	}
 	return [...t].map(([e, t]) => ({
 		camera: e,
 		rooms: t
 	}));
-}, fe = (e) => !!e.entities?.alarm || !!e.alerts?.exterior_doors?.length || !!e.alerts?.interior_doors?.length || de(e).length > 0 || h(e).some((e) => !!e.car_lock || (e.devices ?? []).some((e) => [
+}, ue = (e) => !!e.entities?.alarm || !!e.alerts?.exterior_doors?.length || !!e.alerts?.interior_doors?.length || le(e).length > 0 || g(e).some((e) => !!e.car_lock || (e.devices ?? []).some((e) => [
 	"binary_sensor",
 	"cover",
 	"lock"
-].includes(e.entity.split(".")[0]))), pe = (e) => [...new Set(h(e).flatMap((t) => S(e, t)))], S = (e, t) => {
+].includes(e.entity.split(".")[0]))), de = (e) => [...new Set(g(e).flatMap((t) => w(e, t)))], w = (e, t) => {
 	if (!t) return [];
 	if (t.light_entities?.length) return t.light_entities;
 	let n = new Set(e.entities?.exclude_lights ?? []);
 	return (t.devices ?? []).map((e) => e.entity).filter((e) => e.startsWith("light.") && !n.has(e));
-}, me = (e, t) => {
+}, fe = (e, t) => {
 	let n = 0, r = 0;
 	for (let i of t) {
 		let t = e.states[i];
@@ -167,12 +167,12 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 		level: t.length ? r / t.length : 0,
 		brightness: n ? Math.round(r / n * 100) : 0
 	};
-}, he, C = (e, t, n = {}) => ({
+}, pe, T = (e, t, n = {}) => ({
 	type: `custom:${r}`,
 	view: t,
 	...n,
 	atlas: e
-}), ge = class extends HTMLElement {
+}), me = class extends HTMLElement {
 	static getConfigElement() {
 		return document.createElement(n);
 	}
@@ -183,7 +183,7 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 		};
 	}
 	static async generate(e) {
-		let t = _(e)[0]?.id, n = {
+		let t = v(e)[0]?.id, n = {
 			subview: !0,
 			back_path: "home"
 		}, r = [
@@ -192,21 +192,21 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 				path: "home",
 				icon: "mdi:home-variant-outline",
 				type: "panel",
-				cards: [C(e, "home")]
+				cards: [T(e, "home")]
 			},
 			{
 				title: "Alerts",
 				path: "alerts",
 				type: "panel",
 				...n,
-				cards: [C(e, "alerts")]
+				cards: [T(e, "alerts")]
 			},
 			{
 				title: "Rooms",
 				path: "rooms",
 				type: "panel",
 				...n,
-				cards: [C(e, "rooms", { floor: t })]
+				cards: [T(e, "rooms", { floor: t })]
 			}
 		];
 		r.push({
@@ -214,39 +214,39 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 			path: "system",
 			type: "panel",
 			...n,
-			cards: [C(e, "system")]
-		}), fe(e) && r.push({
+			cards: [T(e, "system")]
+		}), ue(e) && r.push({
 			title: "Security",
 			path: "security",
 			type: "panel",
 			...n,
-			cards: [C(e, "security")]
-		}), pe(e).length && r.push({
+			cards: [T(e, "security")]
+		}), de(e).length && r.push({
 			title: "Lights",
 			path: "lights",
 			type: "panel",
 			...n,
-			cards: [C(e, "lights")]
-		}), g(e).length && r.push({
+			cards: [T(e, "lights")]
+		}), _(e).length && r.push({
 			title: "Energy",
 			path: "energy",
 			type: "panel",
 			...n,
-			cards: [C(e, "energy")]
+			cards: [T(e, "energy")]
 		});
-		for (let t of _(e)) r.push({
+		for (let t of v(e)) r.push({
 			title: t.name,
 			path: `floor-${t.id}`,
 			type: "panel",
 			...n,
-			cards: [C(e, "rooms", { floor: t.id })]
+			cards: [T(e, "rooms", { floor: t.id })]
 		});
-		for (let t of h(e)) r.push({
+		for (let t of g(e)) r.push({
 			title: t.name,
 			path: `room-${t.id}`,
 			type: "panel",
 			...n,
-			cards: [C(e, "room", { room: t.id })]
+			cards: [T(e, "room", { room: t.id })]
 		});
 		return {
 			title: "ATLAS Home",
@@ -254,43 +254,43 @@ var e = "atlas-home", t = `ll-strategy-dashboard-${e}`, n = "atlas-home-strategy
 		};
 	}
 };
-he = ge, he.registryDependencies = [], he.configRequired = !0;
+pe = me, pe.registryDependencies = [], pe.configRequired = !0;
 // node_modules/@lit/reactive-element/css-tag.js
-var _e = globalThis, ve = _e.ShadowRoot && (_e.ShadyCSS === void 0 || _e.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, ye = Symbol(), be = /* @__PURE__ */ new WeakMap(), xe = class {
+var he = globalThis, ge = he.ShadowRoot && (he.ShadyCSS === void 0 || he.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, _e = Symbol(), ve = /* @__PURE__ */ new WeakMap(), ye = class {
 	constructor(e, t, n) {
-		if (this._$cssResult$ = !0, n !== ye) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+		if (this._$cssResult$ = !0, n !== _e) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
 		this.cssText = e, this.t = t;
 	}
 	get styleSheet() {
 		let e = this.o, t = this.t;
-		if (ve && e === void 0) {
+		if (ge && e === void 0) {
 			let n = t !== void 0 && t.length === 1;
-			n && (e = be.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), n && be.set(t, e));
+			n && (e = ve.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), n && ve.set(t, e));
 		}
 		return e;
 	}
 	toString() {
 		return this.cssText;
 	}
-}, Se = (e) => new xe(typeof e == "string" ? e : e + "", void 0, ye), Ce = (e, ...t) => new xe(e.length === 1 ? e[0] : t.reduce((t, n, r) => t + ((e) => {
+}, be = (e) => new ye(typeof e == "string" ? e : e + "", void 0, _e), xe = (e, ...t) => new ye(e.length === 1 ? e[0] : t.reduce((t, n, r) => t + ((e) => {
 	if (!0 === e._$cssResult$) return e.cssText;
 	if (typeof e == "number") return e;
 	throw Error("Value passed to 'css' function must be a 'css' function result: " + e + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
-})(n) + e[r + 1], e[0]), e, ye), we = (e, t) => {
-	if (ve) e.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
+})(n) + e[r + 1], e[0]), e, _e), Se = (e, t) => {
+	if (ge) e.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
 	else for (let n of t) {
-		let t = document.createElement("style"), r = _e.litNonce;
+		let t = document.createElement("style"), r = he.litNonce;
 		r !== void 0 && t.setAttribute("nonce", r), t.textContent = n.cssText, e.appendChild(t);
 	}
-}, Te = ve ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((e) => {
+}, Ce = ge ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((e) => {
 	let t = "";
 	for (let n of e.cssRules) t += n.cssText;
-	return Se(t);
-})(e) : e, { is: Ee, defineProperty: De, getOwnPropertyDescriptor: Oe, getOwnPropertyNames: ke, getOwnPropertySymbols: Ae, getPrototypeOf: je } = Object, Me = globalThis, Ne = Me.trustedTypes, Pe = Ne ? Ne.emptyScript : "", Fe = Me.reactiveElementPolyfillSupport, Ie = (e, t) => e, Le = {
+	return be(t);
+})(e) : e, { is: we, defineProperty: Te, getOwnPropertyDescriptor: Ee, getOwnPropertyNames: De, getOwnPropertySymbols: Oe, getPrototypeOf: ke } = Object, Ae = globalThis, je = Ae.trustedTypes, Me = je ? je.emptyScript : "", Ne = Ae.reactiveElementPolyfillSupport, Pe = (e, t) => e, Fe = {
 	toAttribute(e, t) {
 		switch (t) {
 			case Boolean:
-				e = e ? Pe : null;
+				e = e ? Me : null;
 				break;
 			case Object:
 			case Array: e = e == null ? e : JSON.stringify(e);
@@ -315,30 +315,30 @@ var _e = globalThis, ve = _e.ShadowRoot && (_e.ShadyCSS === void 0 || _e.ShadyCS
 		}
 		return n;
 	}
-}, Re = (e, t) => !Ee(e, t), ze = {
+}, Ie = (e, t) => !we(e, t), Le = {
 	attribute: !0,
 	type: String,
-	converter: Le,
+	converter: Fe,
 	reflect: !1,
 	useDefault: !1,
-	hasChanged: Re
+	hasChanged: Ie
 };
-Symbol.metadata ??= Symbol("metadata"), Me.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
-var Be = class extends HTMLElement {
+Symbol.metadata ??= Symbol("metadata"), Ae.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+var Re = class extends HTMLElement {
 	static addInitializer(e) {
 		this._$Ei(), (this.l ??= []).push(e);
 	}
 	static get observedAttributes() {
 		return this.finalize(), this._$Eh && [...this._$Eh.keys()];
 	}
-	static createProperty(e, t = ze) {
+	static createProperty(e, t = Le) {
 		if (t.state && (t.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(e) && ((t = Object.create(t)).wrapped = !0), this.elementProperties.set(e, t), !t.noAccessor) {
 			let n = Symbol(), r = this.getPropertyDescriptor(e, n, t);
-			r !== void 0 && De(this.prototype, e, r);
+			r !== void 0 && Te(this.prototype, e, r);
 		}
 	}
 	static getPropertyDescriptor(e, t, n) {
-		let { get: r, set: i } = Oe(this.prototype, e) ?? {
+		let { get: r, set: i } = Ee(this.prototype, e) ?? {
 			get() {
 				return this[t];
 			},
@@ -357,17 +357,17 @@ var Be = class extends HTMLElement {
 		};
 	}
 	static getPropertyOptions(e) {
-		return this.elementProperties.get(e) ?? ze;
+		return this.elementProperties.get(e) ?? Le;
 	}
 	static _$Ei() {
-		if (this.hasOwnProperty(Ie("elementProperties"))) return;
-		let e = je(this);
+		if (this.hasOwnProperty(Pe("elementProperties"))) return;
+		let e = ke(this);
 		e.finalize(), e.l !== void 0 && (this.l = [...e.l]), this.elementProperties = new Map(e.elementProperties);
 	}
 	static finalize() {
-		if (this.hasOwnProperty(Ie("finalized"))) return;
-		if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(Ie("properties"))) {
-			let e = this.properties, t = [...ke(e), ...Ae(e)];
+		if (this.hasOwnProperty(Pe("finalized"))) return;
+		if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(Pe("properties"))) {
+			let e = this.properties, t = [...De(e), ...Oe(e)];
 			for (let n of t) this.createProperty(n, e[n]);
 		}
 		let e = this[Symbol.metadata];
@@ -386,8 +386,8 @@ var Be = class extends HTMLElement {
 		let t = [];
 		if (Array.isArray(e)) {
 			let n = new Set(e.flat(1 / 0).reverse());
-			for (let e of n) t.unshift(Te(e));
-		} else e !== void 0 && t.push(Te(e));
+			for (let e of n) t.unshift(Ce(e));
+		} else e !== void 0 && t.push(Ce(e));
 		return t;
 	}
 	static _$Eu(e, t) {
@@ -413,7 +413,7 @@ var Be = class extends HTMLElement {
 	}
 	createRenderRoot() {
 		let e = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-		return we(e, this.constructor.elementStyles), e;
+		return Se(e, this.constructor.elementStyles), e;
 	}
 	connectedCallback() {
 		this.renderRoot ??= this.createRenderRoot(), this.enableUpdating(!0), this._$EO?.forEach((e) => e.hostConnected?.());
@@ -428,14 +428,14 @@ var Be = class extends HTMLElement {
 	_$ET(e, t) {
 		let n = this.constructor.elementProperties.get(e), r = this.constructor._$Eu(e, n);
 		if (r !== void 0 && !0 === n.reflect) {
-			let i = (n.converter?.toAttribute === void 0 ? Le : n.converter).toAttribute(t, n.type);
+			let i = (n.converter?.toAttribute === void 0 ? Fe : n.converter).toAttribute(t, n.type);
 			this._$Em = e, i == null ? this.removeAttribute(r) : this.setAttribute(r, i), this._$Em = null;
 		}
 	}
 	_$AK(e, t) {
 		let n = this.constructor, r = n._$Eh.get(e);
 		if (r !== void 0 && this._$Em !== r) {
-			let e = n.getPropertyOptions(r), i = typeof e.converter == "function" ? { fromAttribute: e.converter } : e.converter?.fromAttribute === void 0 ? Le : e.converter;
+			let e = n.getPropertyOptions(r), i = typeof e.converter == "function" ? { fromAttribute: e.converter } : e.converter?.fromAttribute === void 0 ? Fe : e.converter;
 			this._$Em = r;
 			let a = i.fromAttribute(t, e.type);
 			this[r] = a ?? this._$Ej?.get(r) ?? a, this._$Em = null;
@@ -444,7 +444,7 @@ var Be = class extends HTMLElement {
 	requestUpdate(e, t, n, r = !1, i) {
 		if (e !== void 0) {
 			let a = this.constructor;
-			if (!1 === r && (i = this[e]), n ??= a.getPropertyOptions(e), !((n.hasChanged ?? Re)(i, t) || n.useDefault && n.reflect && i === this._$Ej?.get(e) && !this.hasAttribute(a._$Eu(e, n)))) return;
+			if (!1 === r && (i = this[e]), n ??= a.getPropertyOptions(e), !((n.hasChanged ?? Ie)(i, t) || n.useDefault && n.reflect && i === this._$Ej?.get(e) && !this.hasAttribute(a._$Eu(e, n)))) return;
 			this.C(e, t, n);
 		}
 		!1 === this.isUpdatePending && (this._$ES = this._$EP());
@@ -508,88 +508,88 @@ var Be = class extends HTMLElement {
 	updated(e) {}
 	firstUpdated(e) {}
 };
-Be.elementStyles = [], Be.shadowRootOptions = { mode: "open" }, Be[Ie("elementProperties")] = /* @__PURE__ */ new Map(), Be[Ie("finalized")] = /* @__PURE__ */ new Map(), Fe?.({ ReactiveElement: Be }), (Me.reactiveElementVersions ??= []).push("2.1.2");
+Re.elementStyles = [], Re.shadowRootOptions = { mode: "open" }, Re[Pe("elementProperties")] = /* @__PURE__ */ new Map(), Re[Pe("finalized")] = /* @__PURE__ */ new Map(), Ne?.({ ReactiveElement: Re }), (Ae.reactiveElementVersions ??= []).push("2.1.2");
 // node_modules/lit-html/lit-html.js
-var Ve = globalThis, He = (e) => e, Ue = Ve.trustedTypes, We = Ue ? Ue.createPolicy("lit-html", { createHTML: (e) => e }) : void 0, Ge = "$lit$", w = `lit$${Math.random().toFixed(9).slice(2)}$`, Ke = "?" + w, qe = `<${Ke}>`, T = document, Je = () => T.createComment(""), Ye = (e) => e === null || typeof e != "object" && typeof e != "function", Xe = Array.isArray, Ze = (e) => Xe(e) || typeof e?.[Symbol.iterator] == "function", Qe = "[ 	\n\f\r]", $e = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, et = /-->/g, tt = />/g, E = RegExp(`>|${Qe}(?:([^\\s"'>=/]+)(${Qe}*=${Qe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), nt = /'/g, rt = /"/g, it = /^(?:script|style|textarea|title)$/i, at = (e) => (t, ...n) => ({
+var ze = globalThis, Be = (e) => e, Ve = ze.trustedTypes, He = Ve ? Ve.createPolicy("lit-html", { createHTML: (e) => e }) : void 0, Ue = "$lit$", E = `lit$${Math.random().toFixed(9).slice(2)}$`, We = "?" + E, Ge = `<${We}>`, D = document, Ke = () => D.createComment(""), qe = (e) => e === null || typeof e != "object" && typeof e != "function", Je = Array.isArray, Ye = (e) => Je(e) || typeof e?.[Symbol.iterator] == "function", Xe = "[ 	\n\f\r]", Ze = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Qe = /-->/g, $e = />/g, O = RegExp(`>|${Xe}(?:([^\\s"'>=/]+)(${Xe}*=${Xe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), et = /'/g, tt = /"/g, nt = /^(?:script|style|textarea|title)$/i, rt = (e) => (t, ...n) => ({
 	_$litType$: e,
 	strings: t,
 	values: n
-}), D = at(1), O = at(2), k = Symbol.for("lit-noChange"), A = Symbol.for("lit-nothing"), ot = /* @__PURE__ */ new WeakMap(), j = T.createTreeWalker(T, 129);
-function st(e, t) {
-	if (!Xe(e) || !e.hasOwnProperty("raw")) throw Error("invalid template strings array");
-	return We === void 0 ? t : We.createHTML(t);
+}), k = rt(1), A = rt(2), j = Symbol.for("lit-noChange"), M = Symbol.for("lit-nothing"), it = /* @__PURE__ */ new WeakMap(), N = D.createTreeWalker(D, 129);
+function at(e, t) {
+	if (!Je(e) || !e.hasOwnProperty("raw")) throw Error("invalid template strings array");
+	return He === void 0 ? t : He.createHTML(t);
 }
-var ct = (e, t) => {
-	let n = e.length - 1, r = [], i, a = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = $e;
+var ot = (e, t) => {
+	let n = e.length - 1, r = [], i, a = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = Ze;
 	for (let t = 0; t < n; t++) {
 		let n = e[t], s, c, l = -1, u = 0;
-		for (; u < n.length && (o.lastIndex = u, c = o.exec(n), c !== null);) u = o.lastIndex, o === $e ? c[1] === "!--" ? o = et : c[1] === void 0 ? c[2] === void 0 ? c[3] !== void 0 && (o = E) : (it.test(c[2]) && (i = RegExp("</" + c[2], "g")), o = E) : o = tt : o === E ? c[0] === ">" ? (o = i ?? $e, l = -1) : c[1] === void 0 ? l = -2 : (l = o.lastIndex - c[2].length, s = c[1], o = c[3] === void 0 ? E : c[3] === "\"" ? rt : nt) : o === rt || o === nt ? o = E : o === et || o === tt ? o = $e : (o = E, i = void 0);
-		let d = o === E && e[t + 1].startsWith("/>") ? " " : "";
-		a += o === $e ? n + qe : l >= 0 ? (r.push(s), n.slice(0, l) + Ge + n.slice(l) + w + d) : n + w + (l === -2 ? t : d);
+		for (; u < n.length && (o.lastIndex = u, c = o.exec(n), c !== null);) u = o.lastIndex, o === Ze ? c[1] === "!--" ? o = Qe : c[1] === void 0 ? c[2] === void 0 ? c[3] !== void 0 && (o = O) : (nt.test(c[2]) && (i = RegExp("</" + c[2], "g")), o = O) : o = $e : o === O ? c[0] === ">" ? (o = i ?? Ze, l = -1) : c[1] === void 0 ? l = -2 : (l = o.lastIndex - c[2].length, s = c[1], o = c[3] === void 0 ? O : c[3] === "\"" ? tt : et) : o === tt || o === et ? o = O : o === Qe || o === $e ? o = Ze : (o = O, i = void 0);
+		let d = o === O && e[t + 1].startsWith("/>") ? " " : "";
+		a += o === Ze ? n + Ge : l >= 0 ? (r.push(s), n.slice(0, l) + Ue + n.slice(l) + E + d) : n + E + (l === -2 ? t : d);
 	}
-	return [st(e, a + (e[n] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), r];
-}, lt = class e {
+	return [at(e, a + (e[n] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), r];
+}, st = class e {
 	constructor({ strings: t, _$litType$: n }, r) {
 		let i;
 		this.parts = [];
-		let a = 0, o = 0, s = t.length - 1, c = this.parts, [l, u] = ct(t, n);
-		if (this.el = e.createElement(l, r), j.currentNode = this.el.content, n === 2 || n === 3) {
+		let a = 0, o = 0, s = t.length - 1, c = this.parts, [l, u] = ot(t, n);
+		if (this.el = e.createElement(l, r), N.currentNode = this.el.content, n === 2 || n === 3) {
 			let e = this.el.content.firstChild;
 			e.replaceWith(...e.childNodes);
 		}
-		for (; (i = j.nextNode()) !== null && c.length < s;) {
+		for (; (i = N.nextNode()) !== null && c.length < s;) {
 			if (i.nodeType === 1) {
-				if (i.hasAttributes()) for (let e of i.getAttributeNames()) if (e.endsWith(Ge)) {
-					let t = u[o++], n = i.getAttribute(e).split(w), r = /([.?@])?(.*)/.exec(t);
+				if (i.hasAttributes()) for (let e of i.getAttributeNames()) if (e.endsWith(Ue)) {
+					let t = u[o++], n = i.getAttribute(e).split(E), r = /([.?@])?(.*)/.exec(t);
 					c.push({
 						type: 1,
 						index: a,
 						name: r[2],
 						strings: n,
-						ctor: r[1] === "." ? pt : r[1] === "?" ? mt : r[1] === "@" ? ht : ft
+						ctor: r[1] === "." ? ft : r[1] === "?" ? pt : r[1] === "@" ? mt : dt
 					}), i.removeAttribute(e);
-				} else e.startsWith(w) && (c.push({
+				} else e.startsWith(E) && (c.push({
 					type: 6,
 					index: a
 				}), i.removeAttribute(e));
-				if (it.test(i.tagName)) {
-					let e = i.textContent.split(w), t = e.length - 1;
+				if (nt.test(i.tagName)) {
+					let e = i.textContent.split(E), t = e.length - 1;
 					if (t > 0) {
-						i.textContent = Ue ? Ue.emptyScript : "";
-						for (let n = 0; n < t; n++) i.append(e[n], Je()), j.nextNode(), c.push({
+						i.textContent = Ve ? Ve.emptyScript : "";
+						for (let n = 0; n < t; n++) i.append(e[n], Ke()), N.nextNode(), c.push({
 							type: 2,
 							index: ++a
 						});
-						i.append(e[t], Je());
+						i.append(e[t], Ke());
 					}
 				}
 			} else if (i.nodeType === 8) {
-				if (i.data === Ke) c.push({
+				if (i.data === We) c.push({
 					type: 2,
 					index: a
 				});
 				else {
 					let e = -1;
-					for (; (e = i.data.indexOf(w, e + 1)) !== -1;) c.push({
+					for (; (e = i.data.indexOf(E, e + 1)) !== -1;) c.push({
 						type: 7,
 						index: a
-					}), e += w.length - 1;
+					}), e += E.length - 1;
 				}
 			}
 			a++;
 		}
 	}
 	static createElement(e, t) {
-		let n = T.createElement("template");
+		let n = D.createElement("template");
 		return n.innerHTML = e, n;
 	}
 };
-function M(e, t, n = e, r) {
-	if (t === k) return t;
-	let i = r === void 0 ? n._$Cl : n._$Co?.[r], a = Ye(t) ? void 0 : t._$litDirective$;
-	return i?.constructor !== a && (i?._$AO?.(!1), a === void 0 ? i = void 0 : (i = new a(e), i._$AT(e, n, r)), r === void 0 ? n._$Cl = i : (n._$Co ??= [])[r] = i), i !== void 0 && (t = M(e, i._$AS(e, t.values), i, r)), t;
+function ct(e, t, n = e, r) {
+	if (t === j) return t;
+	let i = r === void 0 ? n._$Cl : n._$Co?.[r], a = qe(t) ? void 0 : t._$litDirective$;
+	return i?.constructor !== a && (i?._$AO?.(!1), a === void 0 ? i = void 0 : (i = new a(e), i._$AT(e, n, r)), r === void 0 ? n._$Cl = i : (n._$Co ??= [])[r] = i), i !== void 0 && (t = ct(e, i._$AS(e, t.values), i, r)), t;
 }
-var ut = class {
+var lt = class {
 	constructor(e, t) {
 		this._$AV = [], this._$AN = void 0, this._$AD = e, this._$AM = t;
 	}
@@ -600,28 +600,28 @@ var ut = class {
 		return this._$AM._$AU;
 	}
 	u(e) {
-		let { el: { content: t }, parts: n } = this._$AD, r = (e?.creationScope ?? T).importNode(t, !0);
-		j.currentNode = r;
-		let i = j.nextNode(), a = 0, o = 0, s = n[0];
+		let { el: { content: t }, parts: n } = this._$AD, r = (e?.creationScope ?? D).importNode(t, !0);
+		N.currentNode = r;
+		let i = N.nextNode(), a = 0, o = 0, s = n[0];
 		for (; s !== void 0;) {
 			if (a === s.index) {
 				let t;
-				s.type === 2 ? t = new dt(i, i.nextSibling, this, e) : s.type === 1 ? t = new s.ctor(i, s.name, s.strings, this, e) : s.type === 6 && (t = new gt(i, this, e)), this._$AV.push(t), s = n[++o];
+				s.type === 2 ? t = new ut(i, i.nextSibling, this, e) : s.type === 1 ? t = new s.ctor(i, s.name, s.strings, this, e) : s.type === 6 && (t = new ht(i, this, e)), this._$AV.push(t), s = n[++o];
 			}
-			a !== s?.index && (i = j.nextNode(), a++);
+			a !== s?.index && (i = N.nextNode(), a++);
 		}
-		return j.currentNode = T, r;
+		return N.currentNode = D, r;
 	}
 	p(e) {
 		let t = 0;
 		for (let n of this._$AV) n !== void 0 && (n.strings === void 0 ? n._$AI(e[t]) : (n._$AI(e, n, t), t += n.strings.length - 2)), t++;
 	}
-}, dt = class e {
+}, ut = class e {
 	get _$AU() {
 		return this._$AM?._$AU ?? this._$Cv;
 	}
 	constructor(e, t, n, r) {
-		this.type = 2, this._$AH = A, this._$AN = void 0, this._$AA = e, this._$AB = t, this._$AM = n, this.options = r, this._$Cv = r?.isConnected ?? !0;
+		this.type = 2, this._$AH = M, this._$AN = void 0, this._$AA = e, this._$AB = t, this._$AM = n, this.options = r, this._$Cv = r?.isConnected ?? !0;
 	}
 	get parentNode() {
 		let e = this._$AA.parentNode, t = this._$AM;
@@ -634,7 +634,7 @@ var ut = class {
 		return this._$AB;
 	}
 	_$AI(e, t = this) {
-		e = M(this, e, t), Ye(e) ? e === A || e == null || e === "" ? (this._$AH !== A && this._$AR(), this._$AH = A) : e !== this._$AH && e !== k && this._(e) : e._$litType$ === void 0 ? e.nodeType === void 0 ? Ze(e) ? this.k(e) : this._(e) : this.T(e) : this.$(e);
+		e = ct(this, e, t), qe(e) ? e === M || e == null || e === "" ? (this._$AH !== M && this._$AR(), this._$AH = M) : e !== this._$AH && e !== j && this._(e) : e._$litType$ === void 0 ? e.nodeType === void 0 ? Ye(e) ? this.k(e) : this._(e) : this.T(e) : this.$(e);
 	}
 	O(e) {
 		return this._$AA.parentNode.insertBefore(e, this._$AB);
@@ -643,36 +643,36 @@ var ut = class {
 		this._$AH !== e && (this._$AR(), this._$AH = this.O(e));
 	}
 	_(e) {
-		this._$AH !== A && Ye(this._$AH) ? this._$AA.nextSibling.data = e : this.T(T.createTextNode(e)), this._$AH = e;
+		this._$AH !== M && qe(this._$AH) ? this._$AA.nextSibling.data = e : this.T(D.createTextNode(e)), this._$AH = e;
 	}
 	$(e) {
-		let { values: t, _$litType$: n } = e, r = typeof n == "number" ? this._$AC(e) : (n.el === void 0 && (n.el = lt.createElement(st(n.h, n.h[0]), this.options)), n);
+		let { values: t, _$litType$: n } = e, r = typeof n == "number" ? this._$AC(e) : (n.el === void 0 && (n.el = st.createElement(at(n.h, n.h[0]), this.options)), n);
 		if (this._$AH?._$AD === r) this._$AH.p(t);
 		else {
-			let e = new ut(r, this), n = e.u(this.options);
+			let e = new lt(r, this), n = e.u(this.options);
 			e.p(t), this.T(n), this._$AH = e;
 		}
 	}
 	_$AC(e) {
-		let t = ot.get(e.strings);
-		return t === void 0 && ot.set(e.strings, t = new lt(e)), t;
+		let t = it.get(e.strings);
+		return t === void 0 && it.set(e.strings, t = new st(e)), t;
 	}
 	k(t) {
-		Xe(this._$AH) || (this._$AH = [], this._$AR());
+		Je(this._$AH) || (this._$AH = [], this._$AR());
 		let n = this._$AH, r, i = 0;
-		for (let a of t) i === n.length ? n.push(r = new e(this.O(Je()), this.O(Je()), this, this.options)) : r = n[i], r._$AI(a), i++;
+		for (let a of t) i === n.length ? n.push(r = new e(this.O(Ke()), this.O(Ke()), this, this.options)) : r = n[i], r._$AI(a), i++;
 		i < n.length && (this._$AR(r && r._$AB.nextSibling, i), n.length = i);
 	}
 	_$AR(e = this._$AA.nextSibling, t) {
 		for (this._$AP?.(!1, !0, t); e !== this._$AB;) {
-			let t = He(e).nextSibling;
-			He(e).remove(), e = t;
+			let t = Be(e).nextSibling;
+			Be(e).remove(), e = t;
 		}
 	}
 	setConnected(e) {
 		this._$AM === void 0 && (this._$Cv = e, this._$AP?.(e));
 	}
-}, ft = class {
+}, dt = class {
 	get tagName() {
 		return this.element.tagName;
 	}
@@ -680,47 +680,47 @@ var ut = class {
 		return this._$AM._$AU;
 	}
 	constructor(e, t, n, r, i) {
-		this.type = 1, this._$AH = A, this._$AN = void 0, this.element = e, this.name = t, this._$AM = r, this.options = i, n.length > 2 || n[0] !== "" || n[1] !== "" ? (this._$AH = Array(n.length - 1).fill(/* @__PURE__ */ new String()), this.strings = n) : this._$AH = A;
+		this.type = 1, this._$AH = M, this._$AN = void 0, this.element = e, this.name = t, this._$AM = r, this.options = i, n.length > 2 || n[0] !== "" || n[1] !== "" ? (this._$AH = Array(n.length - 1).fill(/* @__PURE__ */ new String()), this.strings = n) : this._$AH = M;
 	}
 	_$AI(e, t = this, n, r) {
 		let i = this.strings, a = !1;
-		if (i === void 0) e = M(this, e, t, 0), a = !Ye(e) || e !== this._$AH && e !== k, a && (this._$AH = e);
+		if (i === void 0) e = ct(this, e, t, 0), a = !qe(e) || e !== this._$AH && e !== j, a && (this._$AH = e);
 		else {
 			let r = e, o, s;
-			for (e = i[0], o = 0; o < i.length - 1; o++) s = M(this, r[n + o], t, o), s === k && (s = this._$AH[o]), a ||= !Ye(s) || s !== this._$AH[o], s === A ? e = A : e !== A && (e += (s ?? "") + i[o + 1]), this._$AH[o] = s;
+			for (e = i[0], o = 0; o < i.length - 1; o++) s = ct(this, r[n + o], t, o), s === j && (s = this._$AH[o]), a ||= !qe(s) || s !== this._$AH[o], s === M ? e = M : e !== M && (e += (s ?? "") + i[o + 1]), this._$AH[o] = s;
 		}
 		a && !r && this.j(e);
 	}
 	j(e) {
-		e === A ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
+		e === M ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
 	}
-}, pt = class extends ft {
+}, ft = class extends dt {
 	constructor() {
 		super(...arguments), this.type = 3;
 	}
 	j(e) {
-		this.element[this.name] = e === A ? void 0 : e;
+		this.element[this.name] = e === M ? void 0 : e;
 	}
-}, mt = class extends ft {
+}, pt = class extends dt {
 	constructor() {
 		super(...arguments), this.type = 4;
 	}
 	j(e) {
-		this.element.toggleAttribute(this.name, !!e && e !== A);
+		this.element.toggleAttribute(this.name, !!e && e !== M);
 	}
-}, ht = class extends ft {
+}, mt = class extends dt {
 	constructor(e, t, n, r, i) {
 		super(e, t, n, r, i), this.type = 5;
 	}
 	_$AI(e, t = this) {
-		if ((e = M(this, e, t, 0) ?? A) === k) return;
-		let n = this._$AH, r = e === A && n !== A || e.capture !== n.capture || e.once !== n.once || e.passive !== n.passive, i = e !== A && (n === A || r);
+		if ((e = ct(this, e, t, 0) ?? M) === j) return;
+		let n = this._$AH, r = e === M && n !== M || e.capture !== n.capture || e.once !== n.once || e.passive !== n.passive, i = e !== M && (n === M || r);
 		r && this.element.removeEventListener(this.name, this, n), i && this.element.addEventListener(this.name, this, e), this._$AH = e;
 	}
 	handleEvent(e) {
 		typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, e) : this._$AH.handleEvent(e);
 	}
-}, gt = class {
+}, ht = class {
 	constructor(e, t, n) {
 		this.element = e, this.type = 6, this._$AN = void 0, this._$AM = t, this.options = n;
 	}
@@ -728,18 +728,18 @@ var ut = class {
 		return this._$AM._$AU;
 	}
 	_$AI(e) {
-		M(this, e);
+		ct(this, e);
 	}
-}, _t = Ve.litHtmlPolyfillSupport;
-_t?.(lt, dt), (Ve.litHtmlVersions ??= []).push("3.3.3");
-var vt = (e, t, n) => {
+}, gt = ze.litHtmlPolyfillSupport;
+gt?.(st, ut), (ze.litHtmlVersions ??= []).push("3.3.3");
+var _t = (e, t, n) => {
 	let r = n?.renderBefore ?? t, i = r._$litPart$;
 	if (i === void 0) {
 		let e = n?.renderBefore ?? null;
-		r._$litPart$ = i = new dt(t.insertBefore(Je(), e), e, void 0, n ?? {});
+		r._$litPart$ = i = new ut(t.insertBefore(Ke(), e), e, void 0, n ?? {});
 	}
 	return i._$AI(e), i;
-}, yt = globalThis, bt = class extends Be {
+}, vt = globalThis, yt = class extends Re {
 	constructor() {
 		super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
 	}
@@ -749,7 +749,7 @@ var vt = (e, t, n) => {
 	}
 	update(e) {
 		let t = this.render();
-		this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = vt(t, this.renderRoot, this.renderOptions);
+		this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = _t(t, this.renderRoot, this.renderOptions);
 	}
 	connectedCallback() {
 		super.connectedCallback(), this._$Do?.setConnected(!0);
@@ -758,14 +758,14 @@ var vt = (e, t, n) => {
 		super.disconnectedCallback(), this._$Do?.setConnected(!1);
 	}
 	render() {
-		return k;
+		return j;
 	}
 };
-bt._$litElement$ = !0, bt.finalized = !0, yt.litElementHydrateSupport?.({ LitElement: bt });
-var xt = yt.litElementPolyfillSupport;
-xt?.({ LitElement: bt }), (yt.litElementVersions ??= []).push("4.2.2");
+yt._$litElement$ = !0, yt.finalized = !0, vt.litElementHydrateSupport?.({ LitElement: yt });
+var bt = vt.litElementPolyfillSupport;
+bt?.({ LitElement: yt }), (vt.litElementVersions ??= []).push("4.2.2");
 // src/config/preset-demo.ts
-var St = {
+var xt = {
 	appearance: {
 		accent: "#56E7C0",
 		variant: "warm_glass",
@@ -1078,16 +1078,34 @@ var St = {
 				{
 					entity: "binary_sensor.kitchen_window",
 					name: "Window"
-				},
-				{
-					entity: "sensor.oven_temperature",
-					name: "Oven"
-				},
-				{
-					entity: "select.dishwasher_program",
-					name: "Dishwasher"
 				}
-			]
+			],
+			appliances: [{
+				name: "Oven",
+				entity: "switch.oven_power",
+				temperature: "sensor.oven_temperature",
+				temperature_max: 300,
+				setpoint: "number.oven_setpoint",
+				operation: "sensor.oven_operation_state",
+				program: "select.oven_program",
+				door: "binary_sensor.oven_door",
+				progress: "sensor.oven_program_progress",
+				finish: "sensor.oven_finish_time",
+				controls: ["switch.oven_fast_preheat", "button.oven_pause"],
+				stop: "button.oven_stop"
+			}, {
+				name: "Dishwasher",
+				icon: "mdi:dishwasher",
+				entity: "switch.dishwasher_power",
+				operation: "sensor.dishwasher_operation_state",
+				program: "select.dishwasher_program",
+				door: "binary_sensor.dishwasher_door",
+				progress: "sensor.dishwasher_program_progress",
+				finish: "sensor.dishwasher_finish_time",
+				remote: "binary_sensor.dishwasher_remote_start",
+				controls: ["switch.dishwasher_extra_dry"],
+				stop: "button.dishwasher_stop"
+			}]
 		},
 		{
 			id: "entrance",
@@ -1489,27 +1507,27 @@ var St = {
 			max_power: 500
 		}
 	]
-}, N = (e, t = !1) => ({ entity: {
+}, P = (e, t = !1) => ({ entity: {
 	...e ? { domain: e } : {},
 	...t ? { multiple: !0 } : {}
-} }), P = { text: {} }, F = { boolean: {} }, I = (e, t = {}) => ({ select: {
+} }), F = { text: {} }, I = { boolean: {} }, L = (e, t = {}) => ({ select: {
 	mode: "dropdown",
 	options: e,
 	...t
-} }), Ct = (e) => Array.isArray(e) ? e.join(", ") : e, wt = [
+} }), St = (e) => Array.isArray(e) ? e.join(", ") : e, Ct = [
 	{
 		name: "entity",
 		label: "Entity",
 		type: "entity (any)",
 		required: !0,
-		selector: N()
+		selector: P()
 	},
 	{
 		name: "name",
 		label: "Name",
 		type: "text",
 		help: "Label on the tile. Default: the entity's friendly name.",
-		selector: P
+		selector: F
 	},
 	{
 		name: "icon",
@@ -1518,15 +1536,15 @@ var St = {
 		help: "Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class.",
 		selector: { icon: {} }
 	}
-], Tt = [
-	...wt,
+], wt = [
+	...Ct,
 	{
 		name: "tap",
 		label: "Tap action",
 		type: "toggle | more-info | press",
 		default: "toggle for light, switch, fan, input_boolean; more-info otherwise",
 		help: "press: presses a button or input_button, or runs a script. Hold or right click always opens the details. Covers ignore this and show Open / Stop / Close buttons.",
-		selector: I([
+		selector: L([
 			{
 				value: "toggle",
 				label: "Toggle"
@@ -1547,7 +1565,120 @@ var St = {
 		type: "boolean",
 		default: "false (true for covers with device class garage or gate)",
 		help: "Asks for confirmation before the tap action, and before Open / Close on a cover (Stop never asks). Use it for plugs that power servers or network gear.",
+		selector: I
+	}
+], Tt = [
+	{
+		name: "name",
+		label: "Name",
+		type: "text",
+		required: !0,
 		selector: F
+	},
+	{
+		name: "entity",
+		label: "Main state",
+		type: "entity (switch, binary_sensor, sensor)",
+		help: "On (or an operation state like Run) counts as running.",
+		selector: P([
+			"switch",
+			"binary_sensor",
+			"sensor",
+			"input_boolean"
+		])
+	},
+	{
+		name: "icon",
+		label: "Icon",
+		type: "icon",
+		help: "Shown when no temperature sensor is set.",
+		selector: { icon: {} }
+	},
+	{
+		name: "operation",
+		label: "Operation state",
+		type: "entity (sensor, select)",
+		help: "e.g. Ready, Run, Finished (Home Connect operation state).",
+		selector: P(["sensor", "select"])
+	},
+	{
+		name: "program",
+		label: "Active program",
+		type: "entity (sensor, select)",
+		selector: P(["sensor", "select"])
+	},
+	{
+		name: "door",
+		label: "Door",
+		type: "entity (binary_sensor, sensor)",
+		selector: P(["binary_sensor", "sensor"])
+	},
+	{
+		name: "temperature",
+		label: "Temperature",
+		type: "entity (sensor)",
+		help: "Shows an arc gauge instead of the icon.",
+		selector: P("sensor")
+	},
+	{
+		name: "temperature_max",
+		label: "Temperature full scale",
+		type: "number",
+		default: "300",
+		selector: { number: {
+			mode: "box",
+			step: 10,
+			min: 1
+		} }
+	},
+	{
+		name: "setpoint",
+		label: "Setpoint",
+		type: "entity (sensor, number)",
+		selector: P(["sensor", "number"])
+	},
+	{
+		name: "progress",
+		label: "Program progress (%)",
+		type: "entity (sensor)",
+		selector: P("sensor")
+	},
+	{
+		name: "finish",
+		label: "Finish time",
+		type: "entity (sensor)",
+		help: "Timestamp sensor (shows the time and how long until then) or a remaining time sensor.",
+		selector: P("sensor")
+	},
+	{
+		name: "remote",
+		label: "Remote start allowed",
+		type: "entity (binary_sensor, switch)",
+		selector: P(["binary_sensor", "switch"])
+	},
+	{
+		name: "controls",
+		label: "Controls while running",
+		type: "list of entity (switch, button, script)",
+		help: "Switches toggle, buttons are pressed, scripts run.",
+		selector: P([
+			"switch",
+			"input_boolean",
+			"button",
+			"input_button",
+			"script"
+		], !0)
+	},
+	{
+		name: "stop",
+		label: "Stop button",
+		type: "entity (button, script)",
+		help: "Shown while running; always asks first.",
+		selector: P([
+			"button",
+			"input_button",
+			"script"
+		])
 	}
 ], Et = [
 	{
@@ -1579,7 +1710,7 @@ var St = {
 				type: "warm_glass | glass | quiet",
 				default: "warm_glass",
 				help: "warm_glass: blurred room photo + glass panels. glass: no photo. quiet: opaque panels, no blur (best for the wall tablet).",
-				selector: I([
+				selector: L([
 					{
 						value: "warm_glass",
 						label: "Warm glass (photo + blur)"
@@ -1600,7 +1731,7 @@ var St = {
 				type: "graphite | midnight | deep_teal | violet_night | warm",
 				default: "graphite",
 				help: "Background colour mood behind the glass.",
-				selector: I([
+				selector: L([
 					{
 						value: "graphite",
 						label: "Graphite"
@@ -1629,7 +1760,7 @@ var St = {
 				type: "room id",
 				default: "first room",
 				help: "Room whose image is the blurred Home background. Room views always use their own image.",
-				selector: I("$rooms")
+				selector: L("$rooms")
 			},
 			{
 				name: "time_display",
@@ -1637,7 +1768,7 @@ var St = {
 				type: "changed | updated | off",
 				default: "changed",
 				help: "changed: time since the state last changed (HA last_changed). updated: time since the entity last reported anything (HA last_updated). off: hide.",
-				selector: I([
+				selector: L([
 					{
 						value: "changed",
 						label: "Last changed"
@@ -1658,7 +1789,7 @@ var St = {
 				type: "boolean",
 				default: "true",
 				help: "Room photos get darker when the room's lights are off and light up (warm glow) when they are on; brightness follows the light level. Rooms without lights stay unchanged.",
-				selector: F
+				selector: I
 			},
 			{
 				name: "image_path",
@@ -1666,7 +1797,7 @@ var St = {
 				type: "URL",
 				default: "rooms/ next to atlas-home.js",
 				help: "Where room images are loaded from. Example for own photos: /local/atlas/rooms/",
-				selector: P
+				selector: F
 			}
 		]
 	},
@@ -1680,58 +1811,58 @@ var St = {
 			{
 				name: "alarm",
 				label: "Alarm panel",
-				type: `entity (${Ct("alarm_control_panel")})`,
+				type: `entity (${St("alarm_control_panel")})`,
 				help: "Greeting line, Security card, Security page (arm modes the panel supports, Disarm), Arm away quick action. Panels that need a code open the Home Assistant dialog, which asks for it.",
-				selector: N("alarm_control_panel")
+				selector: P("alarm_control_panel")
 			},
 			{
 				name: "weather",
 				label: "Weather",
 				type: "entity (weather)",
 				help: "Top bar condition and icon.",
-				selector: N("weather")
+				selector: P("weather")
 			},
 			{
 				name: "outdoor_temperature",
 				label: "Outdoor temperature",
 				type: "entity (sensor)",
 				help: "Top bar temperature. Falls back to the weather entity's temperature.",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "heat_pump",
 				label: "Heat pump (climate)",
 				type: "entity (climate)",
 				help: "Greeting indoor reading and Climate card ring (current and target).",
-				selector: N("climate"),
+				selector: P("climate"),
 				group: "Heat pump"
 			},
 			{
 				name: "heat_pump_outdoor",
 				label: "Heat pump outdoor sensor",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Heat pump"
 			},
 			{
 				name: "heat_pump_supply",
 				label: "Heat pump supply line",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Heat pump"
 			},
 			{
 				name: "heat_pump_return",
 				label: "Heat pump return line",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Heat pump"
 			},
 			{
 				name: "solar_power",
 				label: "Solar power",
 				type: "entity (sensor, W or kW)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Energy"
 			},
 			{
@@ -1739,14 +1870,14 @@ var St = {
 				label: "House load",
 				type: "entity (sensor, W or kW)",
 				help: "Total house consumption.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Energy"
 			},
 			{
 				name: "grid_import",
 				label: "Grid import",
 				type: "entity (sensor, W or kW)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Energy"
 			},
 			{
@@ -1754,7 +1885,7 @@ var St = {
 				label: "Grid export",
 				type: "entity (sensor, W or kW)",
 				help: "When export is larger than import the arrow points to the grid.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Energy"
 			},
 			{
@@ -1762,7 +1893,7 @@ var St = {
 				label: "Garage door (cover)",
 				type: "entity (cover)",
 				help: "Garage quick action (open or close, always confirmed).",
-				selector: N("cover"),
+				selector: P("cover"),
 				group: "Quick actions and system"
 			},
 			{
@@ -1770,7 +1901,7 @@ var St = {
 				label: "Wake PC",
 				type: "entity (input_button, button, script)",
 				help: "Wake PC quick action (press, or script.turn_on).",
-				selector: N([
+				selector: P([
 					"input_button",
 					"button",
 					"script"
@@ -1782,7 +1913,7 @@ var St = {
 				label: "Incident report sensor",
 				type: "entity (sensor)",
 				help: "Optional log analyzer sensor (e.g. the incident report published by Node-RED). Attributes: generated, summary (critical, warning, minor), incidents (severity, title, detail, recommendation, count, sources). Counts may also be top-level attributes, numbers or lists. Shown on the System page and in the attention banner.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Quick actions and system"
 			},
 			{
@@ -1790,7 +1921,7 @@ var St = {
 				label: "Persons",
 				type: "list of entity (person)",
 				help: "Presence chips on Home (picture, name, Home / Away / zone). Tap opens the person details.",
-				selector: N("person", !0),
+				selector: P("person", !0),
 				group: "Quick actions and system"
 			},
 			{
@@ -1798,7 +1929,7 @@ var St = {
 				label: "Lights never counted as room lights",
 				type: "list of entity (light)",
 				help: "Camera status LEDs etc. Excluded from Lights off.",
-				selector: N("light", !0),
+				selector: P("light", !0),
 				group: "Quick actions and system"
 			}
 		]
@@ -1822,14 +1953,14 @@ var St = {
 						label: "Label",
 						type: "text",
 						help: "Default: room name.",
-						selector: P
+						selector: F
 					},
 					{
 						name: "entity",
 						label: "Temperature sensor",
 						type: "entity (sensor)",
 						required: !0,
-						selector: N("sensor")
+						selector: P("sensor")
 					},
 					{
 						name: "above",
@@ -1857,27 +1988,27 @@ var St = {
 				name: "exterior_doors",
 				label: "Exterior doors (warning when open)",
 				type: "list of entity (binary_sensor, cover)",
-				selector: N(["binary_sensor", "cover"], !0)
+				selector: P(["binary_sensor", "cover"], !0)
 			},
 			{
 				name: "interior_doors",
 				label: "Interior doors (info when open)",
 				type: "list of entity (binary_sensor, cover)",
-				selector: N(["binary_sensor", "cover"], !0)
+				selector: P(["binary_sensor", "cover"], !0)
 			},
 			{
 				name: "critical",
 				label: "Critical detectors (leak, smoke)",
 				type: "list of entity (binary_sensor)",
 				help: "Critical when on. Warning when the detector itself is unavailable.",
-				selector: N("binary_sensor", !0)
+				selector: P("binary_sensor", !0)
 			},
 			{
 				name: "rain_windows",
 				label: "Windows to close when it rains (warning)",
 				type: "list of entity (binary_sensor, cover)",
 				help: "Warning when one is open while the weather is rainy, pouring, snowy, hail or a thunderstorm. With an hourly forecast, the rule waits until the current or next hour confirms precipitation (stops false alarms from a wrong rainy state).",
-				selector: N(["binary_sensor", "cover"], !0),
+				selector: P(["binary_sensor", "cover"], !0),
 				group: "Weather"
 			},
 			{
@@ -1886,7 +2017,7 @@ var St = {
 				type: "entity (weather)",
 				default: "entities.weather",
 				help: "Optional, e.g. a local weather service that reports rain more reliably.",
-				selector: N("weather"),
+				selector: P("weather"),
 				group: "Weather"
 			},
 			{
@@ -1908,7 +2039,7 @@ var St = {
 				type: "boolean",
 				default: "true",
 				help: "Warning while the weather is lightning, hail, pouring or exceptional.",
-				selector: F,
+				selector: I,
 				group: "Weather"
 			},
 			{
@@ -1916,28 +2047,28 @@ var St = {
 				label: "Mailbox contact",
 				type: "entity (binary_sensor)",
 				help: "Info while open (or while the acknowledge helper is on).",
-				selector: N("binary_sensor")
+				selector: P("binary_sensor")
 			},
 			{
 				name: "mailbox_ack",
 				label: "Mailbox acknowledge helper",
 				type: "entity (input_boolean)",
 				help: "Optional. If set, the alert stays until this helper is turned off (Acknowledge button). An automation must turn it on when the mailbox opens.",
-				selector: N("input_boolean")
+				selector: P("input_boolean")
 			},
 			{
 				name: "updates",
 				label: "Show available updates (info)",
 				type: "boolean",
 				default: "true",
-				selector: F
+				selector: I
 			},
 			{
 				name: "data_quality",
 				label: "Warn about unavailable mapped devices",
 				type: "boolean",
 				default: "true",
-				selector: F
+				selector: I
 			}
 		]
 	},
@@ -1954,21 +2085,21 @@ var St = {
 				type: "text",
 				required: !0,
 				help: "Used in URLs (floor-<id>). Lowercase, no spaces.",
-				selector: P
+				selector: F
 			},
 			{
 				name: "name",
 				label: "Name",
 				type: "text",
 				required: !0,
-				selector: P
+				selector: F
 			},
 			{
 				name: "level",
 				label: "Level",
 				type: "text",
 				help: "Shown on the floor card, e.g. +1, 0, -1.",
-				selector: P
+				selector: F
 			},
 			{
 				name: "cameras",
@@ -1976,7 +2107,7 @@ var St = {
 				type: "off | live | stills",
 				default: "off",
 				help: "Shows the cameras of all rooms on this floor side by side on its Rooms page (stacked on the phone). live: muted live streams. stills: snapshots refreshed every 10 s (lighter on the tablet). Rooms with the camera section off are skipped; private cameras stay hidden.",
-				selector: I([
+				selector: L([
 					{
 						value: "off",
 						label: "Off"
@@ -2006,7 +2137,7 @@ var St = {
 				type: "text",
 				required: !0,
 				help: "Used in URLs (room-<id>) and in layout lists. Lowercase, no spaces.",
-				selector: P,
+				selector: F,
 				group: "_grid"
 			},
 			{
@@ -2014,14 +2145,14 @@ var St = {
 				label: "Name",
 				type: "text",
 				required: !0,
-				selector: P,
+				selector: F,
 				group: "_grid"
 			},
 			{
 				name: "floor",
 				label: "Floor",
 				type: "floor id",
-				selector: I("$floors"),
+				selector: L("$floors"),
 				group: "_grid"
 			},
 			{
@@ -2029,7 +2160,7 @@ var St = {
 				label: "Icon",
 				type: "ATLAS icon key",
 				help: "One of the shipped line icons, e.g. office, living, server.",
-				selector: I("$icons"),
+				selector: L("$icons"),
 				group: "_grid"
 			},
 			{
@@ -2046,13 +2177,13 @@ var St = {
 				name: "temperature",
 				label: "Temperature sensor",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "humidity",
 				label: "Humidity sensor",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "show_camera",
@@ -2060,7 +2191,7 @@ var St = {
 				type: "boolean",
 				default: "true",
 				help: "Off: the room has no camera section at all (no Camera card, no stream, not counted as unavailable), even if a camera entity is set. On without a camera entity: a compact \"No camera\" card.",
-				selector: F,
+				selector: I,
 				group: "Camera"
 			},
 			{
@@ -2068,7 +2199,7 @@ var St = {
 				label: "Camera (live stream)",
 				type: "entity (camera)",
 				help: "Enables the camera slot (16:9) with Live, Snapshot, Recordings.",
-				selector: N("camera"),
+				selector: P("camera"),
 				group: "Camera"
 			},
 			{
@@ -2076,7 +2207,7 @@ var St = {
 				label: "Camera high quality stream",
 				type: "entity (camera)",
 				help: "Optional, reserved for a quality switch.",
-				selector: N("camera"),
+				selector: P("camera"),
 				group: "Camera"
 			},
 			{
@@ -2084,7 +2215,7 @@ var St = {
 				label: "Snapshot camera",
 				type: "entity (camera)",
 				help: "Optional. Snapshot uses this entity's picture, else the live camera's.",
-				selector: N("camera"),
+				selector: P("camera"),
 				group: "Camera"
 			},
 			{
@@ -2093,7 +2224,7 @@ var St = {
 				type: "boolean",
 				default: "false",
 				help: "Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens.",
-				selector: F,
+				selector: I,
 				group: "Camera"
 			},
 			{
@@ -2101,7 +2232,7 @@ var St = {
 				label: "Light entities",
 				type: "list of entity (light, switch, input_boolean)",
 				help: "What counts as this room's lights for the photo effect, the Lights chip and Lights off, e.g. Tasmota relays (switch.*) that power lamps. Empty: the room's light.* devices, minus the excluded status LEDs.",
-				selector: N([
+				selector: P([
 					"light",
 					"switch",
 					"input_boolean"
@@ -2114,15 +2245,24 @@ var St = {
 				type: "list",
 				help: "More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history.",
 				selector: { object: {} },
-				fields: wt,
+				fields: Ct,
 				group: "Climate and automations"
+			},
+			{
+				name: "appliances",
+				label: "Appliances",
+				type: "list",
+				help: "Appliances card (oven, dishwasher, washer, dryer ...). Only the name is required; every other field adds its part of the tile. Controls and Stop appear while the appliance runs.",
+				selector: { object: {} },
+				fields: Tt,
+				group: "Appliances"
 			},
 			{
 				name: "automations",
 				label: "Automations",
 				type: "list of entity (automation)",
 				help: "Shows an Automations card with an on/off switch and the last run time for each.",
-				selector: N("automation", !0),
+				selector: P("automation", !0),
 				group: "Climate and automations"
 			},
 			{
@@ -2130,7 +2270,7 @@ var St = {
 				label: "Printer name",
 				type: "text",
 				help: "Title of the 3D printer card. The card appears when a status or progress sensor is set.",
-				selector: P,
+				selector: F,
 				group: "3D printer"
 			},
 			{
@@ -2138,14 +2278,14 @@ var St = {
 				label: "Print status",
 				type: "entity (sensor)",
 				help: "e.g. sensor.<printer>_print_status (Bambu Lab).",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "3D printer"
 			},
 			{
 				name: "printer_progress",
 				label: "Print progress (%)",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "3D printer"
 			},
 			{
@@ -2153,49 +2293,49 @@ var St = {
 				label: "Remaining time",
 				type: "entity (sensor, duration)",
 				help: "Seconds, minutes or hours; converted by its unit.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "3D printer"
 			},
 			{
 				name: "printer_nozzle",
 				label: "Nozzle temperature",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "3D printer"
 			},
 			{
 				name: "printer_bed",
 				label: "Bed temperature",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "3D printer"
 			},
 			{
 				name: "printer_chamber",
 				label: "Chamber temperature",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "3D printer"
 			},
 			{
 				name: "printer_light",
 				label: "Chamber light",
 				type: "entity (light, switch)",
-				selector: N(["light", "switch"]),
+				selector: P(["light", "switch"]),
 				group: "3D printer"
 			},
 			{
 				name: "printer_pause",
 				label: "Pause button",
 				type: "entity (button)",
-				selector: N("button"),
+				selector: P("button"),
 				group: "3D printer"
 			},
 			{
 				name: "printer_resume",
 				label: "Resume button",
 				type: "entity (button)",
-				selector: N("button"),
+				selector: P("button"),
 				group: "3D printer"
 			},
 			{
@@ -2203,7 +2343,7 @@ var St = {
 				label: "Stop button",
 				type: "entity (button)",
 				help: "Always asks for confirmation.",
-				selector: N("button"),
+				selector: P("button"),
 				group: "3D printer"
 			},
 			{
@@ -2211,7 +2351,7 @@ var St = {
 				label: "Printer picture",
 				type: "entity (camera, image)",
 				help: "Chamber camera or cover image, shown as a still in the card.",
-				selector: N(["camera", "image"]),
+				selector: P(["camera", "image"]),
 				group: "3D printer"
 			},
 			{
@@ -2219,7 +2359,7 @@ var St = {
 				label: "Vehicle name",
 				type: "text",
 				help: "Title of the vehicle card. The card appears in this room when any vehicle entity below is set.",
-				selector: P,
+				selector: F,
 				group: "Vehicle"
 			},
 			{
@@ -2227,7 +2367,7 @@ var St = {
 				label: "Vehicle subtitle",
 				type: "text",
 				help: "e.g. the model.",
-				selector: P,
+				selector: F,
 				group: "Vehicle"
 			},
 			{
@@ -2235,7 +2375,7 @@ var St = {
 				label: "Vehicle image",
 				type: "file name or URL",
 				help: "File under the image base URL or a full URL (e.g. /local/car.png). Empty: a drawn car outline.",
-				selector: P,
+				selector: F,
 				group: "Vehicle"
 			},
 			{
@@ -2243,7 +2383,7 @@ var St = {
 				label: "Lock",
 				type: "entity (lock)",
 				help: "Shows locked / unlocked with Lock and Unlock buttons (Unlock asks first). Locks that need a code open the Home Assistant lock dialog.",
-				selector: N("lock"),
+				selector: P("lock"),
 				group: "Vehicle"
 			},
 			{
@@ -2251,7 +2391,7 @@ var St = {
 				label: "Doors locked status",
 				type: "entity (sensor, binary_sensor)",
 				help: "Read-only lock status when there is no lock entity. A binary_sensor with device class lock counts off as locked (Home Assistant convention).",
-				selector: N(["sensor", "binary_sensor"]),
+				selector: P(["sensor", "binary_sensor"]),
 				group: "Vehicle"
 			},
 			{
@@ -2260,21 +2400,21 @@ var St = {
 				type: "text",
 				default: "locked (sensor), off (binary_sensor)",
 				help: "The state value of the doors status that means locked, if it differs.",
-				selector: P,
+				selector: F,
 				group: "Vehicle"
 			},
 			{
 				name: "car_range",
 				label: "Range",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
 				name: "car_odometer",
 				label: "Odometer",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
@@ -2282,35 +2422,35 @@ var St = {
 				label: "Location",
 				type: "entity (device_tracker, sensor)",
 				help: "A device_tracker shows its zone (Home, Away or the zone name).",
-				selector: N(["device_tracker", "sensor"]),
+				selector: P(["device_tracker", "sensor"]),
 				group: "Vehicle"
 			},
 			{
 				name: "car_daily_distance",
 				label: "Distance today",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
 				name: "car_daily_trips",
 				label: "Trips today",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
 				name: "car_monthly_distance",
 				label: "Distance this month",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
 				name: "car_monthly_trips",
 				label: "Trips this month",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
@@ -2318,14 +2458,14 @@ var St = {
 				label: "Last update",
 				type: "entity (sensor, timestamp)",
 				help: "When the car last reported. Empty: the newest update among the vehicle entities.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Vehicle"
 			},
 			{
 				name: "car_flash",
 				label: "Flash lights",
 				type: "entity (button, input_button, script)",
-				selector: N([
+				selector: P([
 					"button",
 					"input_button",
 					"script"
@@ -2337,7 +2477,7 @@ var St = {
 				label: "Honk horn",
 				type: "entity (button, input_button, script)",
 				help: "Asks first.",
-				selector: N([
+				selector: P([
 					"button",
 					"input_button",
 					"script"
@@ -2349,7 +2489,7 @@ var St = {
 				label: "Update data",
 				type: "entity (button, input_button, script)",
 				help: "Asks the car to send fresh data.",
-				selector: N([
+				selector: P([
 					"button",
 					"input_button",
 					"script"
@@ -2361,21 +2501,21 @@ var St = {
 				label: "Power sensor",
 				type: "entity (sensor)",
 				help: "Room power card (gauge coloured by load) and a power chip in the room status strip.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Room power"
 			},
 			{
 				name: "power_energy",
 				label: "Energy sensor (kWh)",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Room power"
 			},
 			{
 				name: "power_current",
 				label: "Current sensor (A)",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Room power"
 			},
 			{
@@ -2396,14 +2536,14 @@ var St = {
 				label: "Lawn mower",
 				type: "entity (lawn_mower)",
 				help: "Mower card: state, battery, Start / Pause / Dock for what the mower supports. A mower in error raises a warning.",
-				selector: N("lawn_mower"),
+				selector: P("lawn_mower"),
 				group: "Lawn mower"
 			},
 			{
 				name: "mower_battery",
 				label: "Mower battery (%)",
 				type: "entity (sensor)",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Lawn mower"
 			},
 			{
@@ -2411,7 +2551,7 @@ var St = {
 				label: "Mower name",
 				type: "text",
 				default: "entity name",
-				selector: P,
+				selector: F,
 				group: "Lawn mower"
 			},
 			{
@@ -2419,7 +2559,7 @@ var St = {
 				label: "Salt level sensor (%)",
 				type: "entity (sensor)",
 				help: "Water softener salt in % (0-100, or 0-1). Card with the level; an info alert asks to buy salt below the threshold.",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Salt level"
 			},
 			{
@@ -2427,7 +2567,7 @@ var St = {
 				label: "Salt distance sensor",
 				type: "entity (sensor)",
 				help: "Optional raw reading shown as a detail (e.g. distance from the lid to the salt).",
-				selector: N("sensor"),
+				selector: P("sensor"),
 				group: "Salt level"
 			},
 			{
@@ -2448,7 +2588,7 @@ var St = {
 				label: "Salt card title",
 				type: "text",
 				default: "Salt level",
-				selector: P,
+				selector: F,
 				group: "Salt level"
 			},
 			{
@@ -2473,7 +2613,7 @@ var St = {
 				type: "list",
 				help: "Device tiles. Tap toggles light, switch, fan, input_boolean; other domains and long press open more-info. Per tile you can change the tap action (e.g. press a button) and ask before acting. A cover gets a full-width tile with Open / Stop / Close buttons for the actions it supports.",
 				selector: { object: {} },
-				fields: Tt
+				fields: wt
 			}
 		]
 	},
@@ -2545,14 +2685,14 @@ var St = {
 				label: "Name",
 				type: "text",
 				required: !0,
-				selector: P
+				selector: F
 			},
 			{
 				name: "power",
 				label: "Power sensor",
 				type: "entity (sensor, W or kW)",
 				required: !0,
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "main",
@@ -2560,7 +2700,7 @@ var St = {
 				type: "boolean",
 				default: "false",
 				help: "Shown large at the top with phases. Use for the whole-house meter.",
-				selector: F
+				selector: I
 			},
 			{
 				name: "max_power",
@@ -2578,91 +2718,91 @@ var St = {
 				name: "energy",
 				label: "Total energy sensor",
 				type: "entity (sensor, kWh)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "current",
 				label: "Current sensor",
 				type: "entity (sensor, A)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "power_factor",
 				label: "Power factor sensor",
 				type: "entity (sensor)",
 				help: "Percent (0-100) or 0-1; shown as %.",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "voltage",
 				label: "Voltage sensor",
 				type: "entity (sensor, V)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "frequency",
 				label: "Frequency sensor",
 				type: "entity (sensor, Hz)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "power_a",
 				label: "Phase A power",
 				type: "entity (sensor)",
 				help: "Phase sensors are optional; with any of them set the meter shows a phase table.",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "power_b",
 				label: "Phase B power",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "power_c",
 				label: "Phase C power",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "current_a",
 				label: "Phase A current",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "current_b",
 				label: "Phase B current",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "current_c",
 				label: "Phase C current",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "voltage_a",
 				label: "Phase A voltage",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "voltage_b",
 				label: "Phase B voltage",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			},
 			{
 				name: "voltage_c",
 				label: "Phase C voltage",
 				type: "entity (sensor)",
-				selector: N("sensor")
+				selector: P("sensor")
 			}
 		]
 	}
-], Dt, Ot = class extends bt {
+], Dt, Ot = class extends yt {
 	constructor() {
 		super(), this._fieldIndex = new Map(Et.flatMap((e) => e.fields.map((e) => [e.name, e]))), this._label = (e) => this._fieldIndex.get(e.name)?.label ?? e.name, this._helper = (e) => this._fieldIndex.get(e.name)?.help, this._tab = "appearance", this._room = 0, this._formReady = !!customElements.get("ha-form");
 	}
@@ -2695,7 +2835,7 @@ var St = {
 	_loadPreset() {
 		this._emit({
 			type: this._config.type,
-			...structuredClone(St)
+			...structuredClone(xt)
 		});
 	}
 	_options() {
@@ -2716,7 +2856,7 @@ var St = {
 			$images: [{
 				value: "none",
 				label: "none (no image)"
-			}, ...ee.map((e) => ({
+			}, ...h.map((e) => ({
 				value: e,
 				label: e
 			}))]
@@ -2772,7 +2912,7 @@ var St = {
 		return t.map(({ _group: e, ...t }) => t);
 	}
 	_form(e, t, n) {
-		return D`<ha-form
+		return k`<ha-form
       .hass=${this.hass}
       .data=${e ?? {}}
       .schema=${t}
@@ -2784,16 +2924,16 @@ var St = {
     ></ha-form>`;
 	}
 	render() {
-		if (!this._config || !this.hass) return A;
-		if (!this._formReady) return D`<p>Loading editor...</p>`;
+		if (!this._config || !this.hass) return M;
+		if (!this._formReady) return k`<p>Loading editor...</p>`;
 		let e = !(this._config.rooms ?? []).length, t = Et.find((e) => e.key === this._tab) ?? Et[0];
-		return D`
-      ${e ? D`<div class="preset">
+		return k`
+      ${e ? k`<div class="preset">
             <p>This dashboard has no rooms yet. Load the demo house as a starting point and replace its entities with yours, or paste your own config in YAML mode.</p>
             <button @click=${this._loadPreset}>Load demo house</button>
-          </div>` : A}
+          </div>` : M}
       <nav>
-        ${Et.map((e) => D`<button class=${e.key === t.key ? "on" : ""} @click=${() => this._tab = e.key}>${e.tab}</button>`)}
+        ${Et.map((e) => k`<button class=${e.key === t.key ? "on" : ""} @click=${() => this._tab = e.key}>${e.tab}</button>`)}
       </nav>
       <p class="intro">${t.intro}</p>
       <div class="body">${this._renderSection(t)}</div>
@@ -2826,10 +2966,10 @@ var St = {
 			let a = [...t];
 			[a[n], a[r]] = [a[r], a[n]], i(a, r);
 		};
-		return D`
+		return k`
       <div class="rooms-bar">
         <select @change=${(e) => this._room = Number(e.target.value)}>
-          ${t.map((e, t) => D`<option value=${t} ?selected=${t === n}>${e.name} (${e.id})</option>`)}
+          ${t.map((e, t) => k`<option value=${t} ?selected=${t === n}>${e.name} (${e.id})</option>`)}
         </select>
         <button title="Move up" @click=${() => a(-1)}>Up</button>
         <button title="Move down" @click=${() => a(1)}>Down</button>
@@ -2840,7 +2980,7 @@ var St = {
 		}], t.length)}>Add</button>
         <button class="danger" ?disabled=${!r} @click=${() => confirm(`Delete room "${r?.name}"?`) && i(t.filter((e, t) => t !== n), Math.max(0, n - 1))}>Delete</button>
       </div>
-      ${r ? this._form(r, this._schema(e.fields), (e) => i(t.map((t, r) => r === n ? e : t))) : D`<p>No rooms.</p>`}
+      ${r ? this._form(r, this._schema(e.fields), (e) => i(t.map((t, r) => r === n ? e : t))) : k`<p>No rooms.</p>`}
     `;
 	}
 };
@@ -2850,7 +2990,7 @@ Dt = Ot, Dt.properties = {
 	_tab: { state: !0 },
 	_room: { state: !0 },
 	_formReady: { state: !0 }
-}, Dt.styles = Ce`
+}, Dt.styles = xe`
     :host { display: block; }
     nav { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
     button {
@@ -2866,79 +3006,79 @@ Dt = Ot, Dt.properties = {
     select { font: inherit; padding: 6px; border-radius: 8px; flex: 1; min-width: 160px;
       background: var(--card-background-color); color: var(--primary-text-color); border: 1px solid var(--divider-color, #444); }
   `;
-var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z = (e) => !e || e.state === "unavailable" || e.state === "unknown", B = (e, t) => {
-	let n = R(e, t);
-	if (z(n)) return;
+var R = (e) => e.split(".")[0], z = (e, t) => t && e ? e.states[t] : void 0, B = (e) => !e || e.state === "unavailable" || e.state === "unknown", V = (e, t) => {
+	let n = z(e, t);
+	if (B(n)) return;
 	let r = Number(n.state);
 	return Number.isFinite(r) ? r : void 0;
-}, V = (e, t) => {
-	let n = B(e, t);
+}, kt = (e, t) => {
+	let n = V(e, t);
 	if (n === void 0) return;
-	let r = String(R(e, t)?.attributes.unit_of_measurement ?? "kW");
+	let r = String(z(e, t)?.attributes.unit_of_measurement ?? "kW");
 	return r === "W" ? n / 1e3 : r === "MW" ? n * 1e3 : n;
-}, kt = (e, t) => String(R(e, t)?.attributes.friendly_name ?? t), H = (e, t) => {
+}, At = (e, t) => String(z(e, t)?.attributes.friendly_name ?? t), H = (e, t) => {
 	if (e.formatEntityState) return e.formatEntityState(t);
 	let n = t.attributes.unit_of_measurement;
 	return n ? `${t.state} ${n}` : t.state;
-}, U = (e) => e ? L(e.entity_id) === "cover" ? e.state === "open" || e.state === "opening" : e.state === "on" : !1, At = {
+}, U = (e) => e ? R(e.entity_id) === "cover" ? e.state === "open" || e.state === "opening" : e.state === "on" : !1, jt = {
 	critical: 0,
 	warning: 1,
 	minor: 2
-}, jt = [
+}, Mt = [
 	"critical",
 	"warning",
 	"minor"
-], Mt = (e) => {
+], Nt = (e) => {
 	if (Array.isArray(e)) return e.length;
 	if (e == null || e === "") return;
 	let t = Number(e);
 	return Number.isFinite(t) ? t : void 0;
-}, Nt = (e) => jt.includes(e) ? e : "minor", Pt = (e) => {
-	if (!e || z(e)) return;
+}, Pt = (e) => Mt.includes(e) ? e : "minor", Ft = (e) => {
+	if (!e || B(e)) return;
 	let t = e.attributes ?? {}, n = (Array.isArray(t.incidents) ? t.incidents : []).filter((e) => e && typeof e == "object").map((e, t) => ({
 		id: String(e.id ?? t),
-		severity: Nt(e.severity),
+		severity: Pt(e.severity),
 		title: String(e.title ?? "Incident"),
 		detail: e.detail ? String(e.detail) : "",
 		recommendation: e.recommendation ? String(e.recommendation) : "",
-		count: Mt(e.count),
+		count: Nt(e.count),
 		sources: Array.isArray(e.sources) ? e.sources.map(String) : []
-	})).sort((e, t) => At[e.severity] - At[t.severity] || (t.count ?? 0) - (e.count ?? 0)), r = t.summary && typeof t.summary == "object" ? t.summary : {}, i = Object.fromEntries(jt.map((e) => [e, Mt(r[e]) ?? Mt(t[e]) ?? n.filter((t) => t.severity === e).length]));
+	})).sort((e, t) => jt[e.severity] - jt[t.severity] || (t.count ?? 0) - (e.count ?? 0)), r = t.summary && typeof t.summary == "object" ? t.summary : {}, i = Object.fromEntries(Mt.map((e) => [e, Nt(r[e]) ?? Nt(t[e]) ?? n.filter((t) => t.severity === e).length]));
 	return {
 		generated: typeof t.generated == "string" ? t.generated : void 0,
 		counts: i,
 		incidents: n
 	};
-}, Ft = (e, t) => `${e}|${t}`, It = {
+}, It = (e, t) => `${e}|${t}`, Lt = {
 	daily: 1,
 	hourly: 2,
 	twice_daily: 4
-}, Lt = (e) => {
+}, Rt = (e) => {
 	let t = Number(e?.attributes.supported_features ?? 0);
 	return [
 		"daily",
 		"twice_daily",
 		"hourly"
-	].filter((e) => (t & It[e]) !== 0);
-}, Rt = (e) => Lt(e).filter((e) => e === "daily" || e === "hourly"), zt = [
+	].filter((e) => (t & Lt[e]) !== 0);
+}, zt = (e) => Rt(e).filter((e) => e === "daily" || e === "hourly"), Bt = [
 	"rainy",
 	"pouring",
 	"lightning-rainy",
 	"snowy",
 	"snowy-rainy",
 	"hail"
-], Bt = [
+], Vt = [
 	"lightning",
 	"lightning-rainy",
 	"hail",
 	"pouring",
 	"exceptional"
-], Vt = (e) => e ? e === "partlycloudy" ? "Partly cloudy" : e === "clear-night" ? "Clear night" : e === "windy-variant" ? "Windy" : e.charAt(0).toUpperCase() + e.slice(1).replace(/-/g, ", ") : "-", Ht = (e, t = .1) => {
+], Ht = (e) => e ? e === "partlycloudy" ? "Partly cloudy" : e === "clear-night" ? "Clear night" : e === "windy-variant" ? "Windy" : e.charAt(0).toUpperCase() + e.slice(1).replace(/-/g, ", ") : "-", Ut = (e, t = .1) => {
 	if (!Array.isArray(e) || !e.length) return;
 	let n = !1;
 	for (let r of e.slice(0, 2)) if (r.precipitation !== void 0 && r.precipitation !== null && (n = !0, Number(r.precipitation) >= t) || r.precipitation_probability !== void 0 && r.precipitation_probability !== null && (n = !0, Number(r.precipitation_probability) >= 50)) return !0;
 	return !n && void 0;
-}, Ut = [
+}, Wt = [
 	"N",
 	"NE",
 	"E",
@@ -2947,19 +3087,19 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 	"SW",
 	"W",
 	"NW"
-], Wt = (e) => {
+], Gt = (e) => {
 	if (typeof e == "string" && e.trim()) return e;
 	let t = Number(e);
-	return e == null || !Number.isFinite(t) ? "" : Ut[Math.round((t % 360 + 360) % 360 / 45) % 8];
-}, Gt = /* @__PURE__ */ new Map(), Kt = {
+	return e == null || !Number.isFinite(t) ? "" : Wt[Math.round((t % 360 + 360) % 360 / 45) % 8];
+}, Kt = /* @__PURE__ */ new Map(), qt = {
 	critical: 0,
 	warning: 1,
 	info: 2
-}, qt = (e, t, n = {}) => {
-	let r = [], i = t.alerts ?? {}, a = (e) => x(t, e)?.name, o = (n) => ae(t, n) ?? kt(e, n);
+}, Jt = (e, t, n = {}) => {
+	let r = [], i = t.alerts ?? {}, a = (e) => C(t, e)?.name, o = (n) => re(t, n) ?? At(e, n);
 	for (let n of i.critical ?? []) {
-		let i = R(e, n), a = x(t, n);
-		z(i) ? r.push({
+		let i = z(e, n), a = C(t, n);
+		B(i) ? r.push({
 			id: `crit-na-${n}`,
 			severity: "warning",
 			title: `${o(n)} unavailable`,
@@ -2985,9 +3125,9 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 		});
 	}
 	for (let n of i.temperature_rules ?? []) {
-		let i = B(e, n.entity), a = x(t, n.entity), s = n.label || a?.name || o(n.entity);
+		let i = V(e, n.entity), a = C(t, n.entity), s = n.label || a?.name || o(n.entity);
 		if (i === void 0) {
-			Gt.delete(n.entity), r.push({
+			Kt.delete(n.entity), r.push({
 				id: `temp-na-${n.entity}`,
 				severity: "warning",
 				title: `${s} temperature unavailable`,
@@ -3001,9 +3141,9 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 			});
 			continue;
 		}
-		let c = n.clear_below ?? n.above, l = Gt.get(n.entity) ? i >= c : i > n.above;
-		if (Gt.set(n.entity, l), l) {
-			let t = B(e, a?.humidity);
+		let c = n.clear_below ?? n.above, l = Kt.get(n.entity) ? i >= c : i > n.above;
+		if (Kt.set(n.entity, l), l) {
+			let t = V(e, a?.humidity);
 			r.push({
 				id: `temp-${n.entity}`,
 				severity: "warning",
@@ -3021,13 +3161,13 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 	}
 	let s = (n, i) => {
 		for (let a of n ?? []) {
-			if (!U(R(e, a))) continue;
-			let n = x(t, a);
+			if (!U(z(e, a))) continue;
+			let n = C(t, a);
 			r.push({
 				id: `door-${a}`,
 				severity: i,
 				title: `${n ? `${n.name} ` : ""}${o(a).toLowerCase()} open`,
-				meta: `${kt(e, a)}${n ? ` · ${n.name}` : ""}`,
+				meta: `${At(e, a)}${n ? ` · ${n.name}` : ""}`,
 				chipTitle: n?.name ?? o(a),
 				chipValue: o(a),
 				badge: "Open",
@@ -3039,20 +3179,20 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 		}
 	};
 	s(i.exterior_doors, "warning"), s(i.interior_doors, "info");
-	let c = i.rain_weather || t.entities?.weather, l = R(e, c);
-	if (i.rain_windows?.length && c && !z(l) && zt.includes(l.state)) {
+	let c = i.rain_weather || t.entities?.weather, l = z(e, c);
+	if (i.rain_windows?.length && c && !B(l) && Bt.includes(l.state)) {
 		let a = Number.isFinite(Number(i.rain_min_mm)) && i.rain_min_mm !== void 0 ? Number(i.rain_min_mm) : .1;
-		if (Ht(n[Ft(c, "hourly")], a) !== !1) {
-			let n = H(e, l) || Vt(l.state);
+		if (Ut(n[It(c, "hourly")], a) !== !1) {
+			let n = H(e, l) || Ht(l.state);
 			for (let a of i.rain_windows) {
-				let i = R(e, a);
-				if (z(i) || !U(i)) continue;
-				let s = x(t, a);
+				let i = z(e, a);
+				if (B(i) || !U(i)) continue;
+				let s = C(t, a);
 				r.push({
 					id: `rain-${a}`,
 					severity: "warning",
 					title: `${s ? `${s.name} ` : ""}${o(a).toLowerCase()} open · ${n.toLowerCase()}`,
-					meta: `${kt(e, a)}${s ? ` · ${s.name}` : ""} · close it, the weather is ${n.toLowerCase()}`,
+					meta: `${At(e, a)}${s ? ` · ${s.name}` : ""} · close it, the weather is ${n.toLowerCase()}`,
 					chipTitle: s?.name ?? o(a),
 					chipValue: o(a),
 					badge: n,
@@ -3065,9 +3205,9 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 		}
 	}
 	for (let n of t.rooms ?? []) {
-		let t = R(e, n.mower);
+		let t = z(e, n.mower);
 		if (n.mower && t?.state === "error") {
-			let t = n.mower_name || kt(e, n.mower);
+			let t = n.mower_name || At(e, n.mower);
 			r.push({
 				id: `mower-${n.id}`,
 				severity: "warning",
@@ -3082,7 +3222,7 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 				entity: n.mower
 			});
 		}
-		let i = B(e, n.salt_level);
+		let i = V(e, n.salt_level);
 		if (n.salt_level && i !== void 0) {
 			let e = Math.max(0, Math.min(100, i > 1 ? i : i * 100));
 			e < (Number.isFinite(Number(n.salt_warn_below)) && n.salt_warn_below !== void 0 ? Number(n.salt_warn_below) : 30) && r.push({
@@ -3100,9 +3240,9 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 			});
 		}
 	}
-	let u = R(e, t.entities?.weather);
-	if (i.severe_weather !== !1 && t.entities?.weather && !z(u) && Bt.includes(u.state)) {
-		let n = H(e, u) || Vt(u.state);
+	let u = z(e, t.entities?.weather);
+	if (i.severe_weather !== !1 && t.entities?.weather && !B(u) && Vt.includes(u.state)) {
+		let n = H(e, u) || Ht(u.state);
 		r.push({
 			id: "severe-weather",
 			severity: "warning",
@@ -3116,8 +3256,8 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 		});
 	}
 	if (i.data_quality !== !1) {
-		let n = ue(t).filter((t) => {
-			let n = R(e, t);
+		let n = ce(t).filter((t) => {
+			let n = z(e, t);
 			return !n || n.state === "unavailable";
 		});
 		if (n.length) {
@@ -3139,7 +3279,7 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 	}
 	let d = t.entities?.incidents;
 	if (d) {
-		let t = Pt(R(e, d));
+		let t = Ft(z(e, d));
 		if (!t) r.push({
 			id: "incidents-na",
 			severity: "warning",
@@ -3174,8 +3314,8 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 			}
 		}
 	}
-	if (i.mailbox && (i.mailbox_ack ? R(e, i.mailbox_ack)?.state === "on" : R(e, i.mailbox)?.state === "on")) {
-		let e = x(t, i.mailbox);
+	if (i.mailbox && (i.mailbox_ack ? z(e, i.mailbox_ack)?.state === "on" : z(e, i.mailbox)?.state === "on")) {
+		let e = C(t, i.mailbox);
 		r.push({
 			id: "mailbox",
 			severity: "info",
@@ -3190,7 +3330,7 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 		});
 	}
 	if (i.updates !== !1) {
-		let t = Object.values(e.states).filter((e) => L(e.entity_id) === "update" && e.state === "on");
+		let t = Object.values(e.states).filter((e) => R(e.entity_id) === "update" && e.state === "on");
 		t.length && r.push({
 			id: "updates",
 			severity: "info",
@@ -3203,15 +3343,15 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 			href: "/config/updates"
 		});
 	}
-	return r.sort((e, t) => Kt[e.severity] - Kt[t.severity]);
-}, Jt = (e) => {
+	return r.sort((e, t) => qt[e.severity] - qt[t.severity]);
+}, Yt = (e) => {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e) n.room && n.roomBadge && !t.has(n.room) && t.set(n.room, {
 		text: n.roomBadge,
 		severity: n.severity
 	});
 	return t;
-}, Yt = Ce`
+}, Xt = xe`
   :host {
     --atlas-canvas: #14171c;
     --atlas-solid: #252a30;
@@ -3674,6 +3814,42 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
   .salttank { position: relative; width: 44px; height: 84px; flex: none; border-radius: 10px 10px 14px 14px; border: 2px solid rgba(188, 200, 222, 0.3); overflow: hidden; display: flex; align-items: flex-end; background: rgba(0, 0, 0, 0.25); }
   .salttank > i { display: block; width: 100%; opacity: 0.85; transition: height 0.4s ease; }
 
+  /* ---------- appliances (step 9) ---------- */
+  .appls { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+  .appl { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 14px; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); min-width: 0; }
+  .appl.run { border-color: var(--atlas-accent-glow); background: rgba(86, 231, 192, 0.06); }
+  .appl.na { border-style: dashed; border-color: rgba(255, 191, 87, 0.35); }
+  .ahead { display: flex; align-items: center; gap: 12px; text-align: left; min-width: 0; }
+  .ahead .atxt { flex: 1; }
+  .ahead .atxt small { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .aarc { position: relative; width: 48px; height: 48px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .aarc svg { position: absolute; inset: 0; }
+  .aarc b { position: relative; font-size: 14px; font-weight: 700; }
+  .aico { width: 44px; height: 44px; flex: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; background: rgba(241, 245, 255, 0.08); color: var(--atlas-text2); }
+  .appl.run .aico { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .abadge { flex: none; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: rgba(241, 245, 255, 0.08); color: var(--atlas-text2); }
+  .abadge.on { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .apill { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px; border-radius: 999px; font-size: 11px; background: rgba(241, 245, 255, 0.08); }
+  .apill i { width: 6px; height: 6px; border-radius: 3px; background: var(--atlas-text2); }
+  .apill.active { color: var(--atlas-accent); background: var(--atlas-accent-soft); }
+  .apill.active i { background: var(--atlas-accent); }
+  .apill.ready { color: #5ec8ff; }
+  .apill.ready i { background: #5ec8ff; }
+  .adoor { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; }
+  .adoor.open { color: var(--atlas-warn); }
+  .astrip { display: grid; gap: 6px; padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.22); }
+  .astrip span { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .astrip small { font-size: 10px; color: var(--atlas-text2); text-transform: uppercase; letter-spacing: 0.04em; }
+  .astrip b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
+  .adot { display: inline-block; width: 7px; height: 7px; border-radius: 4px; background: rgba(241, 245, 255, 0.25); }
+  .adot.on { background: var(--atlas-accent); box-shadow: 0 0 4px var(--atlas-accent); }
+  .aprog { display: block; height: 5px; border-radius: 3px; background: rgba(241, 245, 255, 0.08); overflow: hidden; }
+  .aprog > i { display: block; height: 100%; background: var(--atlas-accent); border-radius: 3px; }
+  .actls { display: flex; flex-wrap: wrap; gap: 6px; }
+  .actl { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 10px; font-size: 12px; border: 1px solid rgba(188, 200, 222, 0.2); background: rgba(241, 245, 255, 0.06); }
+  .actl.on { border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
+  .actl.stop { color: var(--atlas-crit); border-color: rgba(255, 114, 125, 0.45); }
+
   /* ---------- weather strip (Home hero) ---------- */
   .hside { display: flex; align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; gap: 10px; min-width: 0; }
   .hside .presence { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 6px; }
@@ -3847,6 +4023,7 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
     .hside .presence { flex-direction: row; flex-wrap: wrap; }
     .lrooms { grid-template-columns: minmax(0, 1fr); }
     .scams { grid-template-columns: minmax(0, 1fr); }
+    .appls { grid-template-columns: minmax(0, 1fr); }
     .inc { grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .increc { padding: 10px 0 0; border-left: 0; border-top: 1px solid rgba(188, 200, 222, 0.12); }
     .amodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -3904,17 +4081,17 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
     .bnav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; color: var(--atlas-text2); }
     .bnav button.on { color: var(--atlas-accent); }
   }
-`, Xt = {
+`, Zt = {
 	ATTRIBUTE: 1,
 	CHILD: 2,
 	PROPERTY: 3,
 	BOOLEAN_ATTRIBUTE: 4,
 	EVENT: 5,
 	ELEMENT: 6
-}, Zt = (e) => (...t) => ({
+}, Qt = (e) => (...t) => ({
 	_$litDirective$: e,
 	values: t
-}), Qt = class {
+}), $t = class {
 	constructor(e) {}
 	get _$AU() {
 		return this._$AM._$AU;
@@ -3928,13 +4105,13 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 	update(e, t) {
 		return this.render(...t);
 	}
-}, $t = class extends Qt {
+}, en = class extends $t {
 	constructor(e) {
-		if (super(e), this.it = A, e.type !== Xt.CHILD) throw Error(this.constructor.directiveName + "() can only be used in child bindings");
+		if (super(e), this.it = M, e.type !== Zt.CHILD) throw Error(this.constructor.directiveName + "() can only be used in child bindings");
 	}
 	render(e) {
-		if (e === A || e == null) return this._t = void 0, this.it = e;
-		if (e === k) return e;
+		if (e === M || e == null) return this._t = void 0, this.it = e;
+		if (e === j) return e;
 		if (typeof e != "string") throw Error(this.constructor.directiveName + "() called with a non-string value");
 		if (e === this.it) return this._t;
 		this.it = e;
@@ -3946,11 +4123,11 @@ var L = (e) => e.split(".")[0], R = (e, t) => t && e ? e.states[t] : void 0, z =
 		};
 	}
 };
-$t.directiveName = "unsafeHTML", $t.resultType = 1;
+en.directiveName = "unsafeHTML", en.resultType = 1;
 // node_modules/lit-html/directives/unsafe-svg.js
-var en = class extends $t {};
-en.directiveName = "unsafeSVG", en.resultType = 2;
-var tn = Zt(en), nn = {
+var tn = class extends en {};
+tn.directiveName = "unsafeSVG", tn.resultType = 2;
+var nn = Qt(tn), rn = {
 	alert: "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 4a2 2 0 0 1 4 0l12 22a2 2 0 0 1-2 3H4a2 2 0 0 1-2-3Z\"/><path d=\"M16 11v8M16 24h.01\"/></g>",
 	"arm-away": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m16 3 11 4v9c0 7-11 13-11 13S5 23 5 16V7Z\"/><path d=\"m11 16 4 4 7-9\"/></g>",
 	attic: "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m2 17 14-14 14 14M6 14v15h20V14\"/><path d=\"m11 15 5-5 5 5v8H11Z\"/></g>",
@@ -3995,9 +4172,9 @@ var tn = Zt(en), nn = {
 	temperature: "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20V7a4 4 0 0 1 8 0v13a7 7 0 1 1-8 0Z\"/><path d=\"M16 10v13\"/><circle cx=\"16\" cy=\"25\" r=\"2\"/></g>",
 	"wake-pc": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"26\" height=\"18\" rx=\"2\"/><path d=\"M16 22v7M9 29h14M16 7v7M11 10a6 6 0 1 0 10 0\"/></g>"
 }, W = (e, t = 20) => {
-	let n = e ? nn[e] : void 0;
-	return n ? D`<svg class="ic" aria-hidden="true" width=${t} height=${t} viewBox="0 0 32 32">${tn(n)}</svg>` : A;
-}, rn = {
+	let n = e ? rn[e] : void 0;
+	return n ? k`<svg class="ic" aria-hidden="true" width=${t} height=${t} viewBox="0 0 32 32">${nn(n)}</svg>` : M;
+}, an = {
 	door: "M6 21V3h10v18M4 21h14M13 12h.01",
 	window: "M4 4h16v16H4zM12 4v16M4 12h16",
 	thermo: "M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0z",
@@ -4026,25 +4203,25 @@ var tn = Zt(en), nn = {
 	shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z",
 	shieldoff: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM4 4l16 16",
 	refresh: "M20 11a8 8 0 0 0-14.6-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.6 4.5L20 16M20 20v-4h-4"
-}, G = (e, t = 20) => D`<svg aria-hidden="true" width=${t} height=${t} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${O`<path d=${rn[e] ?? rn.dot}></path>`}</svg>`, an = (e) => {
-	let t = e ?? "", n = O`<circle cx="14" cy="13" r="6" fill="#FFD27A"></circle>`, r = O`<path d="M10 26h20a7 7 0 0 0 0-14 9.5 9.5 0 0 0-18.3 2A6 6 0 0 0 10 26z" fill="#D3D8DE"></path>`, i = O`<path d="M14 28l-2 3M21 28l-2 3M28 28l-2 3" stroke="#5EC8FF" stroke-width="2" stroke-linecap="round"></path>`, a = O`<path d="M24 6a10 10 0 1 0 8 15A9 9 0 0 1 24 6z" fill="#D3D8DE"></path>`, o = O`${r}`;
-	return t === "sunny" ? o = O`<circle cx="20" cy="15" r="8" fill="#FFD27A"></circle>` : t === "clear-night" ? o = a : t === "partlycloudy" ? o = O`${n}${r}` : (t.includes("rain") || t === "pouring" || t.includes("snow") || t === "hail") && (o = O`${r}${i}`), D`<svg aria-hidden="true" width="40" height="32" viewBox="0 0 40 32">${o}</svg>`;
-}, on = 6e4, sn = 36e5, cn = 864e5, K = (e, t, n = Date.now()) => {
+}, G = (e, t = 20) => k`<svg aria-hidden="true" width=${t} height=${t} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${A`<path d=${an[e] ?? an.dot}></path>`}</svg>`, on = (e) => {
+	let t = e ?? "", n = A`<circle cx="14" cy="13" r="6" fill="#FFD27A"></circle>`, r = A`<path d="M10 26h20a7 7 0 0 0 0-14 9.5 9.5 0 0 0-18.3 2A6 6 0 0 0 10 26z" fill="#D3D8DE"></path>`, i = A`<path d="M14 28l-2 3M21 28l-2 3M28 28l-2 3" stroke="#5EC8FF" stroke-width="2" stroke-linecap="round"></path>`, a = A`<path d="M24 6a10 10 0 1 0 8 15A9 9 0 0 1 24 6z" fill="#D3D8DE"></path>`, o = A`${r}`;
+	return t === "sunny" ? o = A`<circle cx="20" cy="15" r="8" fill="#FFD27A"></circle>` : t === "clear-night" ? o = a : t === "partlycloudy" ? o = A`${n}${r}` : (t.includes("rain") || t === "pouring" || t.includes("snow") || t === "hail") && (o = A`${r}${i}`), k`<svg aria-hidden="true" width="40" height="32" viewBox="0 0 40 32">${o}</svg>`;
+}, sn = 6e4, cn = 36e5, ln = 864e5, K = (e, t, n = Date.now()) => {
 	let r = t ? Date.parse(t) : NaN;
 	if (!Number.isFinite(r)) return "";
 	let i = e.locale?.language ?? e.language ?? "en", a = new Intl.RelativeTimeFormat(i, {
 		numeric: "auto",
 		style: "short"
 	}), o = Math.max(0, n - r);
-	return o < on ? a.format(0, "minute") : o < sn ? a.format(-Math.floor(o / on), "minute") : o < cn ? a.format(-Math.floor(o / sn), "hour") : o < 7 * cn ? a.format(-Math.floor(o / cn), "day") : new Date(r).toLocaleDateString(i, {
+	return o < sn ? a.format(0, "minute") : o < cn ? a.format(-Math.floor(o / sn), "minute") : o < ln ? a.format(-Math.floor(o / cn), "hour") : o < 7 * ln ? a.format(-Math.floor(o / ln), "day") : new Date(r).toLocaleDateString(i, {
 		day: "numeric",
 		month: "short"
 	});
-}, ln = (e, t = "changed") => !e || t === "off" ? void 0 : t === "updated" ? e.last_updated : e.last_changed, un = (e, t) => {
+}, un = (e, t = "changed") => !e || t === "off" ? void 0 : t === "updated" ? e.last_updated : e.last_changed, dn = (e, t) => {
 	if (!t) return "";
 	let n = e.locale?.language ?? e.language ?? "en", r = (e) => Number.isFinite(Date.parse(e)) ? new Date(e).toLocaleString(n) : "-";
 	return `${t.entity_id}\nLast changed: ${r(t.last_changed)}\nLast updated: ${r(t.last_updated)}`;
-}, dn = [
+}, fn = [
 	"car_lock",
 	"car_doors_locked",
 	"car_range",
@@ -4058,10 +4235,10 @@ var tn = Zt(en), nn = {
 	"car_flash",
 	"car_horn",
 	"car_refresh"
-], fn = (e) => dn.map((t) => e[t]).filter((e) => !!e), pn = (e) => fn(e).length > 0, mn = (e, t) => {
-	let n = R(e.hass, t.car_lock);
+], pn = (e) => fn.map((t) => e[t]).filter((e) => !!e), mn = (e) => pn(e).length > 0, hn = (e, t) => {
+	let n = z(e.hass, t.car_lock);
 	if (t.car_lock) {
-		if (z(n)) return {
+		if (B(n)) return {
 			state: "unknown",
 			text: "Unknown",
 			entity: t.car_lock
@@ -4077,67 +4254,67 @@ var tn = Zt(en), nn = {
 			entity: t.car_lock
 		};
 	}
-	let r = R(e.hass, t.car_doors_locked);
+	let r = z(e.hass, t.car_doors_locked);
 	if (!t.car_doors_locked) return {
 		state: "unknown",
 		text: ""
 	};
-	if (z(r)) return {
+	if (B(r)) return {
 		state: "unknown",
 		text: "Unknown",
 		entity: t.car_doors_locked
 	};
-	let i = t.car_doors_locked_when?.trim(), a = r.state, o = i ? a.toLowerCase() === i.toLowerCase() : L(r.entity_id) === "binary_sensor" ? a === "off" : a.toLowerCase() === "locked";
+	let i = t.car_doors_locked_when?.trim(), a = r.state, o = i ? a.toLowerCase() === i.toLowerCase() : R(r.entity_id) === "binary_sensor" ? a === "off" : a.toLowerCase() === "locked";
 	return {
 		state: o ? "locked" : "unlocked",
 		text: o ? "Locked" : "Unlocked",
 		entity: t.car_doors_locked
 	};
-}, hn = (e, t) => {
-	let n = R(e.hass, t);
-	return !n || z(n) ? "–" : H(e.hass, n);
 }, gn = (e, t) => {
-	let n = R(e.hass, t.car_last_updated);
-	if (n && !z(n) && Number.isFinite(Date.parse(n.state))) return n.state;
-	let r = fn(t).map((t) => e.hass.states[t]).filter((e) => !!e && !z(e) && ![
+	let n = z(e.hass, t);
+	return !n || B(n) ? "–" : H(e.hass, n);
+}, _n = (e, t) => {
+	let n = z(e.hass, t.car_last_updated);
+	if (n && !B(n) && Number.isFinite(Date.parse(n.state))) return n.state;
+	let r = pn(t).map((t) => e.hass.states[t]).filter((e) => !!e && !B(e) && ![
 		"button",
 		"input_button",
 		"script"
-	].includes(L(e.entity_id))).map((e) => e.last_updated).filter((e) => Number.isFinite(Date.parse(e))).sort();
+	].includes(R(e.entity_id))).map((e) => e.last_updated).filter((e) => Number.isFinite(Date.parse(e))).sort();
 	return r[r.length - 1];
-}, _n = () => O`<svg class="vsvg" viewBox="0 0 320 130" aria-hidden="true">
+}, vn = () => A`<svg class="vsvg" viewBox="0 0 320 130" aria-hidden="true">
   <path d="M18 92 C18 78 26 72 40 70 L92 62 C112 40 140 30 178 30 L214 30 C238 30 256 42 270 60 L290 66 C302 69 306 76 306 88 L306 96 L18 96 Z"
     fill="var(--atlas-accent-soft)" stroke="var(--atlas-accent)" stroke-width="2.5" stroke-linejoin="round"/>
   <path d="M106 62 C122 44 144 38 172 38 L178 38 L178 62 Z M190 38 L212 38 C230 38 244 46 254 62 L190 62 Z" fill="rgba(241,245,255,0.12)" stroke="var(--atlas-accent)" stroke-width="2"/>
   <circle cx="84" cy="96" r="20" fill="#14171c" stroke="var(--atlas-accent)" stroke-width="3"/><circle cx="84" cy="96" r="7" fill="var(--atlas-accent)"/>
   <circle cx="246" cy="96" r="20" fill="#14171c" stroke="var(--atlas-accent)" stroke-width="3"/><circle cx="246" cy="96" r="7" fill="var(--atlas-accent)"/>
   <path d="M292 76 L304 78" stroke="#FFD27A" stroke-width="4" stroke-linecap="round"/>
-</svg>`, vn = (e, t) => {
-	let n = L(t);
+</svg>`, yn = (e, t) => {
+	let n = R(t);
 	return e.call(n, n === "script" ? "turn_on" : "press", { entity_id: t });
-}, yn = (e, t) => {
-	if (!pn(t)) return A;
-	let n = t.car_name || "Vehicle", r = mn(e, t), i = !!R(e.hass, t.car_lock)?.attributes.code_format, a = se(e.config, t.car_image), o = gn(e, t), s = R(e.hass, t.car_location), c = (a) => {
+}, bn = (e, t) => {
+	if (!mn(t)) return M;
+	let n = t.car_name || "Vehicle", r = hn(e, t), i = !!z(e.hass, t.car_lock)?.attributes.code_format, a = ae(e.config, t.car_image), o = _n(e, t), s = z(e.hass, t.car_location), c = (a) => {
 		if (!t.car_lock) return;
 		if (i) return e.moreInfo(t.car_lock);
 		let o = () => e.call("lock", a, { entity_id: t.car_lock });
 		a === "unlock" ? e.confirm(`Unlock ${n}?`, `${n} is ${r.text.toLowerCase()}.`, o, "Unlock") : o();
-	}, l = (t, n, r) => n ? D`<button class="vstat" @click=${() => e.moreInfo(n)}><b class="n">${hn(e, n)}</b><small>${t}${r ? ` · ${r}` : ""}</small></button>` : A, u = (t, n, r) => n || r ? D`<button class="vstat" @click=${() => e.moreInfo(n || r)}>
-          <b class="n">${n ? hn(e, n) : "–"}</b>
-          <small>${t}${r ? ` · ${hn(e, r)} trip${hn(e, r) === "1" ? "" : "s"}` : ""}</small>
-        </button>` : A, d = (t, r, i, a = !1) => t ? D`<button class="sq vact" ?disabled=${R(e.hass, t)?.state === "unavailable"} title=${r}
-          @click=${() => a ? e.confirm(`${r}?`, `${n}: ${r.toLowerCase()} now.`, () => vn(e, t), r) : vn(e, t)}>${G(i, 18)}<span>${r}</span></button>` : A;
-	return D`<section class="glass card vehicle">
+	}, l = (t, n, r) => n ? k`<button class="vstat" @click=${() => e.moreInfo(n)}><b class="n">${gn(e, n)}</b><small>${t}${r ? ` · ${r}` : ""}</small></button>` : M, u = (t, n, r) => n || r ? k`<button class="vstat" @click=${() => e.moreInfo(n || r)}>
+          <b class="n">${n ? gn(e, n) : "–"}</b>
+          <small>${t}${r ? ` · ${gn(e, r)} trip${gn(e, r) === "1" ? "" : "s"}` : ""}</small>
+        </button>` : M, d = (t, r, i, a = !1) => t ? k`<button class="sq vact" ?disabled=${z(e.hass, t)?.state === "unavailable"} title=${r}
+          @click=${() => a ? e.confirm(`${r}?`, `${n}: ${r.toLowerCase()} now.`, () => yn(e, t), r) : yn(e, t)}>${G(i, 18)}<span>${r}</span></button>` : M;
+	return k`<section class="glass card vehicle">
     <div class="row">
-      <h2>${G("car", 20)}<span class="vname">${n}${t.car_subtitle ? D`<small class="t2">${t.car_subtitle}</small>` : A}</span></h2>
-      ${r.text ? D`<button class="vlock ${r.state}" @click=${() => r.entity && e.moreInfo(r.entity)}>${G(r.state === "locked" ? "lock" : "unlock", 16)}${r.text}</button>` : A}
+      <h2>${G("car", 20)}<span class="vname">${n}${t.car_subtitle ? k`<small class="t2">${t.car_subtitle}</small>` : M}</span></h2>
+      ${r.text ? k`<button class="vlock ${r.state}" @click=${() => r.entity && e.moreInfo(r.entity)}>${G(r.state === "locked" ? "lock" : "unlock", 16)}${r.text}</button>` : M}
     </div>
     <div class="vbody">
-      <div class="vpic">${a ? D`<img src=${a} alt=${n} loading="lazy" />` : _n()}</div>
+      <div class="vpic">${a ? k`<img src=${a} alt=${n} loading="lazy" />` : vn()}</div>
       <div class="vstats">
         ${l("Range", t.car_range)}
         ${l("Odometer", t.car_odometer)}
-        ${t.car_location ? D`<button class="vstat" @click=${() => e.moreInfo(t.car_location)}><b>${hn(e, t.car_location)}</b><small>Location${s && !z(s) ? ` · ${K(e.hass, s.last_changed)}` : ""}</small></button>` : A}
+        ${t.car_location ? k`<button class="vstat" @click=${() => e.moreInfo(t.car_location)}><b>${gn(e, t.car_location)}</b><small>Location${s && !B(s) ? ` · ${K(e.hass, s.last_changed)}` : ""}</small></button>` : M}
         ${u("Today", t.car_daily_distance, t.car_daily_trips)}
         ${u("This month", t.car_monthly_distance, t.car_monthly_trips)}
       </div>
@@ -4145,100 +4322,100 @@ var tn = Zt(en), nn = {
     <div class="vfoot">
       <span class="t2 vupd">${o ? `Updated ${K(e.hass, o)}` : "No update time"}</span>
       <div class="vacts">
-        ${t.car_lock ? D`<button class="sq vact" ?disabled=${r.state === "unknown" || r.state === "moving"} @click=${() => c(r.state === "locked" ? "unlock" : "lock")}>
-              ${G(r.state === "locked" ? "unlock" : "lock", 18)}<span>${r.state === "locked" ? "Unlock" : "Lock"}</span></button>` : A}
+        ${t.car_lock ? k`<button class="sq vact" ?disabled=${r.state === "unknown" || r.state === "moving"} @click=${() => c(r.state === "locked" ? "unlock" : "lock")}>
+              ${G(r.state === "locked" ? "unlock" : "lock", 18)}<span>${r.state === "locked" ? "Unlock" : "Lock"}</span></button>` : M}
         ${d(t.car_flash, "Flash lights", "bulb")}
         ${d(t.car_horn, "Honk horn", "horn", !0)}
         ${d(t.car_refresh, "Update data", "refresh")}
       </div>
     </div>
   </section>`;
-}, bn = 2, xn = (e, t) => {
-	let n = V(e.hass, t.power);
+}, xn = 2, Sn = (e, t) => {
+	let n = kt(e.hass, t.power);
 	return n === void 0 ? void 0 : n * 1e3;
-}, Sn = (e, t) => {
+}, Cn = (e, t) => {
 	if (e === void 0) return "var(--atlas-text2)";
 	let n = e / (t || 3e3);
 	return n < .65 ? "var(--atlas-accent)" : n < .85 ? "var(--atlas-warn)" : "var(--atlas-crit)";
-}, Cn = (e) => e === void 0 ? "–" : Math.abs(e) >= 1e4 ? `${(e / 1e3).toFixed(2)} kW` : `${Math.round(e)} W`, wn = (e, t) => {
+}, wn = (e) => e === void 0 ? "–" : Math.abs(e) >= 1e4 ? `${(e / 1e3).toFixed(2)} kW` : `${Math.round(e)} W`, Tn = (e, t) => {
 	let n = Math.max(0, Math.min(1, e));
-	return O`<svg class="ering" width="96" height="96" viewBox="0 0 100 100" aria-hidden="true">
+	return A`<svg class="ering" width="96" height="96" viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(241,245,255,0.08)" stroke-width="8" stroke-linecap="round"
       pathLength="100" stroke-dasharray="75 100" transform="rotate(135 50 50)"></circle>
-    ${n > 0 ? O`<circle cx="50" cy="50" r="42" fill="none" stroke=${t} stroke-width="8" stroke-linecap="round"
-          pathLength="100" stroke-dasharray=${`${(n * 75).toFixed(1)} 100`} transform="rotate(135 50 50)"></circle>` : A}
+    ${n > 0 ? A`<circle cx="50" cy="50" r="42" fill="none" stroke=${t} stroke-width="8" stroke-linecap="round"
+          pathLength="100" stroke-dasharray=${`${(n * 75).toFixed(1)} 100`} transform="rotate(135 50 50)"></circle>` : M}
   </svg>`;
-}, Tn = (e, t) => {
-	if (!t.power) return A;
-	let n = Number(t.power_max) > 0 ? Number(t.power_max) : 3e3, r = xn(e, t), i = Sn(r, n), a = r === void 0 ? "Offline" : r < bn ? "Standby" : "Consuming", o = B(e.hass, t.power_energy), s = B(e.hass, t.power_current);
-	return D`<section class="glass card rpower">
-    <div class="row"><h2>${G("power", 20)}Power</h2><span class="n t2" style="font-size:12px">of ${Cn(n)}</span></div>
+}, En = (e, t) => {
+	if (!t.power) return M;
+	let n = Number(t.power_max) > 0 ? Number(t.power_max) : 3e3, r = Sn(e, t), i = Cn(r, n), a = r === void 0 ? "Offline" : r < xn ? "Standby" : "Consuming", o = V(e.hass, t.power_energy), s = V(e.hass, t.power_current);
+	return k`<section class="glass card rpower">
+    <div class="row"><h2>${G("power", 20)}Power</h2><span class="n t2" style="font-size:12px">of ${wn(n)}</span></div>
     <button class="rpbody" @click=${() => e.moreInfo(t.power)}>
-      <span class="rpring">${wn(r === void 0 ? 0 : r / n, i)}<b class="n" style="color:${i}">${Cn(r)}</b></span>
+      <span class="rpring">${Tn(r === void 0 ? 0 : r / n, i)}<b class="n" style="color:${i}">${wn(r)}</b></span>
       <span class="rptxt">
         <b style="color:${i}">${a}</b>
-        ${t.power_energy ? D`<small class="t2">Energy <span class="n">${o === void 0 ? "–" : `${o.toFixed(2)} kWh`}</span></small>` : A}
-        ${t.power_current ? D`<small class="t2">Current <span class="n">${s === void 0 ? "–" : `${s.toFixed(2)} A`}</span></small>` : A}
+        ${t.power_energy ? k`<small class="t2">Energy <span class="n">${o === void 0 ? "–" : `${o.toFixed(2)} kWh`}</span></small>` : M}
+        ${t.power_current ? k`<small class="t2">Current <span class="n">${s === void 0 ? "–" : `${s.toFixed(2)} A`}</span></small>` : M}
       </span>
     </button>
   </section>`;
-}, q = {
+}, Dn = {
 	start: 1,
 	pause: 2,
 	dock: 4
-}, En = {
+}, On = {
 	mowing: "Mowing",
 	paused: "Paused",
 	returning: "Returning",
 	docked: "Docked",
 	idle: "Idle",
 	error: "Error"
-}, Dn = (e) => {
-	let t = Number(e?.attributes.supported_features ?? 0), n = !!e && !z(e);
+}, kn = (e) => {
+	let t = Number(e?.attributes.supported_features ?? 0), n = !!e && !B(e);
 	return {
-		start: (t & q.start) !== 0 && n && e.state !== "mowing",
-		pause: (t & q.pause) !== 0 && n && e.state !== "paused" && ["mowing", "returning"].includes(e.state),
-		dock: (t & q.dock) !== 0 && n && e.state !== "docked",
-		showStart: (t & q.start) !== 0,
-		showPause: (t & q.pause) !== 0,
-		showDock: (t & q.dock) !== 0
+		start: (t & Dn.start) !== 0 && n && e.state !== "mowing",
+		pause: (t & Dn.pause) !== 0 && n && e.state !== "paused" && ["mowing", "returning"].includes(e.state),
+		dock: (t & Dn.dock) !== 0 && n && e.state !== "docked",
+		showStart: (t & Dn.start) !== 0,
+		showPause: (t & Dn.pause) !== 0,
+		showDock: (t & Dn.dock) !== 0
 	};
-}, On = (e, t) => {
-	if (!t.mower) return A;
-	let n = R(e.hass, t.mower), r = t.mower_name || String(n?.attributes.friendly_name ?? "Mower"), i = n ? z(n) ? "Unavailable" : En[n.state] ?? H(e.hass, n) : "Not found", a = !n || z(n) || n.state === "error" ? "bad" : n.state === "mowing" ? "on" : n.state === "returning" || n.state === "paused" ? "mid" : "", o = B(e.hass, t.mower_battery), s = o === void 0 ? "var(--atlas-text2)" : o > 50 ? "var(--atlas-accent)" : o > 20 ? "var(--atlas-warn)" : "var(--atlas-crit)", c = Dn(n), l = (n) => e.call("lawn_mower", n, { entity_id: t.mower }), u = c.showPause && n && ["mowing", "returning"].includes(n.state);
-	return D`<section class="glass card mower">
+}, An = (e, t) => {
+	if (!t.mower) return M;
+	let n = z(e.hass, t.mower), r = t.mower_name || String(n?.attributes.friendly_name ?? "Mower"), i = n ? B(n) ? "Unavailable" : On[n.state] ?? H(e.hass, n) : "Not found", a = !n || B(n) || n.state === "error" ? "bad" : n.state === "mowing" ? "on" : n.state === "returning" || n.state === "paused" ? "mid" : "", o = V(e.hass, t.mower_battery), s = o === void 0 ? "var(--atlas-text2)" : o > 50 ? "var(--atlas-accent)" : o > 20 ? "var(--atlas-warn)" : "var(--atlas-crit)", c = kn(n), l = (n) => e.call("lawn_mower", n, { entity_id: t.mower }), u = c.showPause && n && ["mowing", "returning"].includes(n.state);
+	return k`<section class="glass card mower">
     <div class="row">
       <h2>${G("mower", 20)}${r}</h2>
       <button class="mbadge ${a}" @click=${() => e.moreInfo(t.mower)}>${i}</button>
     </div>
-    <span class="t2" style="font-size:12px">${n && !z(n) ? `${i} since ${K(e.hass, n.last_changed)}` : t.mower}</span>
-    ${t.mower_battery ? D`<button class="mbatt" @click=${() => e.moreInfo(t.mower_battery)}>
+    <span class="t2" style="font-size:12px">${n && !B(n) ? `${i} since ${K(e.hass, n.last_changed)}` : t.mower}</span>
+    ${t.mower_battery ? k`<button class="mbatt" @click=${() => e.moreInfo(t.mower_battery)}>
           <small class="t2">Battery</small><i class="mbar"><i style="width:${o === void 0 ? 0 : Math.max(0, Math.min(100, o))}%;background:${s}"></i></i>
           <b class="n" style="color:${s}">${o === void 0 ? "–" : `${Math.round(o)} %`}</b>
-        </button>` : A}
+        </button>` : M}
     <div class="mbtns">
-      ${u ? D`<button class="sq" ?disabled=${!c.pause} @click=${() => l("pause")}>Pause</button>` : c.showStart ? D`<button class="sq on" ?disabled=${!c.start} @click=${() => l("start_mowing")}>Start mowing</button>` : A}
-      ${c.showDock ? D`<button class="sq" ?disabled=${!c.dock} @click=${() => l("dock")}>Return to dock</button>` : A}
+      ${u ? k`<button class="sq" ?disabled=${!c.pause} @click=${() => l("pause")}>Pause</button>` : c.showStart ? k`<button class="sq on" ?disabled=${!c.start} @click=${() => l("start_mowing")}>Start mowing</button>` : M}
+      ${c.showDock ? k`<button class="sq" ?disabled=${!c.dock} @click=${() => l("dock")}>Return to dock</button>` : M}
     </div>
   </section>`;
-}, kn = (e, t) => {
-	let n = B(e.hass, t.salt_level);
+}, jn = (e, t) => {
+	let n = V(e.hass, t.salt_level);
 	if (n !== void 0) return Math.max(0, Math.min(100, n > 1 ? n : n * 100));
-}, An = (e) => Number.isFinite(Number(e.salt_warn_below)) && e.salt_warn_below !== void 0 ? Number(e.salt_warn_below) : 30, jn = (e) => e === void 0 ? "var(--atlas-text2)" : e < 30 ? "var(--atlas-crit)" : e < 60 ? "var(--atlas-warn)" : "var(--atlas-accent)", Mn = (e, t) => {
-	if (!t.salt_level) return A;
-	let n = kn(e, t), r = n !== void 0 && n < An(t), i = jn(n), a = R(e.hass, t.salt_distance);
-	return D`<section class="glass card salt">
-    <div class="row"><h2>${G("drop", 20)}${t.salt_name || "Salt level"}</h2>${r ? D`<span class="badge">Buy salt</span>` : A}</div>
+}, Mn = (e) => Number.isFinite(Number(e.salt_warn_below)) && e.salt_warn_below !== void 0 ? Number(e.salt_warn_below) : 30, Nn = (e) => e === void 0 ? "var(--atlas-text2)" : e < 30 ? "var(--atlas-crit)" : e < 60 ? "var(--atlas-warn)" : "var(--atlas-accent)", Pn = (e, t) => {
+	if (!t.salt_level) return M;
+	let n = jn(e, t), r = n !== void 0 && n < Mn(t), i = Nn(n), a = z(e.hass, t.salt_distance);
+	return k`<section class="glass card salt">
+    <div class="row"><h2>${G("drop", 20)}${t.salt_name || "Salt level"}</h2>${r ? k`<span class="badge">Buy salt</span>` : M}</div>
     <button class="saltbody" @click=${() => e.moreInfo(t.salt_level)}>
       <span class="salttank"><i style="height:${n ?? 0}%;background:${i}"></i></span>
       <span class="rptxt">
         <b class="n" style="font-size:30px;color:${i}">${n === void 0 ? "–" : `${Math.round(n)} %`}</b>
-        <small class="t2">${n === void 0 ? "Sensor unavailable" : r ? `Below ${An(t)} %, refill the softener` : "full"}</small>
-        ${t.salt_distance ? D`<small class="t2">Reading <span class="n">${a && !z(a) ? H(e.hass, a) : "–"}</span></small>` : A}
+        <small class="t2">${n === void 0 ? "Sensor unavailable" : r ? `Below ${Mn(t)} %, refill the softener` : "full"}</small>
+        ${t.salt_distance ? k`<small class="t2">Reading <span class="n">${a && !B(a) ? H(e.hass, a) : "–"}</span></small>` : M}
       </span>
     </button>
   </section>`;
-}, Nn = (e) => [
+}, Fn = (e) => [
 	e.power,
 	e.power_energy,
 	e.power_current,
@@ -4246,75 +4423,173 @@ var tn = Zt(en), nn = {
 	e.mower_battery,
 	e.salt_level,
 	e.salt_distance
-].filter((e) => !!e), Pn = (e, t = " °C") => e === void 0 ? "–" : `${e.toFixed(1)}${t}`, Fn = (e) => e === void 0 ? "" : `${Math.round(e)} % RH`, In = (e, t) => {
+].filter((e) => !!e), In = (e) => !!e && [
+	"on",
+	"true",
+	"home",
+	"open"
+].includes(e.state.toLowerCase()), Ln = (e, t) => {
+	let n = z(e.hass, t);
+	return !n || B(n) ? "–" : H(e.hass, n);
+}, Rn = (e, t) => {
+	if (In(z(e.hass, t.entity))) return !0;
+	let n = z(e.hass, t.operation)?.state.toLowerCase() ?? "";
+	return [
+		"run",
+		"active",
+		"heat",
+		"progress"
+	].some((e) => n.includes(e));
+}, zn = (e) => {
+	let t = e.toLowerCase();
+	return t.includes("ready") ? "ready" : [
+		"run",
+		"active",
+		"heat",
+		"progress"
+	].some((e) => t.includes(e)) ? "active" : "idle";
+}, Bn = (e, t) => {
+	let n = z(e.hass, t);
+	if (!n || B(n)) return "–";
+	let r = Date.parse(n.state);
+	if (n.attributes.device_class === "timestamp" || Number.isFinite(r) && /\d{4}-\d{2}-\d{2}T/.test(n.state)) {
+		let t = e.hass.locale?.language ?? e.hass.language ?? "en", n = new Date(r).toLocaleTimeString(t, {
+			hour: "2-digit",
+			minute: "2-digit"
+		}), i = Math.round((r - Date.now()) / 6e4);
+		return i > 0 ? `${n} · ${i >= 60 ? `${Math.floor(i / 60)} h ${i % 60}` : `${i} min`}` : n;
+	}
+	return H(e.hass, n);
+}, Vn = (e, t) => {
+	let n = Math.max(0, Math.min(1, e));
+	return A`<svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(241,245,255,0.1)" stroke-width="4"></circle>
+    ${n > 0 ? A`<circle cx="24" cy="24" r="20" fill="none" stroke=${t} stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray=${`${(n * 100).toFixed(1)} 100`} transform="rotate(-90 24 24)"></circle>` : M}
+  </svg>`;
+}, Hn = (e, t) => {
+	let n = z(e.hass, t.entity), r = Rn(e, t), i = !!t.entity && B(n), a = In(n), o = i ? "–" : a || r ? "On" : "Off", s = V(e.hass, t.temperature), c = Number(t.temperature_max) > 0 ? Number(t.temperature_max) : 300, l = s === void 0 ? "var(--atlas-text2)" : s / c > .6 ? "var(--atlas-crit)" : s / c > .25 ? "var(--atlas-warn)" : "var(--atlas-accent)", u = String(z(e.hass, t.temperature)?.attributes.unit_of_measurement ?? "°C"), d = z(e.hass, t.operation), f = z(e.hass, t.door), p = !!f && !B(f) && (In(f) || f.state.toLowerCase() === "open"), m = V(e.hass, t.progress), h = V(e.hass, t.setpoint), g = [];
+	if (t.setpoint && g.push(["Setpoint", h !== void 0 && h > 0 ? `${Math.round(h)}${u}` : "–"]), t.program && g.push(["Program", Ln(e, t.program)]), t.progress && g.push(["Progress", m !== void 0 && m > 0 ? `${Math.round(m)} %` : "–"]), t.finish && g.push(["Finish", Bn(e, t.finish)]), t.remote) {
+		let n = z(e.hass, t.remote);
+		g.push(["Remote start", k`<i class="adot ${In(n) ? "on" : ""}"></i>${Ln(e, t.remote)}`]);
+	}
+	let _ = (t) => {
+		let n = z(e.hass, t);
+		return !!n && n.state !== "unavailable";
+	}, ee = r ? (t.controls ?? []).filter(_) : [], te = (n) => {
+		let r = z(e.hass, n), i = R(n), a = String(r.attributes.friendly_name ?? n).replace(RegExp(`^${t.name}\\s*`, "i"), ""), o = ["switch", "input_boolean"].includes(i);
+		return k`<button class="actl ${o && r.state === "on" ? "on" : ""}" @click=${() => o ? e.call(i, "toggle", { entity_id: n }) : e.call(i, i === "script" ? "turn_on" : "press", { entity_id: n })}>${o ? k`<i class="adot ${r.state === "on" ? "on" : ""}"></i>` : M}${a}</button>`;
+	}, v = t.stop && r && _(t.stop) ? t.stop : void 0, y = n ? K(e.hass, n.last_changed) : "", b = t.entity || t.operation || t.program;
+	return k`<div class="appl ${r ? "run" : ""} ${i ? "na" : ""}">
+    <button class="ahead" @click=${() => b && e.moreInfo(b)}>
+      ${t.temperature ? k`<span class="aarc">${Vn(s === void 0 ? 0 : s / c, l)}<b class="n" style="color:${l}">${s === void 0 ? "–" : Math.round(s)}</b></span>` : k`<span class="chipi aico">${t.icon ? k`<ha-icon .icon=${t.icon} style="--mdc-icon-size:20px"></ha-icon>` : G(/oven|stove|cook/i.test(t.name) ? "oven" : "washer", 20)}</span>`}
+      <span class="atxt">
+        <b>${t.name}</b>
+        <small class="t2">
+          ${d && !B(d) ? k`<span class="apill ${zn(d.state)}"><i></i>${H(e.hass, d)}</span>` : M}
+          ${f && !B(f) ? k`<span class="adoor ${p ? "open" : ""}">${G("door", 13)}${H(e.hass, f)}</span>` : M}
+          ${(!d || B(d)) && (!f || B(f)) ? y : M}
+        </small>
+      </span>
+      <span class="abadge ${o === "On" ? "on" : ""}">${o}</span>
+    </button>
+    ${g.length ? k`<div class="astrip" style="grid-template-columns:repeat(${Math.min(g.length, 4)}, minmax(0, 1fr))">
+          ${g.map(([e, t]) => k`<span><small>${e}</small><b class="n">${t}</b></span>`)}
+        </div>` : M}
+    ${m !== void 0 && m > 0 ? k`<i class="aprog"><i style="width:${Math.min(100, m)}%"></i></i>` : M}
+    ${ee.length || v ? k`<div class="actls">
+          ${ee.map(te)}
+          ${v ? k`<button class="actl stop" @click=${() => e.confirm(`Stop ${t.name}?`, "The running program will be cancelled.", () => e.call(R(v), R(v) === "script" ? "turn_on" : "press", { entity_id: v }), "Stop")}>Stop</button>` : M}
+        </div>` : M}
+  </div>`;
+}, Un = (e, t) => {
+	let n = (t.appliances ?? []).filter((e) => e && e.name);
+	if (!n.length) return M;
+	let r = n.filter((t) => Rn(e, t)).length;
+	return k`<section class="glass card appliances">
+    <div class="row"><h2>${G("oven", 20)}Appliances</h2><span class="n t2" style="font-size:12px">${r ? `${r} running` : "All idle"}</span></div>
+    <div class="appls">${n.map((t) => Hn(e, t))}</div>
+  </section>`;
+}, Wn = (e) => (e.appliances ?? []).flatMap((e) => [
+	e.entity,
+	e.operation,
+	e.program,
+	e.door,
+	e.temperature,
+	e.setpoint,
+	e.progress,
+	e.finish,
+	e.remote,
+	e.stop,
+	...e.controls ?? []
+]).filter((e) => !!e), Gn = (e, t = " °C") => e === void 0 ? "–" : `${e.toFixed(1)}${t}`, Kn = (e) => e === void 0 ? "" : `${Math.round(e)} % RH`, qn = (e, t) => {
 	if (e.config.appearance?.light_mood === !1) return;
-	let n = S(e.config, t);
+	let n = w(e.config, t);
 	if (!n.length) return;
-	let { on: r, level: i, brightness: a } = me(e.hass, n);
+	let { on: r, level: i, brightness: a } = fe(e.hass, n);
 	return {
 		state: r === 0 ? "dark" : i >= .95 ? "lit" : "part",
 		vars: r === 0 ? "--lb:0.42;--ls:0.55;--lg:0" : `--lb:${(.6 + .45 * i).toFixed(2)};--ls:${(.8 + .32 * i).toFixed(2)};--lg:${(.28 * i).toFixed(2)}`,
 		text: r === 0 ? "Off" : a < 100 ? `${r} on · ${a} %` : `${r} on`,
 		ids: n
 	};
-}, Ln = (e, t, n = "", r) => {
-	let i = B(e.hass, t.temperature), a = B(e.hass, t.humidity), o = e.badges.get(t.id), s = ce(e.config, t), c = t.temperature || t.humidity ? Fn(a) || (t.humidity ? "no reading" : "") : "no climate sensor", l = s ? In(e, t) : void 0;
-	return D`<button class="tile ${n} ${o ? "alert" : ""} ${l ? `mood ${l.state}` : ""}" style=${l?.vars ?? ""} aria-label="Open ${t.name}" @click=${() => e.openRoom(t)}>
-    ${s ? D`<img src=${s} alt="" loading="lazy" />${l ? D`<span class="glow"></span>` : A}<span class="shade"></span>` : A}
-    <span class="top">${W(t.icon, 26)}<span class="tright">${l ? D`<span class="lchip ${l.state}" title="Room lights">${G("bulb", 13)}${l.text}</span>` : A}${o ? D`<span class="badge ${o.severity === "critical" ? "critical" : ""}">${o.text}</span>` : A}</span></span>
+}, Jn = (e, t, n = "", r) => {
+	let i = V(e.hass, t.temperature), a = V(e.hass, t.humidity), o = e.badges.get(t.id), s = oe(e.config, t), c = t.temperature || t.humidity ? Kn(a) || (t.humidity ? "no reading" : "") : "no climate sensor", l = s ? qn(e, t) : void 0;
+	return k`<button class="tile ${n} ${o ? "alert" : ""} ${l ? `mood ${l.state}` : ""}" style=${l?.vars ?? ""} aria-label="Open ${t.name}" @click=${() => e.openRoom(t)}>
+    ${s ? k`<img src=${s} alt="" loading="lazy" />${l ? k`<span class="glow"></span>` : M}<span class="shade"></span>` : M}
+    <span class="top">${W(t.icon, 26)}<span class="tright">${l ? k`<span class="lchip ${l.state}" title="Room lights">${G("bulb", 13)}${l.text}</span>` : M}${o ? k`<span class="badge ${o.severity === "critical" ? "critical" : ""}">${o.text}</span>` : M}</span></span>
     <span class="bot">
       <span class="info">
         <span class="name">${t.name}</span>
-        ${t.temperature ? D`<span class="temp n ${e.hot.has(t.id) ? "hot" : ""}">${Pn(i)}</span>` : A}
+        ${t.temperature ? k`<span class="temp n ${e.hot.has(t.id) ? "hot" : ""}">${Gn(i)}</span>` : M}
         <span class="hum n">${[c, r].filter(Boolean).join(" · ")}</span>
       </span>
       <span class="go">${W("chevron", 14)}</span>
     </span>
   </button>`;
-}, Rn = {
+}, Yn = {
 	critical: "var(--atlas-crit)",
 	warning: "var(--atlas-warn)",
 	info: "var(--atlas-info)"
-}, zn = (e, t, n) => {
+}, Xn = (e, t, n) => {
 	let r = (Array.isArray(t) ? t : t && typeof t == "object" ? [t] : []).filter((e) => e && typeof e == "object");
-	return r.length ? D`<div class="owncards ${n}">${r.map((t) => D`<atlas-hui-card .config=${t} .hass=${e.hass}></atlas-hui-card>`)}</div>` : A;
-}, J = (e, ...t) => t.some((t) => e.includes(t)), Bn = [
+	return r.length ? k`<div class="owncards ${n}">${r.map((t) => k`<atlas-hui-card .config=${t} .hass=${e.hass}></atlas-hui-card>`)}</div>` : M;
+}, q = (e, ...t) => t.some((t) => e.includes(t)), Zn = [
 	"door",
 	"garage_door",
 	"opening",
 	"window"
-], Vn = [
+], Qn = [
 	"motion",
 	"occupancy",
 	"presence"
-], Hn = (e) => {
-	if (!e || L(e.entity_id) !== "binary_sensor") return !1;
+], $n = (e) => {
+	if (!e || R(e.entity_id) !== "binary_sensor") return !1;
 	let t = String(e.attributes.device_class ?? "");
-	return Vn.includes(t) ? !1 : Bn.includes(t) || J(e.entity_id, "contact", "window", "door", "skylight", "velux");
-}, Un = (e) => {
-	if (!e || L(e.entity_id) !== "binary_sensor" || Hn(e)) return !1;
+	return Qn.includes(t) ? !1 : Zn.includes(t) || q(e.entity_id, "contact", "window", "door", "skylight", "velux");
+}, er = (e) => {
+	if (!e || R(e.entity_id) !== "binary_sensor" || $n(e)) return !1;
 	let t = String(e.attributes.device_class ?? "");
-	return Vn.includes(t) || J(e.entity_id, "motion", "presence", "occupancy");
-}, Wn = (e, t) => {
-	let n = L(e), r = String(t?.attributes.device_class ?? "");
-	return n === "binary_sensor" ? r === "window" || J(e, "window", "skylight", "velux") ? "window" : r === "garage_door" ? "garage" : J(e, "mailbox", "letterbox") ? "mail" : r === "door" || r === "opening" || J(e, "door") ? "door" : Vn.includes(r) || J(e, "motion", "presence", "person", "occupancy") ? "motion" : "dot" : n === "light" ? "bulb" : n === "fan" ? "fan" : n === "media_player" ? "tv" : n === "cover" ? "garage" : n === "camera" ? "camera" : n === "climate" ? "heat" : n === "switch" ? J(e, "water", "valve", "irrig") ? "drop" : "power" : n === "select" ? "washer" : J(e, "print") ? "printer" : J(e, "mower") ? "mower" : J(e, "oven") ? "oven" : J(e, "washer", "dryer") ? "washer" : r === "temperature" ? "thermo" : r === "battery" ? "power" : "dot";
-}, Gn = [
+	return Qn.includes(t) || q(e.entity_id, "motion", "presence", "occupancy");
+}, tr = (e, t) => {
+	let n = R(e), r = String(t?.attributes.device_class ?? "");
+	return n === "binary_sensor" ? r === "window" || q(e, "window", "skylight", "velux") ? "window" : r === "garage_door" ? "garage" : q(e, "mailbox", "letterbox") ? "mail" : r === "door" || r === "opening" || q(e, "door") ? "door" : Qn.includes(r) || q(e, "motion", "presence", "person", "occupancy") ? "motion" : "dot" : n === "light" ? "bulb" : n === "fan" ? "fan" : n === "media_player" ? "tv" : n === "cover" ? "garage" : n === "camera" ? "camera" : n === "climate" ? "heat" : n === "switch" ? q(e, "water", "valve", "irrig") ? "drop" : "power" : n === "select" ? "washer" : q(e, "print") ? "printer" : q(e, "mower") ? "mower" : q(e, "oven") ? "oven" : q(e, "washer", "dryer") ? "washer" : r === "temperature" ? "thermo" : r === "battery" ? "power" : "dot";
+}, nr = [
 	"light",
 	"switch",
 	"fan",
 	"input_boolean"
-], Kn = [
+], rr = [
 	"button",
 	"input_button",
 	"script"
-], qn = (e) => e.tap ?? (Gn.includes(L(e.entity)) ? "toggle" : "more-info"), Jn = 1, Yn = 2, Xn = 8, Zn = (e) => {
+], ir = (e) => e.tap ?? (nr.includes(R(e.entity)) ? "toggle" : "more-info"), ar = 1, or = 2, sr = 8, cr = (e) => {
 	let t = Number(e?.attributes.supported_features ?? 0);
 	return {
-		open: (t & Jn) !== 0,
-		close: (t & Yn) !== 0,
-		stop: (t & Xn) !== 0
+		open: (t & ar) !== 0,
+		close: (t & or) !== 0,
+		stop: (t & sr) !== 0
 	};
-}, Qn = (e) => {
+}, lr = (e) => {
 	if (!e || e.state === "unavailable") return {
 		open: !1,
 		close: !1,
@@ -4326,28 +4601,28 @@ var tn = Zt(en), nn = {
 		close: t || !a && e.state !== "closing",
 		stop: !0
 	};
-}, $n = (e, t) => e.confirm ?? ["garage", "gate"].includes(String(t?.attributes.device_class ?? "")), er = (e) => !!e && e.state === "unknown" && ["button", "input_button"].includes(L(e.entity_id)), tr = (e) => {
-	if (er(e)) return "idle";
-	if (z(e)) return "na";
-	let t = L(e.entity_id), n = e.state;
-	return t === "binary_sensor" ? n === "on" ? Hn(e) ? "open" : "on" : "idle" : t === "cover" ? n === "open" || n === "opening" ? "open" : "idle" : Gn.includes(t) ? n === "on" ? "on" : "idle" : t === "media_player" ? [
+}, ur = (e, t) => e.confirm ?? ["garage", "gate"].includes(String(t?.attributes.device_class ?? "")), dr = (e) => !!e && e.state === "unknown" && ["button", "input_button"].includes(R(e.entity_id)), fr = (e) => {
+	if (dr(e)) return "idle";
+	if (B(e)) return "na";
+	let t = R(e.entity_id), n = e.state;
+	return t === "binary_sensor" ? n === "on" ? $n(e) ? "open" : "on" : "idle" : t === "cover" ? n === "open" || n === "opening" ? "open" : "idle" : nr.includes(t) ? n === "on" ? "on" : "idle" : t === "media_player" ? [
 		"off",
 		"standby",
 		"idle"
 	].includes(n) ? "idle" : "on" : t === "climate" ? n === "off" ? "idle" : "on" : "idle";
-}, nr = (e, t) => {
+}, pr = (e, t) => {
 	if (!t) return "Not found";
 	if (t.state === "unavailable") return "Unavailable";
-	if (er(t)) return "Never pressed";
+	if (dr(t)) return "Never pressed";
 	if (t.state === "unknown") return "Unknown";
-	let n = L(t.entity_id);
+	let n = R(t.entity_id);
 	if (n === "light" && t.state === "on" && typeof t.attributes.brightness == "number") return `On · ${Math.round(t.attributes.brightness / 255 * 100)} %`;
 	if (n === "climate") {
 		let e = t.attributes.hvac_action ? String(t.attributes.hvac_action) : t.state, n = t.attributes.current_temperature;
 		return `${e.charAt(0).toUpperCase()}${e.slice(1)}${n == null ? "" : ` · ${n} °C`}`;
 	}
 	return H(e, t);
-}, rr = (e, t) => t.name || String(e.states[t.entity]?.attributes.friendly_name ?? t.entity), ir = [
+}, mr = (e, t) => t.name || String(e.states[t.entity]?.attributes.friendly_name ?? t.entity), hr = [
 	{
 		state: "armed_home",
 		label: "Home",
@@ -4383,215 +4658,215 @@ var tn = Zt(en), nn = {
 		service: "alarm_arm_custom_bypass",
 		g: "shield"
 	}
-], ar = (e) => {
+], gr = (e) => {
 	let t = Number(e?.attributes.supported_features ?? 0);
-	return ir.filter((e) => (t & e.feature) !== 0);
-}, or = (e, t) => !!e?.attributes.code_format && (!t || !!e.attributes.code_arm_required), sr = (e) => z(e) ? "na" : e.state === "triggered" ? "crit" : [
+	return hr.filter((e) => (t & e.feature) !== 0);
+}, _r = (e, t) => !!e?.attributes.code_format && (!t || !!e.attributes.code_arm_required), vr = (e) => B(e) ? "na" : e.state === "triggered" ? "crit" : [
 	"arming",
 	"pending",
 	"disarming"
-].includes(e.state) ? "warn" : e.state.startsWith("armed") ? "armed" : "calm", cr = (e, t) => ae(e.config, t) ?? String(e.hass.states[t]?.attributes.friendly_name ?? t), lr = (e) => {
+].includes(e.state) ? "warn" : e.state.startsWith("armed") ? "armed" : "calm", yr = (e, t) => re(e.config, t) ?? String(e.hass.states[t]?.attributes.friendly_name ?? t), br = (e) => {
 	let t = e.config.entities?.alarm;
-	if (!t) return A;
-	let n = R(e.hass, t), r = sr(n), i = ar(n), a = n?.attributes.changed_by, o = (r) => {
-		if (or(n, !0)) return e.moreInfo(t);
+	if (!t) return M;
+	let n = z(e.hass, t), r = vr(n), i = gr(n), a = n?.attributes.changed_by, o = (r) => {
+		if (_r(n, !0)) return e.moreInfo(t);
 		e.confirm(`Arm ${r.label.toLowerCase()}?`, `The alarm will arm in ${r.label.toLowerCase()} mode.`, () => e.call("alarm_control_panel", r.service, { entity_id: t }), "Arm");
 	}, s = () => {
-		if (or(n, !1)) return e.moreInfo(t);
+		if (_r(n, !1)) return e.moreInfo(t);
 		e.confirm("Disarm the alarm?", `The alarm is ${n ? H(e.hass, n).toLowerCase() : "unknown"}.`, () => e.call("alarm_control_panel", "alarm_disarm", { entity_id: t }), "Disarm");
 	}, c = n?.state === "disarmed";
-	return D`<section class="glass card alarm ${r}">
+	return k`<section class="glass card alarm ${r}">
     <div class="row">
       <h2>${W("security", 20)}Alarm</h2>
       <button class="t2 more" @click=${() => e.moreInfo(t)}>Details ${W("chevron", 14)}</button>
     </div>
     <button class="astate" @click=${() => e.moreInfo(t)}>
       <span class="aico">${G(r === "calm" ? "shieldoff" : "shield", 30)}</span>
-      <span class="atxt"><b>${n ? z(n) ? "Unavailable" : H(e.hass, n) : "Not found"}</b>
-        <small class="t2">${n && !z(n) ? `Since ${K(e.hass, n.last_changed)}` : t}${a ? ` · by ${a}` : ""}</small></span>
+      <span class="atxt"><b>${n ? B(n) ? "Unavailable" : H(e.hass, n) : "Not found"}</b>
+        <small class="t2">${n && !B(n) ? `Since ${K(e.hass, n.last_changed)}` : t}${a ? ` · by ${a}` : ""}</small></span>
     </button>
     <div class="amodes">
-      ${i.map((e) => D`<button class="sq ${n?.state === e.state ? "on" : ""}" aria-pressed=${n?.state === e.state ? "true" : "false"}
-          ?disabled=${z(n) || n?.state === e.state} @click=${() => o(e)}>${G(e.g, 18)}<span>${e.label}</span></button>`)}
-      <button class="sq dis" ?disabled=${z(n) || c} @click=${s}>${G("shieldoff", 18)}<span>Disarm</span></button>
+      ${i.map((e) => k`<button class="sq ${n?.state === e.state ? "on" : ""}" aria-pressed=${n?.state === e.state ? "true" : "false"}
+          ?disabled=${B(n) || n?.state === e.state} @click=${() => o(e)}>${G(e.g, 18)}<span>${e.label}</span></button>`)}
+      <button class="sq dis" ?disabled=${B(n) || c} @click=${s}>${G("shieldoff", 18)}<span>Disarm</span></button>
     </div>
-    ${!i.length && n && !z(n) ? D`<p class="t2" style="font-size:12px;margin:0">This panel reports no arm modes. Use Details to control it.</p>` : A}
+    ${!i.length && n && !B(n) ? k`<p class="t2" style="font-size:12px;margin:0">This panel reports no arm modes. Use Details to control it.</p>` : M}
   </section>`;
-}, ur = (e, t, n, r, i = A) => {
-	let a = e.hass.states[t], o = x(e.config, t);
-	return D`<div class="srow ${r}">
+}, xr = (e, t, n, r, i = M) => {
+	let a = e.hass.states[t], o = C(e.config, t);
+	return k`<div class="srow ${r}">
     <button class="smain" @click=${() => e.moreInfo(t)}>
-      <span class="sic">${G(L(t) === "lock" ? a?.state === "locked" ? "lock" : "unlock" : Wn(t, a), 18)}</span>
-      <span class="atxt"><b>${cr(e, t)}</b><small class="t2">${o ? `${o.name} · ` : ""}${n}${a && !z(a) ? ` · ${K(e.hass, a.last_changed)}` : ""}</small></span>
+      <span class="sic">${G(R(t) === "lock" ? a?.state === "locked" ? "lock" : "unlock" : tr(t, a), 18)}</span>
+      <span class="atxt"><b>${yr(e, t)}</b><small class="t2">${o ? `${o.name} · ` : ""}${n}${a && !B(a) ? ` · ${K(e.hass, a.last_changed)}` : ""}</small></span>
     </button>
     ${i}
   </div>`;
-}, dr = (e) => {
-	let t = e.config.alerts ?? {}, n = h(e.config).flatMap((e) => (e.devices ?? []).map((e) => e.entity)).filter((t) => Hn(e.hass.states[t]) || L(t) === "cover"), r = new Set([t.mailbox].filter(Boolean));
+}, Sr = (e) => {
+	let t = e.config.alerts ?? {}, n = g(e.config).flatMap((e) => (e.devices ?? []).map((e) => e.entity)).filter((t) => $n(e.hass.states[t]) || R(t) === "cover"), r = new Set([t.mailbox].filter(Boolean));
 	return [.../* @__PURE__ */ new Set([
 		...t.exterior_doors ?? [],
 		...t.interior_doors ?? [],
 		...n
 	])].filter((e) => !r.has(e));
-}, fr = (e) => z(e) ? 1 : U(e) ? 0 : 2, pr = (e) => {
-	let t = dr(e);
-	if (!t.length) return A;
-	let n = new Set(e.config.alerts?.exterior_doors ?? []), r = [...t].sort((t, n) => fr(e.hass.states[t]) - fr(e.hass.states[n])), i = t.filter((t) => !z(e.hass.states[t]) && U(e.hass.states[t])).length, a = t.filter((t) => z(e.hass.states[t])).length;
-	return D`<section class="glass card">
+}, Cr = (e) => B(e) ? 1 : U(e) ? 0 : 2, wr = (e) => {
+	let t = Sr(e);
+	if (!t.length) return M;
+	let n = new Set(e.config.alerts?.exterior_doors ?? []), r = [...t].sort((t, n) => Cr(e.hass.states[t]) - Cr(e.hass.states[n])), i = t.filter((t) => !B(e.hass.states[t]) && U(e.hass.states[t])).length, a = t.filter((t) => B(e.hass.states[t])).length;
+	return k`<section class="glass card">
     <div class="row"><h2>${G("door", 20)}Doors and windows</h2>
       <span class="n t2" style="font-size:12px">${i} open · ${t.length - i - a} closed${a ? ` · ${a} n/a` : ""}</span></div>
     <div class="slist">
       ${r.map((t) => {
-		let r = e.hass.states[t], i = z(r), a = !i && U(r);
-		return ur(e, t, `${r ? i ? "Unavailable" : H(e.hass, r) : "Not found"}${n.has(t) ? " · exterior" : ""}`, i ? "na" : a ? n.has(t) ? "warn" : "open" : "");
+		let r = e.hass.states[t], i = B(r), a = !i && U(r);
+		return xr(e, t, `${r ? i ? "Unavailable" : H(e.hass, r) : "Not found"}${n.has(t) ? " · exterior" : ""}`, i ? "na" : a ? n.has(t) ? "warn" : "open" : "");
 	})}
     </div>
   </section>`;
-}, mr = (e) => [...new Set(h(e.config).flatMap((e) => [...(e.devices ?? []).map((e) => e.entity).filter((e) => L(e) === "lock"), ...e.car_lock ? [e.car_lock] : []]))], hr = (e) => {
-	let t = mr(e);
-	if (!t.length) return A;
+}, Tr = (e) => [...new Set(g(e.config).flatMap((e) => [...(e.devices ?? []).map((e) => e.entity).filter((e) => R(e) === "lock"), ...e.car_lock ? [e.car_lock] : []]))], Er = (e) => {
+	let t = Tr(e);
+	if (!t.length) return M;
 	let n = t.filter((t) => {
 		let n = e.hass.states[t];
-		return !z(n) && n.state !== "locked";
+		return !B(n) && n.state !== "locked";
 	}).length;
-	return D`<section class="glass card">
+	return k`<section class="glass card">
     <div class="row"><h2>${G("lock", 20)}Locks</h2><span class="n t2" style="font-size:12px">${n ? `${n} not locked` : "All locked"}</span></div>
     <div class="slist">
       ${t.map((t) => {
-		let n = e.hass.states[t], r = z(n), i = n?.state === "locked", a = [
+		let n = e.hass.states[t], r = B(n), i = n?.state === "locked", a = [
 			"locking",
 			"unlocking",
 			"opening"
-		].includes(n?.state ?? ""), o = cr(e, t);
-		return ur(e, t, n ? r ? "Unavailable" : H(e.hass, n) : "Not found", r ? "na" : i ? "" : "warn", D`<button class="sq sbtn" ?disabled=${r || a} @click=${() => {
+		].includes(n?.state ?? ""), o = yr(e, t);
+		return xr(e, t, n ? r ? "Unavailable" : H(e.hass, n) : "Not found", r ? "na" : i ? "" : "warn", k`<button class="sq sbtn" ?disabled=${r || a} @click=${() => {
 			if (n?.attributes.code_format) return e.moreInfo(t);
 			i ? e.confirm(`Unlock ${o}?`, `${o} is locked.`, () => e.call("lock", "unlock", { entity_id: t }), "Unlock") : e.call("lock", "lock", { entity_id: t });
 		}}>${G(i ? "unlock" : "lock", 16)}<span>${i ? "Unlock" : "Lock"}</span></button>`);
 	})}
     </div>
   </section>`;
-}, gr = (e) => {
-	let t = [...new Set(h(e.config).flatMap((e) => (e.devices ?? []).map((e) => e.entity)))].filter((t) => Un(e.hass.states[t]));
-	if (!t.length) return A;
+}, Dr = (e) => {
+	let t = [...new Set(g(e.config).flatMap((e) => (e.devices ?? []).map((e) => e.entity)))].filter((t) => er(e.hass.states[t]));
+	if (!t.length) return M;
 	let n = t.filter((t) => e.hass.states[t]?.state === "on"), r = [...t].sort((t, n) => Number(e.hass.states[n]?.state === "on") - Number(e.hass.states[t]?.state === "on"));
-	return D`<section class="glass card">
+	return k`<section class="glass card">
     <div class="row"><h2>${G("motion", 20)}Motion and presence</h2><span class="n t2" style="font-size:12px">${n.length ? `${n.length} detected` : "All clear"}</span></div>
     <div class="slist">
       ${r.map((t) => {
-		let n = e.hass.states[t], r = z(n);
-		return ur(e, t, n ? r ? "Unavailable" : H(e.hass, n) : "Not found", r ? "na" : n.state === "on" ? "open" : "");
+		let n = e.hass.states[t], r = B(n);
+		return xr(e, t, n ? r ? "Unavailable" : H(e.hass, n) : "Not found", r ? "na" : n.state === "on" ? "open" : "");
 	})}
     </div>
   </section>`;
-}, _r = (e, t, n, r, i = !1) => {
-	let a = R(e.hass, t), o = !i && !!a && !z(a) && !!a.attributes.entity_picture, s = o ? `${a.attributes.entity_picture}&width=640&height=360&t=${Math.floor(e.tick / 1e4)}` : void 0, c = !i && !o;
-	return D`<button class="cam ${c ? "na" : ""}" aria-label="${n} camera" @click=${r}>
-    ${s ? D`<img src=${s} alt="" />` : D`<span class="camna">${W("camera", 22)}${i ? "Private · open the room" : t ? "Camera unavailable" : "No camera"}</span>`}
+}, Or = (e, t, n, r, i = !1) => {
+	let a = z(e.hass, t), o = !i && !!a && !B(a) && !!a.attributes.entity_picture, s = o ? `${a.attributes.entity_picture}&width=640&height=360&t=${Math.floor(e.tick / 1e4)}` : void 0, c = !i && !o;
+	return k`<button class="cam ${c ? "na" : ""}" aria-label="${n} camera" @click=${r}>
+    ${s ? k`<img src=${s} alt="" />` : k`<span class="camna">${W("camera", 22)}${i ? "Private · open the room" : t ? "Camera unavailable" : "No camera"}</span>`}
     <span class="lbl"><i class="dotst ${c ? "na" : ""}"></i>${n}</span>
   </button>`;
-}, vr = (e) => {
-	let t = de(e.config);
-	return t.length ? D`<section class="glass card">
+}, kr = (e) => {
+	let t = le(e.config);
+	return t.length ? k`<section class="glass card">
     <div class="row"><h2>${W("camera", 20)}Cameras</h2><span class="n t2" style="font-size:12px">${t.length} camera${t.length === 1 ? "" : "s"} · stills every 10 s</span></div>
     <div class="cams scams">
-      ${t.map((t) => _r(e, t.camera, t.rooms.map((e) => e.name).join(" · "), () => e.openRoom(t.rooms[0]), t.rooms.some((e) => e.camera_private)))}
+      ${t.map((t) => Or(e, t.camera, t.rooms.map((e) => e.name).join(" · "), () => e.openRoom(t.rooms[0]), t.rooms.some((e) => e.camera_private)))}
     </div>
-  </section>` : A;
-}, yr = (e) => {
-	let t = R(e.hass, e.config.entities?.alarm), n = dr(e), r = n.filter((t) => !z(e.hass.states[t]) && U(e.hass.states[t])).length, i = de(e.config).length;
-	return D`
+  </section>` : M;
+}, Ar = (e) => {
+	let t = z(e.hass, e.config.entities?.alarm), n = Sr(e), r = n.filter((t) => !B(e.hass.states[t]) && U(e.hass.states[t])).length, i = le(e.config).length;
+	return k`
     <section class="hero" aria-label="Security">
       <h1 class="sm">Security</h1>
       <p class="n">${[
-		t ? z(t) ? "Alarm unavailable" : `Alarm ${H(e.hass, t).toLowerCase()}` : "",
+		t ? B(t) ? "Alarm unavailable" : `Alarm ${H(e.hass, t).toLowerCase()}` : "",
 		n.length ? `${r} open` : "",
 		i ? `${i} camera${i === 1 ? "" : "s"}` : ""
 	].filter(Boolean).join(" · ")}</p>
     </section>
     <div class="sec-grid">
-      <div class="col">${lr(e)}${pr(e)}${hr(e)}</div>
-      <div class="col">${vr(e)}${gr(e)}</div>
+      <div class="col">${br(e)}${wr(e)}${Er(e)}</div>
+      <div class="col">${kr(e)}${Dr(e)}</div>
     </div>
   `;
-}, br = (e) => {
+}, jr = (e) => {
 	let t = e.config.entities?.persons ?? [];
-	return t.length ? D`<div class="presence" role="list" aria-label="Presence: ${t.filter((t) => e.hass.states[t]?.state === "home").length} of ${t.length} home">
+	return t.length ? k`<div class="presence" role="list" aria-label="Presence: ${t.filter((t) => e.hass.states[t]?.state === "home").length} of ${t.length} home">
     ${t.map((t) => {
-		let n = e.hass.states[t], r = String(n?.attributes.friendly_name ?? t.split(".")[1] ?? t), i = z(n), a = n?.state === "home", o = n?.attributes.entity_picture, s = n ? i ? "Unknown" : H(e.hass, n) : "Not found";
-		return D`<button role="listitem" class="pchip ${a ? "home" : ""} ${i ? "na" : ""}" title="${r}: ${s}${n && !i ? `, ${K(e.hass, n.last_changed)}` : ""}"
+		let n = e.hass.states[t], r = String(n?.attributes.friendly_name ?? t.split(".")[1] ?? t), i = B(n), a = n?.state === "home", o = n?.attributes.entity_picture, s = n ? i ? "Unknown" : H(e.hass, n) : "Not found";
+		return k`<button role="listitem" class="pchip ${a ? "home" : ""} ${i ? "na" : ""}" title="${r}: ${s}${n && !i ? `, ${K(e.hass, n.last_changed)}` : ""}"
         @click=${() => e.moreInfo(t)}>
-        <span class="pav">${o ? D`<img src=${o} alt="" />` : r.charAt(0).toUpperCase()}<i></i></span>
+        <span class="pav">${o ? k`<img src=${o} alt="" />` : r.charAt(0).toUpperCase()}<i></i></span>
         <span class="ptxt"><b>${r}</b><small>${s}</small></span>
       </button>`;
 	})}
-  </div>` : A;
-}, Y = (e) => typeof e == "number" && Number.isFinite(e) ? Math.round(e) : void 0, xr = (e) => {
+  </div>` : M;
+}, J = (e) => typeof e == "number" && Number.isFinite(e) ? Math.round(e) : void 0, Mr = (e) => {
 	let t = e.config.entities?.weather;
-	if (!t) return A;
-	let n = R(e.hass, t);
-	if (z(n)) return A;
-	let r = n.attributes, i = Rt(n), a = e.ui.wxType && i.includes(e.ui.wxType) ? e.ui.wxType : i[0], o = (a ? e.forecasts[Ft(t, a)] : void 0) ?? (Array.isArray(r.forecast) ? r.forecast : []), s = e.hass.locale?.language ?? e.hass.language ?? "en", c = a === "hourly", l = (o ?? []).slice(0, c ? 6 : 5), u = (e) => {
+	if (!t) return M;
+	let n = z(e.hass, t);
+	if (B(n)) return M;
+	let r = n.attributes, i = zt(n), a = e.ui.wxType && i.includes(e.ui.wxType) ? e.ui.wxType : i[0], o = (a ? e.forecasts[It(t, a)] : void 0) ?? (Array.isArray(r.forecast) ? r.forecast : []), s = e.hass.locale?.language ?? e.hass.language ?? "en", c = a === "hourly", l = (o ?? []).slice(0, c ? 6 : 5), u = (e) => {
 		let t = new Date(e);
 		return Number.isNaN(t.getTime()) ? "" : c ? t.toLocaleTimeString(s, {
 			hour: "2-digit",
 			minute: "2-digit"
 		}) : t.toLocaleDateString(s, { weekday: "short" });
-	}, d = Y(r.temperature), f = String(r.temperature_unit ?? "°C"), p = Y(r.wind_speed), m = [p === void 0 ? "" : `Wind ${p} ${r.wind_speed_unit ?? "km/h"}${Wt(r.wind_bearing) ? ` ${Wt(r.wind_bearing)}` : ""}`, Y(r.humidity) === void 0 ? "" : `Humidity ${Y(r.humidity)} %`].filter(Boolean);
-	return D`<div class="wxstrip" role="group" aria-label="Weather forecast">
-    ${i.length > 1 ? D`<div class="wxseg" role="group" aria-label="Forecast type">
-          ${i.map((t) => D`<button class=${t === a ? "on" : ""} aria-pressed=${t === a ? "true" : "false"} @click=${() => {
+	}, d = J(r.temperature), f = String(r.temperature_unit ?? "°C"), p = J(r.wind_speed), m = [p === void 0 ? "" : `Wind ${p} ${r.wind_speed_unit ?? "km/h"}${Gt(r.wind_bearing) ? ` ${Gt(r.wind_bearing)}` : ""}`, J(r.humidity) === void 0 ? "" : `Humidity ${J(r.humidity)} %`].filter(Boolean);
+	return k`<div class="wxstrip" role="group" aria-label="Weather forecast">
+    ${i.length > 1 ? k`<div class="wxseg" role="group" aria-label="Forecast type">
+          ${i.map((t) => k`<button class=${t === a ? "on" : ""} aria-pressed=${t === a ? "true" : "false"} @click=${() => {
 		e.ui.wxType = t, e.refresh();
 	}}>${t === "daily" ? "Days" : "Hours"}</button>`)}
-        </div>` : A}
-    <button class="wxfc" title=${`${Vt(n.state)}${d === void 0 ? "" : ` ${d}${f}`}${m.length ? ` · ${m.join(" · ")}` : ""}`} @click=${() => e.moreInfo(t)}>
+        </div>` : M}
+    <button class="wxfc" title=${`${Ht(n.state)}${d === void 0 ? "" : ` ${d}${f}`}${m.length ? ` · ${m.join(" · ")}` : ""}`} @click=${() => e.moreInfo(t)}>
       ${l.length ? l.map((e) => {
-		let t = Y(e.temperature), n = Y(e.templow), r = Y(e.precipitation_probability);
-		return D`<span class="wxday">
+		let t = J(e.temperature), n = J(e.templow), r = J(e.precipitation_probability);
+		return k`<span class="wxday">
               <small>${u(e.datetime)}</small>
-              ${an(e.condition)}
-              <b class="n">${t === void 0 ? "–" : `${t}°`}${n === void 0 ? A : D`<span class="t2">${n}°</span>`}</b>
-              ${r ? D`<small class="wxpp">${r} %</small>` : A}
+              ${on(e.condition)}
+              <b class="n">${t === void 0 ? "–" : `${t}°`}${n === void 0 ? M : k`<span class="t2">${n}°</span>`}</b>
+              ${r ? k`<small class="wxpp">${r} %</small>` : M}
             </span>`;
-	}) : D`<span class="wxnone t2">${i.length ? "Loading forecast..." : `${Vt(n.state)} · no forecast`}</span>`}
+	}) : k`<span class="wxnone t2">${i.length ? "Loading forecast..." : `${Ht(n.state)} · no forecast`}</span>`}
     </button>
   </div>`;
-}, Sr = () => {
+}, Nr = () => {
 	let e = (/* @__PURE__ */ new Date()).getHours();
 	return e < 5 ? "Good night." : e < 12 ? "Good morning." : e < 18 ? "Good afternoon." : "Good evening.";
-}, Cr = (e, t = !1) => {
+}, Pr = (e, t = !1) => {
 	let n = e.alerts, r = n.filter((e) => e.severity === "critical").length, i = n.filter((e) => e.severity === "warning").length, a = n.filter((e) => e.severity === "info").length, o = r + i, s = r ? "critical" : i ? "" : a ? "info" : "calm", c = o ? `${o} thing${o > 1 ? "s" : ""} need${o > 1 ? "" : "s"} attention` : a ? `Nothing urgent · ${a} note${a > 1 ? "s" : ""}` : "Nothing needs attention", l = n.slice(0, 3);
-	return D`<div class="banner ${s}" role="region" aria-label="Attention">
-    <span class="sig">${o || a ? O`<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 7v6M12 17h.01"></path></svg>` : W("security", 22)}</span>
+	return k`<div class="banner ${s}" role="region" aria-label="Attention">
+    <span class="sig">${o || a ? A`<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 7v6M12 17h.01"></path></svg>` : W("security", 22)}</span>
     <button class="sum" @click=${() => e.go("alerts")}>
       <b>${c}</b>
       <span class="n">${r} critical · ${i} warning${i === 1 ? "" : "s"} · ${a} info</span>
     </button>
-    ${t ? A : D`<div class="chips">
-          ${l.map((t) => D`<button class="chip ${t.severity}" @click=${() => e.openAlert(t)}>
+    ${t ? M : k`<div class="chips">
+          ${l.map((t) => k`<button class="chip ${t.severity}" @click=${() => e.openAlert(t)}>
               <span class="ico">${W(t.icon, 20)}</span>
               <span class="txt"><span>${t.chipTitle}</span><span class="val"><b class="n">${t.chipValue}</b><span class="badge ${t.severity}">${t.badge}</span></span></span>
             </button>`)}
         </div>`}
     <button class="more" aria-label="All alerts" @click=${() => e.go("alerts")}>${W("chevron", 18)}</button>
   </div>`;
-}, wr = (e) => {
-	let t = e.config.entities ?? {}, n = R(e.hass, t.heat_pump);
-	if (!t.heat_pump) return A;
-	let r = z(n) ? void 0 : Number(n.attributes.current_temperature), i = z(n) ? void 0 : Number(n.attributes.temperature), a = r !== void 0 && Number.isFinite(r), o = a ? Math.max(0, Math.min(1, (r - 10) / 20)) : 0, s = z(n) ? "Unavailable" : String(n.attributes.hvac_action ?? n.state), c = B(e.hass, t.heat_pump_outdoor) ?? B(e.hass, t.outdoor_temperature), l = B(e.hass, t.heat_pump_supply), u = B(e.hass, t.heat_pump_return);
-	return D`<section class="glass card">
+}, Fr = (e) => {
+	let t = e.config.entities ?? {}, n = z(e.hass, t.heat_pump);
+	if (!t.heat_pump) return M;
+	let r = B(n) ? void 0 : Number(n.attributes.current_temperature), i = B(n) ? void 0 : Number(n.attributes.temperature), a = r !== void 0 && Number.isFinite(r), o = a ? Math.max(0, Math.min(1, (r - 10) / 20)) : 0, s = B(n) ? "Unavailable" : String(n.attributes.hvac_action ?? n.state), c = V(e.hass, t.heat_pump_outdoor) ?? V(e.hass, t.outdoor_temperature), l = V(e.hass, t.heat_pump_supply), u = V(e.hass, t.heat_pump_return);
+	return k`<section class="glass card">
     <h2 style="font-size:18px"><span style="color:var(--atlas-accent)">${W("climate", 22)}</span>Climate</h2>
     <div class="clim">
       <svg role="img" aria-label="Heat pump ${a ? r : "unavailable"} degrees" width="136" height="136" viewBox="0 0 140 140" style="flex:none">
         <circle cx="70" cy="70" r="60" fill="rgba(0,0,0,0.35)"></circle>
         <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(241,245,255,0.08)" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="${78} 100" transform="rotate(130 70 70)"></circle>
-        ${a ? O`<circle cx="70" cy="70" r="58" fill="none" stroke="var(--atlas-accent)" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="${Math.max(1, 78 * o)} 100" transform="rotate(130 70 70)"></circle>` : A}
+        ${a ? A`<circle cx="70" cy="70" r="58" fill="none" stroke="var(--atlas-accent)" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="${Math.max(1, 78 * o)} 100" transform="rotate(130 70 70)"></circle>` : M}
         <text x="70" y="76" text-anchor="middle" font-size="32" font-weight="700" fill="#F1F5FF">${a ? r.toFixed(1) : "–"}<tspan font-size="13" dy="-13">°C</tspan></text>
-        ${i !== void 0 && Number.isFinite(i) ? O`<text x="70" y="98" text-anchor="middle" font-size="12" fill="var(--atlas-accent)">Target ${i.toFixed(1)}°</text>` : A}
+        ${i !== void 0 && Number.isFinite(i) ? A`<text x="70" y="98" text-anchor="middle" font-size="12" fill="var(--atlas-accent)">Target ${i.toFixed(1)}°</text>` : M}
       </svg>
       <div class="det">
         <b>Heat pump · ${s.charAt(0).toUpperCase() + s.slice(1)}</b>
-        <span class="n t2">Outdoor ${Pn(c, "°")} · Supply ${Pn(l, "°")}</span>
-        <span class="n t2">Return ${Pn(u, "°")}</span>
+        <span class="n t2">Outdoor ${Gn(c, "°")} · Supply ${Gn(l, "°")}</span>
+        <span class="n t2">Return ${Gn(u, "°")}</span>
         <div class="btn3">
           <button class="sq" aria-label="Heat pump power" @click=${() => e.moreInfo(t.heat_pump)}>${W("power", 20)}</button>
           <button class="sq" aria-label="Eco mode" @click=${() => e.moreInfo(t.heat_pump)}>${W("eco", 20)}</button>
@@ -4600,57 +4875,57 @@ var tn = Zt(en), nn = {
       </div>
     </div>
   </section>`;
-}, Tr = (e) => e === void 0 ? "–" : `${e.toFixed(2)} kW`, Er = (e) => {
+}, Ir = (e) => e === void 0 ? "–" : `${e.toFixed(2)} kW`, Lr = (e) => {
 	let t = e.config.entities ?? {};
-	if (!t.house_load && !t.solar_power && !t.grid_import) return A;
-	let n = V(e.hass, t.solar_power), r = V(e.hass, t.house_load), i = V(e.hass, t.grid_import), a = V(e.hass, t.grid_export), o = (a ?? 0) > (i ?? 0), s = o ? a : i;
-	return D`<section class="glass card" style="gap:10px">
+	if (!t.house_load && !t.solar_power && !t.grid_import) return M;
+	let n = kt(e.hass, t.solar_power), r = kt(e.hass, t.house_load), i = kt(e.hass, t.grid_import), a = kt(e.hass, t.grid_export), o = (a ?? 0) > (i ?? 0), s = o ? a : i;
+	return k`<section class="glass card" style="gap:10px">
     <div class="row">
       <h2>Energy flow</h2>
-      ${g(e.config).length > 0 ? D`<button class="t2 more" @click=${() => e.go("energy")}>Circuits ${W("chevron", 14)}</button>` : A}
+      ${_(e.config).length > 0 ? k`<button class="t2 more" @click=${() => e.go("energy")}>Circuits ${W("chevron", 14)}</button>` : M}
     </div>
     <div class="flow">
-      <button class="node" @click=${() => t.solar_power && e.moreInfo(t.solar_power)}><span class="c">${W("solar", 22)}</span><b class="n">${Tr(n)}</b><span>Solar</span></button>
+      <button class="node" @click=${() => t.solar_power && e.moreInfo(t.solar_power)}><span class="c">${W("solar", 22)}</span><b class="n">${Ir(n)}</b><span>Solar</span></button>
       <span class="link ${(n ?? 0) > .01 ? "act r" : ""}"></span>
-      <button class="node house" @click=${() => t.house_load && e.moreInfo(t.house_load)}><span class="c">${W("home", 24)}</span><b class="n">${Tr(r)}</b><span>House</span></button>
+      <button class="node house" @click=${() => t.house_load && e.moreInfo(t.house_load)}><span class="c">${W("home", 24)}</span><b class="n">${Ir(r)}</b><span>House</span></button>
       <span class="link ${(s ?? 0) > .01 ? `act ${o ? "r" : "l"}` : ""}"></span>
-      <button class="node" @click=${() => t.grid_import && e.moreInfo(t.grid_import)}><span class="c">${W("grid", 22)}</span><b class="n">${Tr(s)}</b><span>${o ? "Grid export" : "Grid import"}</span></button>
+      <button class="node" @click=${() => t.grid_import && e.moreInfo(t.grid_import)}><span class="c">${W("grid", 22)}</span><b class="n">${Ir(s)}</b><span>${o ? "Grid export" : "Grid import"}</span></button>
     </div>
   </section>`;
-}, Dr = (e) => {
-	let t = e.config.entities ?? {}, n = R(e.hass, t.alarm), r = dr(e).map((t) => e.hass.states[t]), i = r.filter((e) => !z(e)), a = i.filter((e) => U(e)).length, o = (e.config.layout?.security_tiles ?? []).map((t) => v(e.config, t)).filter(Boolean);
-	return D`<section class="glass card">
+}, Rr = (e) => {
+	let t = e.config.entities ?? {}, n = z(e.hass, t.alarm), r = Sr(e).map((t) => e.hass.states[t]), i = r.filter((e) => !B(e)), a = i.filter((e) => U(e)).length, o = (e.config.layout?.security_tiles ?? []).map((t) => y(e.config, t)).filter(Boolean);
+	return k`<section class="glass card">
     <div class="row">
-      ${fe(e.config) ? D`<button class="h2btn" @click=${() => e.go("security")}><h2>${W("security", 20)}Security${W("chevron", 14)}</h2></button>` : D`<h2>${W("security", 20)}Security</h2>`}
+      ${ue(e.config) ? k`<button class="h2btn" @click=${() => e.go("security")}><h2>${W("security", 20)}Security${W("chevron", 14)}</h2></button>` : k`<h2>${W("security", 20)}Security</h2>`}
       <button class="n t2" style="font-size:12px" @click=${() => t.alarm && e.moreInfo(t.alarm)}>
-        ${n ? z(n) ? "Alarm unavailable" : H(e.hass, n) : ""} · ${a} / ${i.length} open${i.length < r.length ? ` · ${r.length - i.length} n/a` : ""}
+        ${n ? B(n) ? "Alarm unavailable" : H(e.hass, n) : ""} · ${a} / ${i.length} open${i.length < r.length ? ` · ${r.length - i.length} n/a` : ""}
       </button>
     </div>
-    ${o.length ? D`<div class="cams">${o.map((t) => _r(e, b(t), t.name, () => e.openRoom(t)))}</div>` : A}
+    ${o.length ? k`<div class="cams">${o.map((t) => Or(e, S(t), t.name, () => e.openRoom(t)))}</div>` : M}
   </section>`;
-}, Or = (e) => {
-	let t = e.config.entities ?? {}, n = R(e.hass, t.alarm), r = R(e.hass, t.garage_cover), i = pe(e.config).filter((t) => e.hass.states[t]?.state === "on"), a = n && n.state !== "disarmed" && !z(n), o = t.wake_pc;
-	return D`<section class="glass card" style="gap:10px;padding:14px 16px">
+}, zr = (e) => {
+	let t = e.config.entities ?? {}, n = z(e.hass, t.alarm), r = z(e.hass, t.garage_cover), i = de(e.config).filter((t) => e.hass.states[t]?.state === "on"), a = n && n.state !== "disarmed" && !B(n), o = t.wake_pc;
+	return k`<section class="glass card" style="gap:10px;padding:14px 16px">
     <h2 style="margin-left:4px">Quick actions</h2>
     <div class="actions">
-      ${t.alarm ? D`<button class="qa primary" ?disabled=${z(n)} @click=${() => a ? e.moreInfo(t.alarm) : e.confirm("Arm away?", "The alarm will arm in away mode.", () => e.call("alarm_control_panel", "alarm_arm_away", { entity_id: t.alarm }), "Arm away")}>
+      ${t.alarm ? k`<button class="qa primary" ?disabled=${B(n)} @click=${() => a ? e.moreInfo(t.alarm) : e.confirm("Arm away?", "The alarm will arm in away mode.", () => e.call("alarm_control_panel", "alarm_arm_away", { entity_id: t.alarm }), "Arm away")}>
             ${W("arm-away", 20)}${a ? "Disarm" : "Arm away"}
-          </button>` : A}
-      ${t.garage_cover ? D`<button class="qa" ?disabled=${z(r)} @click=${() => {
+          </button>` : M}
+      ${t.garage_cover ? k`<button class="qa" ?disabled=${B(r)} @click=${() => {
 		let n = r?.state !== "open";
 		e.confirm(n ? "Open the garage?" : "Close the garage?", `Garage door is ${r ? H(e.hass, r).toLowerCase() : "unknown"}.`, () => e.call("cover", n ? "open_cover" : "close_cover", { entity_id: t.garage_cover }), n ? "Open" : "Close");
-	}}>${W("garage-door", 20)}Garage</button>` : A}
+	}}>${W("garage-door", 20)}Garage</button>` : M}
       <button class="qa" @click=${() => i.length ? e.confirm("Turn lights off?", `${i.length} light${i.length > 1 ? "s are" : " is"} on in mapped rooms (status LEDs excluded).`, () => e.call("homeassistant", "turn_off", { entity_id: i }), "Turn off") : e.confirm("All lights are off", "No mapped room light is on.", () => void 0, "OK")}>
-        ${W("lights-off", 20)}Lights off${i.length ? D` <span class="n t2">${i.length}</span>` : A}
+        ${W("lights-off", 20)}Lights off${i.length ? k` <span class="n t2">${i.length}</span>` : M}
       </button>
-      ${o ? D`<button class="qa" @click=${() => {
-		let t = L(o);
+      ${o ? k`<button class="qa" @click=${() => {
+		let t = R(o);
 		t === "script" ? e.call("script", "turn_on", { entity_id: o }) : e.call(t, "press", { entity_id: o });
-	}}>${W("wake-pc", 20)}Wake PC</button>` : A}
+	}}>${W("wake-pc", 20)}Wake PC</button>` : M}
       <button class="qa" @click=${() => e.go("rooms")}>${W("more", 20)}More</button>
     </div>
   </section>`;
-}, kr = (e) => e === 8 ? [
+}, Br = (e) => e === 8 ? [
 	2,
 	2,
 	2,
@@ -4659,20 +4934,20 @@ var tn = Zt(en), nn = {
 	2,
 	2,
 	2
-] : Array(e).fill(2), Ar = (e) => {
-	let t = e.config.entities ?? {}, n = R(e.hass, t.heat_pump), r = z(n) ? void 0 : Number(n.attributes.current_temperature), i = R(e.hass, t.alarm), a = (e.config.layout?.home_tiles?.length ? e.config.layout.home_tiles : h(e.config).slice(0, 8).map((e) => e.id)).map((t) => v(e.config, t)).filter(Boolean), o = kr(a.length), s = h(e.config).length, c = i ? z(i) ? "Alarm unavailable" : `Alarm ${H(e.hass, i).toLowerCase()}` : "", l = i && (z(i) || ["triggered", "pending"].includes(i.state));
-	return D`
+] : Array(e).fill(2), Vr = (e) => {
+	let t = e.config.entities ?? {}, n = z(e.hass, t.heat_pump), r = B(n) ? void 0 : Number(n.attributes.current_temperature), i = z(e.hass, t.alarm), a = (e.config.layout?.home_tiles?.length ? e.config.layout.home_tiles : g(e.config).slice(0, 8).map((e) => e.id)).map((t) => y(e.config, t)).filter(Boolean), o = Br(a.length), s = g(e.config).length, c = i ? B(i) ? "Alarm unavailable" : `Alarm ${H(e.hass, i).toLowerCase()}` : "", l = i && (B(i) || ["triggered", "pending"].includes(i.state));
+	return k`
     <section class="hero ${t.persons?.length || t.weather ? "split" : ""}" aria-label="Greeting">
       <div class="hgreet">
-      <h1>${Sr()}</h1>
+      <h1>${Nr()}</h1>
       <p class="n">
-        ${t.heat_pump ? D`Heat pump reads ${r !== void 0 && Number.isFinite(r) ? `${r.toFixed(1)} °C` : "–"} indoors` : A}
-        ${c ? D`<span style="opacity:.5"> · </span><span style="color:${l ? "var(--atlas-warn)" : "var(--atlas-accent)"};font-weight:600">${c}</span>` : A}
+        ${t.heat_pump ? k`Heat pump reads ${r !== void 0 && Number.isFinite(r) ? `${r.toFixed(1)} °C` : "–"} indoors` : M}
+        ${c ? k`<span style="opacity:.5"> · </span><span style="color:${l ? "var(--atlas-warn)" : "var(--atlas-accent)"};font-weight:600">${c}</span>` : M}
       </p>
       </div>
-      <div class="hside">${xr(e)}${br(e)}</div>
+      <div class="hside">${Mr(e)}${jr(e)}</div>
     </section>
-    ${Cr(e, e.narrow)}
+    ${Pr(e, e.narrow)}
     <div class="home-grid">
       <div class="col">
         <section class="glass card" style="flex:1;padding:16px">
@@ -4680,208 +4955,208 @@ var tn = Zt(en), nn = {
             <div><h2 style="font-size:20px">Rooms</h2><span class="t2" style="font-size:12px">Quick access to your spaces</span></div>
             <button class="pillbtn" @click=${() => e.go("rooms")}>View all ${s} rooms</button>
           </div>
-          <div class="tiles" style="flex:1">${a.map((t, n) => Ln(e, t, o[n] === 3 ? "s3" : ""))}</div>
+          <div class="tiles" style="flex:1">${a.map((t, n) => Jn(e, t, o[n] === 3 ? "s3" : ""))}</div>
         </section>
-        ${Or(e)}
+        ${zr(e)}
       </div>
-      <div class="col">${wr(e)}${Er(e)}${Dr(e)}</div>
+      <div class="col">${Fr(e)}${Lr(e)}${Rr(e)}</div>
     </div>
-    ${zn(e, e.config.layout?.home_cards, "main homecards")}
+    ${Xn(e, e.config.layout?.home_cards, "main homecards")}
   `;
-}, jr = [
+}, Hr = [
 	["critical", "Critical"],
 	["warning", "Warning"],
 	["info", "Info"]
-], Mr = (e) => {
-	let t = e.config.alerts?.mailbox_ack, n = jr.map(([t, n]) => ({
+], Ur = (e) => {
+	let t = e.config.alerts?.mailbox_ack, n = Hr.map(([t, n]) => ({
 		sev: t,
 		label: n,
 		items: e.alerts.filter((e) => e.severity === t)
 	})).filter((e) => e.items.length);
-	return D`
+	return k`
     <section class="hero">
       <h1 class="sm">Needs attention</h1>
       <p>Grouped by severity · rows clear automatically when the condition resolves</p>
     </section>
-    ${n.length ? n.map((n) => D`<section class="glass card group">
-            <h2 style="color:${Rn[n.sev]}">${n.label} · ${n.items.length}</h2>
+    ${n.length ? n.map((n) => k`<section class="glass card group">
+            <h2 style="color:${Yn[n.sev]}">${n.label} · ${n.items.length}</h2>
             <div class="alist">
-              ${n.items.map((r) => D`<button class="arow ${r.severity}" @click=${() => e.openAlert(r)}>
+              ${n.items.map((r) => k`<button class="arow ${r.severity}" @click=${() => e.openAlert(r)}>
                   <span class="ico">${W(r.icon, 20)}</span>
                   <span class="txt"><b>${r.title}</b><span>${r.meta}</span></span>
-                  ${r.id === "mailbox" && t ? D`<span class="ctl" role="button" @click=${(n) => {
+                  ${r.id === "mailbox" && t ? k`<span class="ctl" role="button" @click=${(n) => {
 		n.stopPropagation(), e.call("input_boolean", "turn_off", { entity_id: t });
-	}}>Acknowledge</span>` : A}
+	}}>Acknowledge</span>` : M}
                   <span class="badge ${r.severity}">${n.label}</span>
                 </button>`)}
             </div>
-          </section>`) : D`<section class="glass card"><p class="empty">Nothing needs attention. All mapped sources report valid states.</p></section>`}
+          </section>`) : k`<section class="glass card"><p class="empty">Nothing needs attention. All mapped sources report valid states.</p></section>`}
   `;
-}, Nr = (e, t) => {
+}, Wr = (e, t) => {
 	let n = t.cameras ?? "off";
-	if (n === "off") return A;
-	let r = ie(e.config, t.id);
-	if (!r.length) return A;
+	if (n === "off") return M;
+	let r = ne(e.config, t.id);
+	if (!r.length) return M;
 	let i = r.length, a = n === "live" && !!customElements.get("ha-camera-stream"), o = Math.floor(e.tick / 1e4);
-	return D`<section class="glass card camsec" style="padding:16px;gap:12px">
+	return k`<section class="glass card camsec" style="padding:16px;gap:12px">
     <div class="row" style="padding:0 4px">
       <h2 style="font-size:20px">Cameras on ${t.name}</h2>
       <span class="t2" style="font-size:12px">${n === "live" ? "Live, muted" : "Snapshots every 10 s"} · tap a name for the room</span>
     </div>
     <div class="camwall ${e.narrow ? "" : "fitwall"}" style="--cols:${i <= 3 ? i : i === 4 ? 2 : 3}">
       ${r.map(({ camera: t, rooms: n }) => {
-		let r = R(e.hass, t), i = n.map((e) => e.name).join(" · "), s = r?.attributes.entity_picture, c;
-		return c = n.some((e) => e.camera_private) ? D`<div class="camslot private"><span class="t2" style="font-size:12px">Private camera · open the room to reveal</span></div>` : z(r) ? D`<div class="camslot"><b style="font-size:13px">Camera unavailable</b></div>` : a ? D`<div class="camslot live"><ha-camera-stream .hass=${e.hass} .stateObj=${r} .fitMode=${"cover"} muted></ha-camera-stream></div>` : D`<div class="camslot live">${s ? D`<img src=${`${s}&width=960&height=540&t=${o}`} alt="${i} camera" loading="lazy" />` : D`<span class="t2" style="font-size:12px">Waiting for picture</span>`}</div>`, D`<div class="camtile">
-          <span class="camname"><i class="dotst ${z(r) ? "na" : ""}"></i>${n.map((t, n) => D`${n ? D`<span class="t2" aria-hidden="true">·</span>` : A}<button @click=${() => e.openRoom(t)}>${t.name}</button>`)}</span>
+		let r = z(e.hass, t), i = n.map((e) => e.name).join(" · "), s = r?.attributes.entity_picture, c;
+		return c = n.some((e) => e.camera_private) ? k`<div class="camslot private"><span class="t2" style="font-size:12px">Private camera · open the room to reveal</span></div>` : B(r) ? k`<div class="camslot"><b style="font-size:13px">Camera unavailable</b></div>` : a ? k`<div class="camslot live"><ha-camera-stream .hass=${e.hass} .stateObj=${r} .fitMode=${"cover"} muted></ha-camera-stream></div>` : k`<div class="camslot live">${s ? k`<img src=${`${s}&width=960&height=540&t=${o}`} alt="${i} camera" loading="lazy" />` : k`<span class="t2" style="font-size:12px">Waiting for picture</span>`}</div>`, k`<div class="camtile">
+          <span class="camname"><i class="dotst ${B(r) ? "na" : ""}"></i>${n.map((t, n) => k`${n ? k`<span class="t2" aria-hidden="true">·</span>` : M}<button @click=${() => e.openRoom(t)}>${t.name}</button>`)}</span>
           ${c}
         </div>`;
 	})}
     </div>
   </section>`;
-}, Pr = (e, t) => {
-	let n = y(e.config, t), r = n.filter((t) => !e.hot.has(t.id)).map((t) => B(e.hass, t.temperature)).filter((e) => e !== void 0), i = r.length ? `${(r.reduce((e, t) => e + t, 0) / r.length).toFixed(1)} °C typical` : "no sensors", a = n.filter((t) => e.badges.has(t.id)).length;
+}, Gr = (e, t) => {
+	let n = x(e.config, t), r = n.filter((t) => !e.hot.has(t.id)).map((t) => V(e.hass, t.temperature)).filter((e) => e !== void 0), i = r.length ? `${(r.reduce((e, t) => e + t, 0) / r.length).toFixed(1)} °C typical` : "no sensors", a = n.filter((t) => e.badges.has(t.id)).length;
 	return i + (a ? ` · ${a} alert${a > 1 ? "s" : ""}` : "");
-}, Fr = (e) => {
-	let t = _(e.config), n = re(e.config, e.floorId) ?? t[0], r = e.config.rooms?.length ?? 0, i = (e.config.rooms ?? []).filter((t) => !t.floor || !re(e.config, t.floor)), a = n ? y(e.config, n.id) : i, o = n ? Nr(e, n) : A, s = o !== A && !e.narrow, c = D`<section class="glass card roomsec" style="flex:1;padding:16px">
+}, Kr = (e) => {
+	let t = v(e.config), n = b(e.config, e.floorId) ?? t[0], r = e.config.rooms?.length ?? 0, i = (e.config.rooms ?? []).filter((t) => !t.floor || !b(e.config, t.floor)), a = n ? x(e.config, n.id) : i, o = n ? Wr(e, n) : M, s = o !== M && !e.narrow, c = k`<section class="glass card roomsec" style="flex:1;padding:16px">
       <div class="row" style="padding:0 4px">
         <h2 style="font-size:20px">${n ? `${n.name}${n.level ? ` · level ${n.level}` : ""}` : "Rooms"}</h2>
         <span class="t2" style="font-size:12px">Tap a room for its devices</span>
       </div>
       <div class="tiles floor">
-        ${a.map((t) => Ln(e, t, "", `${(t.devices ?? []).length} devices`))}
+        ${a.map((t) => Jn(e, t, "", `${(t.devices ?? []).length} devices`))}
       </div>
     </section>`;
-	return D`
+	return k`
     <section class="hero">
       <h1 class="sm">Rooms</h1>
       <p>${t.length} floors · ${r} rooms · pick a floor, then a room</p>
     </section>
     <div class="floors">
       ${t.map((t) => {
-		let r = y(e.config, t.id).length;
-		return D`<button class="glass fl ${t.id === n?.id ? "on" : ""}" @click=${() => e.go(`floor-${t.id}`)}>
+		let r = x(e.config, t.id).length;
+		return k`<button class="glass fl ${t.id === n?.id ? "on" : ""}" @click=${() => e.go(`floor-${t.id}`)}>
           <span class="row" style="align-items:baseline"><span class="lv n">${t.level ?? ""}</span><small>${r} room${r === 1 ? "" : "s"}</small></span>
           <span style="font-size:16px;font-weight:600">${t.name}</span>
-          <small class="n">${Pr(e, t.id)}</small>
+          <small class="n">${Gr(e, t.id)}</small>
         </button>`;
 	})}
     </div>
-    ${s ? D`<div class="fitgrid ${a.length === 1 ? "single" : ""}" style="--rcols:${a.length === 1 ? 1 : 2}">${c}${o}</div>` : D`${c}${o}`}
+    ${s ? k`<div class="fitgrid ${a.length === 1 ? "single" : ""}" style="--rcols:${a.length === 1 ? 1 : 2}">${c}${o}</div>` : k`${c}${o}`}
   `;
-}, Ir = (e, t) => {
-	let n = R(e.hass, t);
-	return n ? z(n) ? "–" : H(e.hass, n) : "–";
-}, Lr = (e, t) => {
-	let n = B(e.hass, t);
+}, qr = (e, t) => {
+	let n = z(e.hass, t);
+	return n ? B(n) ? "–" : H(e.hass, n) : "–";
+}, Jr = (e, t) => {
+	let n = V(e.hass, t);
 	if (n === void 0) return;
-	let r = String(R(e.hass, t)?.attributes.unit_of_measurement ?? "min"), i = r === "s" ? n / 60 : r === "h" ? n * 60 : r === "d" ? n * 1440 : n, a = Math.max(0, Math.round(i));
+	let r = String(z(e.hass, t)?.attributes.unit_of_measurement ?? "min"), i = r === "s" ? n / 60 : r === "h" ? n * 60 : r === "d" ? n * 1440 : n, a = Math.max(0, Math.round(i));
 	return a >= 60 ? `${Math.floor(a / 60)} h ${a % 60} min` : `${a} min`;
-}, Rr = (e) => !!(e.printer_status || e.printer_progress), zr = (e, t) => {
-	let n = e.alerts.filter((e) => e.room === t.id), r = S(e.config, t), i = r.filter((t) => e.hass.states[t]?.state === "on"), a = (t.devices ?? []).filter((t) => {
+}, Yr = (e) => !!(e.printer_status || e.printer_progress), Xr = (e, t) => {
+	let n = e.alerts.filter((e) => e.room === t.id), r = w(e.config, t), i = r.filter((t) => e.hass.states[t]?.state === "on"), a = (t.devices ?? []).filter((t) => {
 		let n = e.hass.states[t.entity];
 		return !n || n.state === "unavailable";
-	}).length, o = Rr(t) ? B(e.hass, t.printer_progress) : void 0;
-	return D`<div class="strip">
+	}).length, o = Yr(t) ? V(e.hass, t.printer_progress) : void 0;
+	return k`<div class="strip">
     <button class="schip ${n.length ? "warn" : "ok"}" @click=${() => e.go("alerts")}>
-      ${n.length ? G("dot", 18) : D`<span class="okdot">✓</span>`}
+      ${n.length ? G("dot", 18) : k`<span class="okdot">✓</span>`}
       <span><b>${n.length ? `${n.length} alert${n.length > 1 ? "s" : ""}` : "All OK"}</b><small>${n.length ? n[0].title : "No alerts"}</small></span>
     </button>
-    ${r.length ? D`<button class="schip ${i.length ? "on" : ""}" title=${i.length ? "Turn the room lights off" : "Turn the room lights on"}
+    ${r.length ? k`<button class="schip ${i.length ? "on" : ""}" title=${i.length ? "Turn the room lights off" : "Turn the room lights on"}
           @click=${() => e.call("homeassistant", i.length ? "turn_off" : "turn_on", { entity_id: i.length ? i : r })}>
           ${G("bulb", 18)}<span><b>Lights</b><small>${i.length ? `${i.length} of ${r.length} on` : "All off"}</small></span>
-        </button>` : A}
-    ${Rr(t) ? D`<button class="schip" @click=${() => t.printer_status && e.moreInfo(t.printer_status)}>
-          ${G("printer", 18)}<span><b>${t.printer_name || "3D printer"}</b><small>${Ir(e, t.printer_status)}${o === void 0 ? "" : ` · ${Math.round(o)} %`}</small>
-          ${o === void 0 ? A : D`<i class="sbar"><i style="width:${Math.max(0, Math.min(100, o))}%"></i></i>`}</span>
-        </button>` : A}
-    ${pn(t) ? (() => {
-		let n = mn(e, t), r = R(e.hass, t.car_range), i = [n.text, r && !z(r) ? H(e.hass, r) : ""].filter(Boolean).join(" · ");
-		return D`<button class="schip ${n.state === "unlocked" || n.state === "jammed" ? "warn" : ""}" @click=${() => (n.entity || t.car_range) && e.moreInfo(n.entity || t.car_range)}>
+        </button>` : M}
+    ${Yr(t) ? k`<button class="schip" @click=${() => t.printer_status && e.moreInfo(t.printer_status)}>
+          ${G("printer", 18)}<span><b>${t.printer_name || "3D printer"}</b><small>${qr(e, t.printer_status)}${o === void 0 ? "" : ` · ${Math.round(o)} %`}</small>
+          ${o === void 0 ? M : k`<i class="sbar"><i style="width:${Math.max(0, Math.min(100, o))}%"></i></i>`}</span>
+        </button>` : M}
+    ${mn(t) ? (() => {
+		let n = hn(e, t), r = z(e.hass, t.car_range), i = [n.text, r && !B(r) ? H(e.hass, r) : ""].filter(Boolean).join(" · ");
+		return k`<button class="schip ${n.state === "unlocked" || n.state === "jammed" ? "warn" : ""}" @click=${() => (n.entity || t.car_range) && e.moreInfo(n.entity || t.car_range)}>
             ${G("car", 18)}<span><b>${t.car_name || "Vehicle"}</b><small>${i || "No data"}</small></span>
           </button>`;
-	})() : A}
+	})() : M}
     ${t.power ? (() => {
-		let n = xn(e, t), r = Number(t.power_max) > 0 ? Number(t.power_max) : 3e3;
-		return D`<button class="schip" @click=${() => e.moreInfo(t.power)}>${G("power", 18)}<span><b style="color:${Sn(n, r)}">${Cn(n)}</b><small>Power</small></span></button>`;
-	})() : A}
+		let n = Sn(e, t), r = Number(t.power_max) > 0 ? Number(t.power_max) : 3e3;
+		return k`<button class="schip" @click=${() => e.moreInfo(t.power)}>${G("power", 18)}<span><b style="color:${Cn(n, r)}">${wn(n)}</b><small>Power</small></span></button>`;
+	})() : M}
     ${t.mower ? (() => {
-		let n = R(e.hass, t.mower), r = B(e.hass, t.mower_battery);
-		return D`<button class="schip ${!n || z(n) || n.state === "error" ? "warn" : n.state === "mowing" ? "on" : ""}" @click=${() => e.moreInfo(t.mower)}>${G("mower", 18)}<span><b>${t.mower_name || "Mower"}</b><small>${n ? H(e.hass, n) : "Not found"}${r === void 0 ? "" : ` · ${Math.round(r)} %`}</small></span></button>`;
-	})() : A}
+		let n = z(e.hass, t.mower), r = V(e.hass, t.mower_battery);
+		return k`<button class="schip ${!n || B(n) || n.state === "error" ? "warn" : n.state === "mowing" ? "on" : ""}" @click=${() => e.moreInfo(t.mower)}>${G("mower", 18)}<span><b>${t.mower_name || "Mower"}</b><small>${n ? H(e.hass, n) : "Not found"}${r === void 0 ? "" : ` · ${Math.round(r)} %`}</small></span></button>`;
+	})() : M}
     ${t.salt_level ? (() => {
-		let n = kn(e, t), r = n !== void 0 && n < An(t);
-		return D`<button class="schip ${r ? "warn" : ""}" @click=${() => e.moreInfo(t.salt_level)}>${G("drop", 18)}<span><b>${n === void 0 ? "–" : `${Math.round(n)} %`}</b><small>${r ? "Buy salt" : t.salt_name || "Salt level"}</small></span></button>`;
-	})() : A}
-    ${a ? D`<span class="schip warn"><span><b>${a} unavailable</b><small>device${a > 1 ? "s" : ""} in this room</small></span></span>` : A}
+		let n = jn(e, t), r = n !== void 0 && n < Mn(t);
+		return k`<button class="schip ${r ? "warn" : ""}" @click=${() => e.moreInfo(t.salt_level)}>${G("drop", 18)}<span><b>${n === void 0 ? "–" : `${Math.round(n)} %`}</b><small>${r ? "Buy salt" : t.salt_name || "Salt level"}</small></span></button>`;
+	})() : M}
+    ${a ? k`<span class="schip warn"><span><b>${a} unavailable</b><small>device${a > 1 ? "s" : ""} in this room</small></span></span>` : M}
   </div>`;
-}, Br = (e, t) => {
+}, Zr = (e, t) => {
 	let n = t.climate_extra ?? [];
-	return n.length ? D`<div class="cextra">
+	return n.length ? k`<div class="cextra">
     ${n.map((t) => {
 		let n = e.hass.states[t.entity];
-		return D`<button class="cx" @click=${() => e.moreInfo(t.entity)}>
-        <span class="cxi">${t.icon ? D`<ha-icon .icon=${t.icon} style="--mdc-icon-size:18px"></ha-icon>` : G(Wn(t.entity, n), 18)}</span>
-        <span><b class="n">${Ir(e, t.entity)}</b><small>${rr(e.hass, t)}</small></span>
+		return k`<button class="cx" @click=${() => e.moreInfo(t.entity)}>
+        <span class="cxi">${t.icon ? k`<ha-icon .icon=${t.icon} style="--mdc-icon-size:18px"></ha-icon>` : G(tr(t.entity, n), 18)}</span>
+        <span><b class="n">${qr(e, t.entity)}</b><small>${mr(e.hass, t)}</small></span>
       </button>`;
 	})}
-  </div>` : A;
-}, Vr = (e, t) => {
-	if (!Rr(t)) return A;
-	let n = B(e.hass, t.printer_progress), r = Lr(e, t.printer_remaining), i = R(e.hass, t.printer_picture)?.attributes.entity_picture, a = Math.floor(e.tick / 1e4), o = [
+  </div>` : M;
+}, Qr = (e, t) => {
+	if (!Yr(t)) return M;
+	let n = V(e.hass, t.printer_progress), r = Jr(e, t.printer_remaining), i = z(e.hass, t.printer_picture)?.attributes.entity_picture, a = Math.floor(e.tick / 1e4), o = [
 		["Nozzle", t.printer_nozzle],
 		["Bed", t.printer_bed],
 		["Chamber", t.printer_chamber]
-	].filter(([, e]) => e), s = R(e.hass, t.printer_light), c = (t) => t && e.call("button", "press", { entity_id: t });
-	return D`<section class="glass card printer">
+	].filter(([, e]) => e), s = z(e.hass, t.printer_light), c = (t) => t && e.call("button", "press", { entity_id: t });
+	return k`<section class="glass card printer">
     <div class="row">
       <h2>${G("printer", 20)}${t.printer_name || "3D printer"}</h2>
-      <button class="pstatus" @click=${() => t.printer_status && e.moreInfo(t.printer_status)}>${Ir(e, t.printer_status)}</button>
+      <button class="pstatus" @click=${() => t.printer_status && e.moreInfo(t.printer_status)}>${qr(e, t.printer_status)}</button>
     </div>
     <div class="pbody">
-      ${i ? D`<button class="ppic" @click=${() => e.moreInfo(t.printer_picture)}><img src=${`${i}${i.includes("?") ? "&" : "?"}t=${a}`} alt="" /></button>` : A}
+      ${i ? k`<button class="ppic" @click=${() => e.moreInfo(t.printer_picture)}><img src=${`${i}${i.includes("?") ? "&" : "?"}t=${a}`} alt="" /></button>` : M}
       <button class="pnum" @click=${() => t.printer_progress && e.moreInfo(t.printer_progress)}>
         <b class="n">${n === void 0 ? "–" : `${Math.round(n)} %`}</b>
         <span class="t2">${r ? `${r} remaining` : t.printer_remaining ? "no time estimate" : ""}</span>
       </button>
     </div>
     <span class="bar"><span style="width:${n === void 0 ? 0 : Math.max(0, Math.min(100, n))}%;background:var(--atlas-accent)"></span></span>
-    ${o.length ? D`<div class="ptemps">${o.map(([t, n]) => D`<button @click=${() => e.moreInfo(n)}><b class="n">${Ir(e, n)}</b><small>${t}</small></button>`)}</div>` : A}
-    ${t.printer_light || t.printer_pause || t.printer_resume || t.printer_stop ? D`<div class="pbtns">
-          ${t.printer_light ? D`<button class="sq ${s?.state === "on" ? "on" : ""}" title="Chamber light" @click=${() => e.call(L(t.printer_light), "toggle", { entity_id: t.printer_light })}>${G("bulb", 20)}</button>` : A}
-          ${t.printer_pause ? D`<button class="sq" title="Pause" @click=${() => c(t.printer_pause)}>Pause</button>` : A}
-          ${t.printer_resume ? D`<button class="sq" title="Resume" @click=${() => c(t.printer_resume)}>Resume</button>` : A}
-          ${t.printer_stop ? D`<button class="sq stop" title="Stop" @click=${() => e.confirm("Stop the print?", "The current print job will be cancelled.", () => c(t.printer_stop), "Stop print")}>Stop</button>` : A}
-        </div>` : A}
+    ${o.length ? k`<div class="ptemps">${o.map(([t, n]) => k`<button @click=${() => e.moreInfo(n)}><b class="n">${qr(e, n)}</b><small>${t}</small></button>`)}</div>` : M}
+    ${t.printer_light || t.printer_pause || t.printer_resume || t.printer_stop ? k`<div class="pbtns">
+          ${t.printer_light ? k`<button class="sq ${s?.state === "on" ? "on" : ""}" title="Chamber light" @click=${() => e.call(R(t.printer_light), "toggle", { entity_id: t.printer_light })}>${G("bulb", 20)}</button>` : M}
+          ${t.printer_pause ? k`<button class="sq" title="Pause" @click=${() => c(t.printer_pause)}>Pause</button>` : M}
+          ${t.printer_resume ? k`<button class="sq" title="Resume" @click=${() => c(t.printer_resume)}>Resume</button>` : M}
+          ${t.printer_stop ? k`<button class="sq stop" title="Stop" @click=${() => e.confirm("Stop the print?", "The current print job will be cancelled.", () => c(t.printer_stop), "Stop print")}>Stop</button>` : M}
+        </div>` : M}
   </section>`;
-}, Hr = (e, t) => {
+}, $r = (e, t) => {
 	let n = t.automations ?? [];
-	return n.length ? D`<section class="glass card autos">
+	return n.length ? k`<section class="glass card autos">
     <h2>${W("automations", 20)}Automations</h2>
     ${n.map((t) => {
 		let n = e.hass.states[t], r = n?.state === "on", i = n?.attributes.last_triggered;
-		return D`<div class="auto">
+		return k`<div class="auto">
         <button class="atxt" @click=${() => e.moreInfo(t)}>
           <b>${String(n?.attributes.friendly_name ?? t)}</b>
-          <small class="t2">${z(n) ? "Unavailable" : i ? `Last run ${K(e.hass, i)}` : "Never run"}</small>
+          <small class="t2">${B(n) ? "Unavailable" : i ? `Last run ${K(e.hass, i)}` : "Never run"}</small>
         </button>
         <button class="tog ${r ? "on" : ""}" role="switch" aria-checked=${r ? "true" : "false"} aria-label="Enable ${String(n?.attributes.friendly_name ?? t)}"
-          ?disabled=${z(n)} @click=${() => e.call("automation", "toggle", { entity_id: t })}><i></i></button>
+          ?disabled=${B(n)} @click=${() => e.call("automation", "toggle", { entity_id: t })}><i></i></button>
       </div>`;
 	})}
-  </section>` : A;
-}, Ur = 500, Wr = 8, Gr = (e) => {
+  </section>` : M;
+}, ei = 500, ti = 8, ni = (e) => {
 	let t = 0, n = 0, r = 0, i = !1, a = !1, o, s = 1;
 	return {
 		down: (c) => {
 			let l = c.currentTarget;
 			t = c.clientX, n = e.start(), r = n, i = !1, a = !1, s = l.getBoundingClientRect().width || 1, l.setPointerCapture?.(c.pointerId), o = window.setTimeout(() => {
 				a = !0, e.hold();
-			}, Ur);
+			}, ei);
 		},
 		move: (c) => {
 			if (a || !c.buttons && c.pointerType === "mouse") return;
 			let l = c.clientX - t;
-			if (!i && Math.abs(l) < Wr || !e.canDrag()) return;
+			if (!i && Math.abs(l) < ti || !e.canDrag()) return;
 			i = !0, window.clearTimeout(o);
 			let u = Math.max(1, Math.min(100, Math.round(n + l / s * 100)));
 			r = e.snap ? e.snap(u) : u;
@@ -4898,24 +5173,24 @@ var tn = Zt(en), nn = {
 			t.preventDefault(), window.clearTimeout(o), a = !0, e.hold();
 		}
 	};
-}, Kr = 1, qr = 4, Jr = (e) => {
+}, ri = 1, ii = 4, ai = (e) => {
 	let t = Number(e?.attributes.supported_features ?? 0);
 	return {
-		speed: (t & Kr) !== 0,
-		direction: (t & qr) !== 0
+		speed: (t & ri) !== 0,
+		direction: (t & ii) !== 0
 	};
-}, Yr = (e) => {
+}, oi = (e) => {
 	if (e?.state !== "on") return 0;
 	let t = Number(e.attributes.percentage);
 	return Number.isFinite(t) ? Math.max(0, Math.min(100, Math.round(t))) : 0;
-}, Xr = (e, t) => {
+}, si = (e, t) => {
 	let n = Number(e?.attributes.percentage_step) > 0 ? Number(e.attributes.percentage_step) : 1;
 	return Math.max(Math.round(n), Math.min(100, Math.round(Math.round(t / n) * n)));
-}, Zr = (e, t, n, r, i) => {
-	let a = e.hass.states[t.entity], o = Jr(a), s = a?.state === "on", c = Yr(a), l = rr(e.hass, t), u = String(a?.attributes.direction ?? "forward"), d = Gr({
-		start: () => Yr(e.hass.states[t.entity]),
-		canDrag: () => Jr(e.hass.states[t.entity]).speed && !z(e.hass.states[t.entity]),
-		snap: (n) => Xr(e.hass.states[t.entity], n),
+}, ci = (e, t, n, r, i) => {
+	let a = e.hass.states[t.entity], o = ai(a), s = a?.state === "on", c = oi(a), l = mr(e.hass, t), u = String(a?.attributes.direction ?? "forward"), d = ni({
+		start: () => oi(e.hass.states[t.entity]),
+		canDrag: () => ai(e.hass.states[t.entity]).speed && !B(e.hass.states[t.entity]),
+		snap: (n) => si(e.hass.states[t.entity], n),
 		preview: (e, t) => {
 			e.style.setProperty("--pct", `${t}%`);
 			let n = e.querySelector(".lprev");
@@ -4927,8 +5202,8 @@ var tn = Zt(en), nn = {
 		}),
 		tap: r,
 		hold: () => e.moreInfo(t.entity)
-	}), f = s && o.speed && c ? `On · ${c} %` : nr(e.hass, a);
-	return D`<div class="dev fan ${s ? "on" : ""} ${!a || z(a) ? "na" : ""}" title=${un(e.hass, a) || t.entity}>
+	}), f = s && o.speed && c ? `On · ${c} %` : pr(e.hass, a);
+	return k`<div class="dev fan ${s ? "on" : ""} ${!a || B(a) ? "na" : ""}" title=${dn(e.hass, a) || t.entity}>
     <button class="dmain fdrag" style="--pct:${c}%" aria-label="${l}: tap to toggle${o.speed ? ", drag to set the speed" : ""}, hold for details"
       @pointerdown=${d.down} @pointermove=${d.move} @pointerup=${d.up} @pointercancel=${d.cancel} @contextmenu=${d.context}
       @keydown=${(e) => {
@@ -4936,232 +5211,233 @@ var tn = Zt(en), nn = {
 	}}>
       <span class="ffill" aria-hidden="true"></span>
       <span class="chipi fspin">${i}</span>
-      <span class="txt"><b>${l}</b><span class="fstate">${f}</span><span class="lprev"></span>${n ? D`<small class="ago n">${n}</small>` : A}</span>
+      <span class="txt"><b>${l}</b><span class="fstate">${f}</span><span class="lprev"></span>${n ? k`<small class="ago n">${n}</small>` : M}</span>
     </button>
-    ${o.direction ? D`<button class="fdir" ?disabled=${!a || z(a)} aria-label="${l} direction: ${u}. Switch"
+    ${o.direction ? k`<button class="fdir" ?disabled=${!a || B(a)} aria-label="${l} direction: ${u}. Switch"
           @click=${() => e.call("fan", "set_direction", {
 		entity_id: t.entity,
 		direction: u === "reverse" ? "forward" : "reverse"
-	})}>${u === "reverse" ? "↺ Rev" : "↻ Fwd"}</button>` : A}
+	})}>${u === "reverse" ? "↺ Rev" : "↻ Fwd"}</button>` : M}
   </div>`;
-}, Qr = 500, $r = (e, t) => {
-	let n = e.hass.states[t.entity], r = L(t.entity), i = rr(e.hass, t), a = qn(t), o, s = "", c = "", l = "";
-	if (a === "toggle" && Gn.includes(r) && !z(n)) {
+}, li = 500, ui = (e, t) => {
+	let n = e.hass.states[t.entity], r = R(t.entity), i = mr(e.hass, t), a = ir(t), o, s = "", c = "", l = "";
+	if (a === "toggle" && nr.includes(r) && !B(n)) {
 		let a = n.state === "on";
-		o = () => e.call(r, "toggle", { entity_id: t.entity }), s = `Turn ${a ? "off" : "on"} ${i}?`, c = `${i} is ${nr(e.hass, n).toLowerCase()}.`, l = a ? "Turn off" : "Turn on";
-	} else if (a === "press" && Kn.includes(r) && n && n.state !== "unavailable") {
+		o = () => e.call(r, "toggle", { entity_id: t.entity }), s = `Turn ${a ? "off" : "on"} ${i}?`, c = `${i} is ${pr(e.hass, n).toLowerCase()}.`, l = a ? "Turn off" : "Turn on";
+	} else if (a === "press" && rr.includes(r) && n && n.state !== "unavailable") {
 		let n = r === "script";
 		o = () => e.call(r, n ? "turn_on" : "press", { entity_id: t.entity }), s = `${n ? "Run" : "Press"} ${i}?`, c = n ? "The script will run now." : "The button will be pressed now.", l = n ? "Run" : "Press";
 	}
 	o ? t.confirm ? e.confirm(s, c, o, l) : o() : e.moreInfo(t.entity);
-}, ei = (e, t) => {
+}, di = (e, t) => {
 	let n, r = !1;
 	return {
 		down: () => {
 			r = !1, n = window.setTimeout(() => {
 				r = !0, e.moreInfo(t.entity);
-			}, Qr);
+			}, li);
 		},
 		up: () => window.clearTimeout(n),
 		click: () => {
-			r || $r(e, t);
+			r || ui(e, t);
 		},
 		context: (i) => {
 			i.preventDefault(), window.clearTimeout(n), r = !0, e.moreInfo(t.entity);
 		}
 	};
-}, ti = (e, t) => e.icon ? D`<ha-icon .icon=${e.icon} style="--mdc-icon-size:20px"></ha-icon>` : G(Wn(e.entity, t)), ni = (e, t, n) => {
-	let r = e.hass.states[t.entity], i = Zn(r), a = Qn(r), o = rr(e.hass, t), s = r?.attributes.current_position, c = typeof s == "number" && r && [
+}, fi = (e, t) => e.icon ? k`<ha-icon .icon=${e.icon} style="--mdc-icon-size:20px"></ha-icon>` : G(tr(e.entity, t)), pi = (e, t, n) => {
+	let r = e.hass.states[t.entity], i = cr(r), a = lr(r), o = mr(e.hass, t), s = r?.attributes.current_position, c = typeof s == "number" && r && [
 		"open",
 		"opening",
 		"closing"
 	].includes(r.state) ? ` · ${s} %` : "", l = (n, i) => {
 		let a = () => e.call("cover", n, { entity_id: t.entity });
-		n !== "stop_cover" && $n(t, r) ? e.confirm(`${i} ${o}?`, `${o} is ${nr(e.hass, r).toLowerCase()}.`, a, i) : a();
-	}, u = (e, t, n, r) => e ? D`<button class="sq" aria-label="${r} ${o}" ?disabled=${!t} @click=${() => l(n, r)}>${r}</button>` : A;
-	return D`<div class="dev cover ${tr(r)}" title=${un(e.hass, r) || t.entity}>
+		n !== "stop_cover" && ur(t, r) ? e.confirm(`${i} ${o}?`, `${o} is ${pr(e.hass, r).toLowerCase()}.`, a, i) : a();
+	}, u = (e, t, n, r) => e ? k`<button class="sq" aria-label="${r} ${o}" ?disabled=${!t} @click=${() => l(n, r)}>${r}</button>` : M;
+	return k`<div class="dev cover ${fr(r)}" title=${dn(e.hass, r) || t.entity}>
     <button class="dmain" @click=${() => e.moreInfo(t.entity)} @contextmenu=${(n) => {
 		n.preventDefault(), e.moreInfo(t.entity);
 	}}>
-      <span class="chipi">${ti(t, r)}</span>
-      <span class="txt"><b>${o}</b><span>${nr(e.hass, r)}${c}</span>${n ? D`<small class="ago n">${n}</small>` : A}</span>
+      <span class="chipi">${fi(t, r)}</span>
+      <span class="txt"><b>${o}</b><span>${pr(e.hass, r)}${c}</span>${n ? k`<small class="ago n">${n}</small>` : M}</span>
     </button>
     <span class="cbtns">
       ${u(i.open, a.open, "open_cover", "Open")}${u(i.stop, a.stop, "stop_cover", "Stop")}${u(i.close, a.close, "close_cover", "Close")}
     </span>
   </div>`;
-}, ri = (e, t, n = []) => {
-	let r = e.hass.states[t.entity], i = K(e.hass, ln(r, e.config.appearance?.time_display)), a = Zn(r);
-	if (L(t.entity) === "cover" && (a.open || a.close || a.stop)) return ni(e, t, i);
-	if (L(t.entity) === "fan" && qn(t) === "toggle") return Zr(e, t, i, () => $r(e, t), ti(t, r));
-	let o = tr(r) === "on" && n.includes(t.entity) ? "on lit" : tr(r), s = ei(e, t);
-	return D`<button class="dev ${o}" title=${un(e.hass, r) || t.entity}
+}, mi = (e, t, n = []) => {
+	let r = e.hass.states[t.entity], i = K(e.hass, un(r, e.config.appearance?.time_display)), a = cr(r);
+	if (R(t.entity) === "cover" && (a.open || a.close || a.stop)) return pi(e, t, i);
+	if (R(t.entity) === "fan" && ir(t) === "toggle") return ci(e, t, i, () => ui(e, t), fi(t, r));
+	let o = fr(r) === "on" && n.includes(t.entity) ? "on lit" : fr(r), s = di(e, t);
+	return k`<button class="dev ${o}" title=${dn(e.hass, r) || t.entity}
     @pointerdown=${s.down} @pointerup=${s.up} @pointerleave=${s.up} @click=${s.click} @contextmenu=${s.context}>
-    <span class="chipi">${ti(t, r)}</span>
-    <span class="txt"><b>${rr(e.hass, t)}</b><span>${nr(e.hass, r)}</span>${i ? D`<small class="ago n">${i}</small>` : A}</span>
+    <span class="chipi">${fi(t, r)}</span>
+    <span class="txt"><b>${mr(e.hass, t)}</b><span>${pr(e.hass, r)}</span>${i ? k`<small class="ago n">${i}</small>` : M}</span>
   </button>`;
-}, ii = (e, t) => {
-	if (t.show_camera === !1) return A;
-	if (!t.camera) return D`<section class="glass card"><h2>Camera</h2>
+}, hi = (e, t) => {
+	if (t.show_camera === !1) return M;
+	if (!t.camera) return k`<section class="glass card"><h2>Camera</h2>
       <div class="camslot none"><span class="camico">${G("camera", 24)}</span><span class="t2" style="font-size:12px">This room has no camera</span></div>
     </section>`;
-	let n = `cam:${t.id}`, r = e.ui[n] ?? "live", i = !t.camera_private || e.ui[`reveal:${t.id}`] === !0, a = R(e.hass, t.camera), o = R(e.hass, t.camera_snapshot) ?? a, s = (t) => {
+	let n = `cam:${t.id}`, r = e.ui[n] ?? "live", i = !t.camera_private || e.ui[`reveal:${t.id}`] === !0, a = z(e.hass, t.camera), o = z(e.hass, t.camera_snapshot) ?? a, s = (t) => {
 		e.ui[n] = t, e.refresh();
 	}, c = !!customElements.get("ha-camera-stream"), l;
-	if (!i) l = D`<div class="camslot private"><span class="camico">${G("camera", 24)}</span>
+	if (!i) l = k`<div class="camslot private"><span class="camico">${G("camera", 24)}</span>
       <b style="font-size:14px">${t.name} camera · private</b><span class="t2" style="font-size:12px">Stream hidden until you tap Reveal</span>
       <button class="ctl" @click=${() => {
 		e.ui[`reveal:${t.id}`] = !0, e.refresh();
 	}}>Reveal</button></div>`;
-	else if (z(a)) l = D`<div class="camslot"><span class="camico">${G("camera", 24)}</span><b style="font-size:14px">Camera unavailable</b><span class="t2" style="font-size:12px">${t.camera}</span></div>`;
-	else if (r === "live" && c) l = D`<div class="camslot live"><ha-camera-stream .hass=${e.hass} .stateObj=${a} .fitMode=${"cover"} controls muted></ha-camera-stream></div>`;
-	else if (r === "snapshot" && o?.attributes.entity_picture) l = D`<div class="camslot live"><img src=${`${o.attributes.entity_picture}&t=${e.ui[`${n}:t`] ?? 0}`} alt="${t.name} snapshot" /></div>`;
+	else if (B(a)) l = k`<div class="camslot"><span class="camico">${G("camera", 24)}</span><b style="font-size:14px">Camera unavailable</b><span class="t2" style="font-size:12px">${t.camera}</span></div>`;
+	else if (r === "live" && c) l = k`<div class="camslot live"><ha-camera-stream .hass=${e.hass} .stateObj=${a} .fitMode=${"cover"} controls muted></ha-camera-stream></div>`;
+	else if (r === "snapshot" && o?.attributes.entity_picture) l = k`<div class="camslot live"><img src=${`${o.attributes.entity_picture}&t=${e.ui[`${n}:t`] ?? 0}`} alt="${t.name} snapshot" /></div>`;
 	else {
 		let e = a?.attributes.entity_picture;
-		l = D`<div class="camslot live">${e ? D`<img src=${`${e}&width=1280&height=720`} alt="" />` : A}
+		l = k`<div class="camslot live">${e ? k`<img src=${`${e}&width=1280&height=720`} alt="" />` : M}
       <span class="camwait">Starting live stream…</span></div>`;
 	}
-	let u = (e, t, n) => D`<button class="sq ${t ? "on" : ""}" style="color:var(--atlas-text)" @click=${n}>${e}</button>`;
-	return D`<section class="glass card">
+	let u = (e, t, n) => k`<button class="sq ${t ? "on" : ""}" style="color:var(--atlas-text)" @click=${n}>${e}</button>`;
+	return k`<section class="glass card">
     <div class="row"><h2>Camera</h2>
       <span style="display:flex;gap:10px;align-items:center">
-        ${i && !z(a) && r === "live" ? D`<span class="livetag"><i></i>Live</span>` : A}
-        ${t.camera_private && i ? D`<button class="t2" style="font-size:12px" @click=${() => {
+        ${i && !B(a) && r === "live" ? k`<span class="livetag"><i></i>Live</span>` : M}
+        ${t.camera_private && i ? k`<button class="t2" style="font-size:12px" @click=${() => {
 		e.ui[`reveal:${t.id}`] = !1, s("live");
-	}}>Hide</button>` : A}
+	}}>Hide</button>` : M}
       </span>
     </div>
     ${l}
-    ${i && !z(a) ? D`<div class="btn3" style="margin-top:0">
+    ${i && !B(a) ? k`<div class="btn3" style="margin-top:0">
           ${u("Live", r === "live", () => c ? s("live") : e.moreInfo(t.camera))}
           ${u("Snapshot", r === "snapshot", () => {
 		e.ui[`${n}:t`] = Date.now(), s("snapshot");
 	})}
           ${u("Recordings", !1, () => e.href("/media-browser/browser"))}
-        </div>` : A}
+        </div>` : M}
   </section>`;
-}, ai = (e) => {
-	let t = v(e.config, e.roomId);
-	if (!t) return D`<section class="glass card"><p class="empty">Room "${e.roomId}" is not in the config.</p></section>`;
-	let n = re(e.config, t.floor), r = n ? y(e.config, n.id) : h(e.config), i = r.findIndex((e) => e.id === t.id), a = r[(i - 1 + r.length) % r.length], o = r[(i + 1) % r.length], s = B(e.hass, t.temperature), c = B(e.hass, t.humidity), l = e.badges.get(t.id), u = t.devices ?? [], d = ce(e.config, t), f = d ? In(e, t) : void 0, p = zn(e, t.side_cards, "side"), m = s === void 0 ? "" : s < 16 ? "#5EC8FF" : s > 30 ? "var(--atlas-crit)" : "var(--atlas-accent)", ee = [
-		s === void 0 ? "" : Pn(s),
-		c === void 0 ? "" : Fn(c),
+}, gi = (e) => {
+	let t = y(e.config, e.roomId);
+	if (!t) return k`<section class="glass card"><p class="empty">Room "${e.roomId}" is not in the config.</p></section>`;
+	let n = b(e.config, t.floor), r = n ? x(e.config, n.id) : g(e.config), i = r.findIndex((e) => e.id === t.id), a = r[(i - 1 + r.length) % r.length], o = r[(i + 1) % r.length], s = V(e.hass, t.temperature), c = V(e.hass, t.humidity), l = e.badges.get(t.id), u = t.devices ?? [], d = oe(e.config, t), f = d ? qn(e, t) : void 0, p = Xn(e, t.side_cards, "side"), m = s === void 0 ? "" : s < 16 ? "#5EC8FF" : s > 30 ? "var(--atlas-crit)" : "var(--atlas-accent)", h = [
+		s === void 0 ? "" : Gn(s),
+		c === void 0 ? "" : Kn(c),
 		`${u.length} device${u.length === 1 ? "" : "s"}`
-	].filter(Boolean).join(" · "), g = t.temperature || t.humidity, te = e.config.appearance?.time_display, ne = (t) => {
-		let n = R(e.hass, t), r = K(e.hass, ln(n, te));
-		return r ? D`<small class="ago n" title=${un(e.hass, n)}>${r}</small>` : A;
+	].filter(Boolean).join(" · "), _ = t.temperature || t.humidity, ee = e.config.appearance?.time_display, te = (t) => {
+		let n = z(e.hass, t), r = K(e.hass, un(n, ee));
+		return r ? k`<small class="ago n" title=${dn(e.hass, n)}>${r}</small>` : M;
 	};
-	return D`
+	return k`
     <nav class="crumb" aria-label="Breadcrumb">
       <button @click=${() => e.go("home")}>Home</button><span aria-hidden="true">›</span>
-      ${n ? D`<button @click=${() => e.go(`floor-${n.id}`)}>${n.name}</button><span aria-hidden="true">›</span>` : A}
+      ${n ? k`<button @click=${() => e.go(`floor-${n.id}`)}>${n.name}</button><span aria-hidden="true">›</span>` : M}
       <b>${t.name}</b>
     </nav>
     <section class="rhead">
       <div class="rtitle">
-        <div class="title">${W(t.icon, 32)}<h1>${t.name}</h1>${l ? D`<span class="badge ${l.severity === "critical" ? "critical" : ""}">${l.text}</span>` : A}</div>
-        <p class="n t2">${n ? D`${n.name} <span style="opacity:.5">·</span> ` : A}${ee}</p>
+        <div class="title">${W(t.icon, 32)}<h1>${t.name}</h1>${l ? k`<span class="badge ${l.severity === "critical" ? "critical" : ""}">${l.text}</span>` : M}</div>
+        <p class="n t2">${n ? k`${n.name} <span style="opacity:.5">·</span> ` : M}${h}</p>
       </div>
-      ${zr(e, t)}
-      ${r.length > 1 ? D`<div class="rnav">
+      ${Xr(e, t)}
+      ${r.length > 1 ? k`<div class="rnav">
             <button class="ctl" aria-label="Previous room" @click=${() => e.openRoom(a)}>‹ ${a.name}</button>
             <button class="ctl" aria-label="Next room" @click=${() => e.openRoom(o)}>${o.name} ›</button>
-          </div>` : A}
+          </div>` : M}
     </section>
-    <div class="room-grid ${p === A ? "" : "has-side"}">
+    <div class="room-grid ${p === M ? "" : "has-side"}">
       <div class="col lcol">
         <section class="glass card" style="gap:16px">
           <h2>Climate</h2>
-          ${g ? D`<div class="metrics">
+          ${_ ? k`<div class="metrics">
                 <button class="metric" @click=${() => t.temperature && e.moreInfo(t.temperature)}>
-                  <span class="lbl">${W("temperature", 16)}Temperature${ne(t.temperature)}</span>
+                  <span class="lbl">${W("temperature", 16)}Temperature${te(t.temperature)}</span>
                   <span class="big n" style="color:${e.hot.has(t.id) ? "var(--atlas-crit)" : "inherit"}">${s === void 0 ? "–" : `${s.toFixed(1)}°`}</span>
-                  <span class="bar">${s === void 0 ? A : D`<span style="width:${Math.round(Math.max(.05, Math.min(1, (s - 10) / 30)) * 100)}%;background:${m}"></span>`}</span>
+                  <span class="bar">${s === void 0 ? M : k`<span style="width:${Math.round(Math.max(.05, Math.min(1, (s - 10) / 30)) * 100)}%;background:${m}"></span>`}</span>
                 </button>
                 <button class="metric" @click=${() => t.humidity && e.moreInfo(t.humidity)}>
-                  <span class="lbl">${W("humidity", 16)}Humidity${ne(t.humidity)}</span>
+                  <span class="lbl">${W("humidity", 16)}Humidity${te(t.humidity)}</span>
                   <span class="big n">${c === void 0 ? "–" : `${Math.round(c)} %`}</span>
-                  <span class="bar">${c === void 0 ? A : D`<span style="width:${Math.round(Math.min(100, c))}%;background:${c < 25 ? "var(--atlas-warn)" : "#5EC8FF"}"></span>`}</span>
+                  <span class="bar">${c === void 0 ? M : k`<span style="width:${Math.round(Math.min(100, c))}%;background:${c < 25 ? "var(--atlas-warn)" : "#5EC8FF"}"></span>`}</span>
                 </button>
-              </div>` : D`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
-          ${Br(e, t)}
+              </div>` : k`<span class="t2" style="font-size:14px">No temperature sensor in this room yet.</span>`}
+          ${Zr(e, t)}
         </section>
-        ${Tn(e, t)}
-        ${Mn(e, t)}
-        ${ii(e, t)}
-        ${Vr(e, t)}
+        ${En(e, t)}
+        ${Pn(e, t)}
+        ${hi(e, t)}
+        ${Qr(e, t)}
       </div>
-      ${p === A ? A : D`<div class="col scol">${p}</div>`}
+      ${p === M ? M : k`<div class="col scol">${p}</div>`}
       <div class="col mcol">
         <section class="glass card devcard ${d ? "has-img" : ""} ${f ? `mood ${f.state}` : ""}" style="flex:1;padding:18px;${f?.vars ?? ""}">
-          ${d ? D`<img class="devbg" src=${d} alt="" />${f ? D`<span class="devglow" aria-hidden="true"></span>` : A}<span class="devshade" aria-hidden="true"></span>` : A}
+          ${d ? k`<img class="devbg" src=${d} alt="" />${f ? k`<span class="devglow" aria-hidden="true"></span>` : M}<span class="devshade" aria-hidden="true"></span>` : M}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${u.length} device${u.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
-          ${u.length ? D`<div class="devs">${u.map((t) => ri(e, t, f?.ids ?? []))}</div>` : D`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${u.length ? k`<div class="devs">${u.map((t) => mi(e, t, f?.ids ?? []))}</div>` : k`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
         </section>
-        ${yn(e, t)}
-        ${On(e, t)}
-        ${Hr(e, t)}
-        ${zn(e, t.cards, "main")}
-        ${r.length > 1 ? D`<section class="glass card" style="padding:14px 16px;gap:10px">
+        ${bn(e, t)}
+        ${An(e, t)}
+        ${Un(e, t)}
+        ${$r(e, t)}
+        ${Xn(e, t.cards, "main")}
+        ${r.length > 1 ? k`<section class="glass card" style="padding:14px 16px;gap:10px">
               <h2 style="font-size:14px;margin-left:4px">Other rooms on ${n?.name ?? "this floor"}</h2>
               <div class="sibs">
                 ${r.filter((e) => e.id !== t.id).map((t) => {
-		let n = B(e.hass, t.temperature);
-		return D`<button class=${e.badges.has(t.id) ? "alert" : ""} @click=${() => e.openRoom(t)}>${W(t.icon, 18)}${t.name}${n === void 0 ? A : D` <span class="n" style="opacity:.7">${n.toFixed(1)}°</span>`}</button>`;
+		let n = V(e.hass, t.temperature);
+		return k`<button class=${e.badges.has(t.id) ? "alert" : ""} @click=${() => e.openRoom(t)}>${W(t.icon, 18)}${t.name}${n === void 0 ? M : k` <span class="n" style="opacity:.7">${n.toFixed(1)}°</span>`}</button>`;
 	})}
               </div>
-            </section>` : A}
+            </section>` : M}
       </div>
     </div>
   `;
-}, oi = 2, si = 3e3, X = (e, t) => {
-	let n = V(e.hass, t);
+}, _i = 2, vi = 3e3, Y = (e, t) => {
+	let n = kt(e.hass, t);
 	return n === void 0 ? void 0 : n * 1e3;
-}, Z = (e) => e === void 0 ? "–" : Math.abs(e) >= 1e4 ? `${(e / 1e3).toFixed(2)} kW` : `${Math.round(e)} W`, Q = (e, t, n) => e === void 0 ? "–" : `${e.toFixed(t)}${n}`, ci = (e, t) => {
-	let n = B(e.hass, t);
+}, X = (e) => e === void 0 ? "–" : Math.abs(e) >= 1e4 ? `${(e / 1e3).toFixed(2)} kW` : `${Math.round(e)} W`, Z = (e, t, n) => e === void 0 ? "–" : `${e.toFixed(t)}${n}`, yi = (e, t) => {
+	let n = V(e.hass, t);
 	if (n !== void 0) return Math.abs(n) <= 1 ? n * 100 : n;
-}, li = (e, t) => !!R(e.hass, t.power) && !z(R(e.hass, t.power)), ui = (e, t, n) => {
+}, bi = (e, t) => !!z(e.hass, t.power) && !B(z(e.hass, t.power)), xi = (e, t, n) => {
 	let r = e === void 0 ? 0 : Math.max(0, Math.min(1, e));
-	return O`<svg class="ering" width=${t} height=${t} viewBox="0 0 100 100" aria-hidden="true">
+	return A`<svg class="ering" width=${t} height=${t} viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(241,245,255,0.08)" stroke-width="7" stroke-linecap="round"
       pathLength="100" stroke-dasharray="75 100" transform="rotate(135 50 50)"></circle>
-    ${r > 0 ? O`<circle cx="50" cy="50" r="42" fill="none" stroke=${n ? "var(--atlas-warn)" : "var(--atlas-accent)"} stroke-width="7" stroke-linecap="round"
-          pathLength="100" stroke-dasharray=${`${(r * 75).toFixed(1)} 100`} transform="rotate(135 50 50)"></circle>` : A}
+    ${r > 0 ? A`<circle cx="50" cy="50" r="42" fill="none" stroke=${n ? "var(--atlas-warn)" : "var(--atlas-accent)"} stroke-width="7" stroke-linecap="round"
+          pathLength="100" stroke-dasharray=${`${(r * 75).toFixed(1)} 100`} transform="rotate(135 50 50)"></circle>` : M}
   </svg>`;
-}, di = (e) => [
+}, Si = (e) => [
 	"a",
 	"b",
 	"c"
-].filter((t) => e[`power_${t}`] || e[`current_${t}`] || e[`voltage_${t}`]), fi = (e, t) => {
-	let n = di(t);
-	if (!n.length) return A;
+].filter((t) => e[`power_${t}`] || e[`current_${t}`] || e[`voltage_${t}`]), Ci = (e, t) => {
+	let n = Si(t);
+	if (!n.length) return M;
 	let r = [
 		{
 			key: "power",
 			label: "W",
-			fmt: (t) => Z(X(e, t))
+			fmt: (t) => X(Y(e, t))
 		},
 		{
 			key: "current",
 			label: "A",
-			fmt: (t) => Q(B(e.hass, t), 2, " A")
+			fmt: (t) => Z(V(e.hass, t), 2, " A")
 		},
 		{
 			key: "voltage",
 			label: "V",
-			fmt: (t) => Q(B(e.hass, t), 0, " V")
+			fmt: (t) => Z(V(e.hass, t), 0, " V")
 		}
 	].filter((e) => n.some((n) => t[`${e.key}_${n}`])), i = `grid-template-columns: 22px repeat(${r.length}, minmax(0, 1fr))`;
-	return D`<div class="ephases" role="table" aria-label="${t.name} phases">
-    ${n.map((n) => D`<div class="ph sm" role="row" style=${i}>
+	return k`<div class="ephases" role="table" aria-label="${t.name} phases">
+    ${n.map((n) => k`<div class="ph sm" role="row" style=${i}>
         <span class="phl" role="rowheader">${n.toUpperCase()}</span>
         ${r.map((r) => {
 		let i = t[`${r.key}_${n}`];
-		return D`<button class="n" role="cell" ?disabled=${!i} aria-label="Phase ${n.toUpperCase()} ${r.key}" @click=${() => i && e.moreInfo(i)}>${i ? r.fmt(i) : ""}</button>`;
+		return k`<button class="n" role="cell" ?disabled=${!i} aria-label="Phase ${n.toUpperCase()} ${r.key}" @click=${() => i && e.moreInfo(i)}>${i ? r.fmt(i) : ""}</button>`;
 	})}
       </div>`)}
   </div>`;
-}, pi = (e, t, n) => li(e, t) ? n !== void 0 && Math.abs(n) >= oi ? {
+}, wi = (e, t, n) => bi(e, t) ? n !== void 0 && Math.abs(n) >= _i ? {
 	text: "Consuming",
 	cls: "on"
 } : {
@@ -5170,78 +5446,78 @@ var tn = Zt(en), nn = {
 } : {
 	text: "Offline",
 	cls: "off"
-}, $ = (e, t, n) => D`<button class="estat" ?disabled=${!n} @click=${() => n?.()}><b class="n">${e}</b><span>${t}</span></button>`, mi = (e, t) => {
-	let n = X(e, t.power), r = t.max_power || si, i = pi(e, t, n), a = di(t), o = (t) => t ? () => e.moreInfo(t) : void 0;
-	return D`<section class="glass card emain">
+}, Q = (e, t, n) => k`<button class="estat" ?disabled=${!n} @click=${() => n?.()}><b class="n">${e}</b><span>${t}</span></button>`, Ti = (e, t) => {
+	let n = Y(e, t.power), r = t.max_power || vi, i = wi(e, t, n), a = Si(t), o = (t) => t ? () => e.moreInfo(t) : void 0;
+	return k`<section class="glass card emain">
     <div class="row"><h2>${W("energy", 20)}${t.name}</h2><span class="estatus ${i.cls}"><i></i>${i.text}</span></div>
     <div class="emain-body">
       <button class="egauge big" @click=${() => e.moreInfo(t.power)}>
-        ${ui(n === void 0 ? void 0 : n / r, 168, n !== void 0 && n > r * .8)}
-        <span class="ev"><b class="n">${Z(n)}</b><span>${i.text === "Offline" ? "no data" : "now"}</span></span>
+        ${xi(n === void 0 ? void 0 : n / r, 168, n !== void 0 && n > r * .8)}
+        <span class="ev"><b class="n">${X(n)}</b><span>${i.text === "Offline" ? "no data" : "now"}</span></span>
       </button>
-      ${a.length ? D`<div class="phases" role="table" aria-label="Phases">
-            <div class="ph head" role="row"><span></span>${a.map((e) => D`<span role="columnheader">Phase ${e.toUpperCase()}</span>`)}</div>
-            <div class="ph" role="row"><span class="t2">${W("energy", 16)}Power</span>${a.map((n) => D`<button class="n" @click=${() => o(t[`power_${n}`])?.()}>${Z(X(e, t[`power_${n}`]))}</button>`)}</div>
-            <div class="ph" role="row"><span class="t2">${W("power", 16)}Current</span>${a.map((n) => D`<button class="n" @click=${() => o(t[`current_${n}`])?.()}>${Q(B(e.hass, t[`current_${n}`]), 2, " A")}</button>`)}</div>
-            <div class="ph" role="row"><span class="t2">${W("grid", 16)}Voltage</span>${a.map((n) => D`<button class="n" @click=${() => o(t[`voltage_${n}`])?.()}>${Q(B(e.hass, t[`voltage_${n}`]), 1, " V")}</button>`)}</div>
-          </div>` : A}
+      ${a.length ? k`<div class="phases" role="table" aria-label="Phases">
+            <div class="ph head" role="row"><span></span>${a.map((e) => k`<span role="columnheader">Phase ${e.toUpperCase()}</span>`)}</div>
+            <div class="ph" role="row"><span class="t2">${W("energy", 16)}Power</span>${a.map((n) => k`<button class="n" @click=${() => o(t[`power_${n}`])?.()}>${X(Y(e, t[`power_${n}`]))}</button>`)}</div>
+            <div class="ph" role="row"><span class="t2">${W("power", 16)}Current</span>${a.map((n) => k`<button class="n" @click=${() => o(t[`current_${n}`])?.()}>${Z(V(e.hass, t[`current_${n}`]), 2, " A")}</button>`)}</div>
+            <div class="ph" role="row"><span class="t2">${W("grid", 16)}Voltage</span>${a.map((n) => k`<button class="n" @click=${() => o(t[`voltage_${n}`])?.()}>${Z(V(e.hass, t[`voltage_${n}`]), 1, " V")}</button>`)}</div>
+          </div>` : M}
     </div>
     <div class="estats">
-      ${t.energy ? $(Q(B(e.hass, t.energy), 1, " kWh"), "Total energy", o(t.energy)) : A}
-      ${t.power_factor ? $(Q(ci(e, t.power_factor), 0, " %"), "Power factor", o(t.power_factor)) : A}
-      ${t.current ? $(Q(B(e.hass, t.current), 2, " A"), "Current", o(t.current)) : A}
-      ${t.frequency ? $(Q(B(e.hass, t.frequency), 2, " Hz"), "Frequency", o(t.frequency)) : A}
+      ${t.energy ? Q(Z(V(e.hass, t.energy), 1, " kWh"), "Total energy", o(t.energy)) : M}
+      ${t.power_factor ? Q(Z(yi(e, t.power_factor), 0, " %"), "Power factor", o(t.power_factor)) : M}
+      ${t.current ? Q(Z(V(e.hass, t.current), 2, " A"), "Current", o(t.current)) : M}
+      ${t.frequency ? Q(Z(V(e.hass, t.frequency), 2, " Hz"), "Frequency", o(t.frequency)) : M}
     </div>
   </section>`;
-}, hi = (e, t, n) => {
-	let r = t ? X(e, t.power) : void 0, i = n.map((t) => ({
+}, Ei = (e, t, n) => {
+	let r = t ? Y(e, t.power) : void 0, i = n.map((t) => ({
 		m: t,
-		w: X(e, t.power)
-	})).filter((e) => e.w !== void 0), a = i.reduce((e, t) => e + Math.max(0, t.w), 0), o = r === void 0 ? void 0 : r - a, s = [...i].filter((e) => e.w >= oi).sort((e, t) => t.w - e.w).slice(0, 4), c = Math.max(r ?? 0, s[0]?.w ?? 0, 1), l = n.length - i.length;
-	return D`<section class="glass card esum">
+		w: Y(e, t.power)
+	})).filter((e) => e.w !== void 0), a = i.reduce((e, t) => e + Math.max(0, t.w), 0), o = r === void 0 ? void 0 : r - a, s = [...i].filter((e) => e.w >= _i).sort((e, t) => t.w - e.w).slice(0, 4), c = Math.max(r ?? 0, s[0]?.w ?? 0, 1), l = n.length - i.length;
+	return k`<section class="glass card esum">
     <h2>${W("info", 20)}Right now</h2>
     <div class="esum-figs">
-      ${t ? D`<div><b class="n">${Z(r)}</b><span>Whole house</span></div>` : A}
-      <div><b class="n">${Z(i.length ? a : void 0)}</b><span>Metered circuits</span></div>
-      ${o === void 0 ? A : D`<div><b class="n">${Z(Math.max(0, o))}</b><span>Not metered</span></div>`}
+      ${t ? k`<div><b class="n">${X(r)}</b><span>Whole house</span></div>` : M}
+      <div><b class="n">${X(i.length ? a : void 0)}</b><span>Metered circuits</span></div>
+      ${o === void 0 ? M : k`<div><b class="n">${X(Math.max(0, o))}</b><span>Not metered</span></div>`}
     </div>
     <h3 class="t2">Top consumers</h3>
-    ${s.length ? D`<div class="etop">${s.map((t) => D`<button @click=${() => e.moreInfo(t.m.power)}>
-            <span class="lbl"><span>${t.m.name}</span><b class="n">${Z(t.w)}</b></span>
+    ${s.length ? k`<div class="etop">${s.map((t) => k`<button @click=${() => e.moreInfo(t.m.power)}>
+            <span class="lbl"><span>${t.m.name}</span><b class="n">${X(t.w)}</b></span>
             <span class="bar"><span style="width:${Math.round(t.w / c * 100)}%"></span></span>
-          </button>`)}</div>` : D`<span class="t2" style="font-size:13px">All circuits in standby.</span>`}
-    ${l ? D`<span class="t2" style="font-size:12px;color:var(--atlas-warn)">${l} circuit${l > 1 ? "s" : ""} offline</span>` : A}
+          </button>`)}</div>` : k`<span class="t2" style="font-size:13px">All circuits in standby.</span>`}
+    ${l ? k`<span class="t2" style="font-size:12px;color:var(--atlas-warn)">${l} circuit${l > 1 ? "s" : ""} offline</span>` : M}
   </section>`;
-}, gi = (e, t) => {
-	let n = X(e, t.power), r = t.max_power || si, i = pi(e, t, n), a = (t) => t ? () => e.moreInfo(t) : void 0, o = [t.voltage ? Q(B(e.hass, t.voltage), 1, " V") : "", t.frequency ? Q(B(e.hass, t.frequency), 2, " Hz") : ""].filter(Boolean).join(" · ");
-	return D`<div class="ecard ${i.cls}">
+}, Di = (e, t) => {
+	let n = Y(e, t.power), r = t.max_power || vi, i = wi(e, t, n), a = (t) => t ? () => e.moreInfo(t) : void 0, o = [t.voltage ? Z(V(e.hass, t.voltage), 1, " V") : "", t.frequency ? Z(V(e.hass, t.frequency), 2, " Hz") : ""].filter(Boolean).join(" · ");
+	return k`<div class="ecard ${i.cls}">
     <div class="row"><b class="ename">${t.name}</b><span class="estatus ${i.cls}"><i></i>${i.text}</span></div>
     <button class="egauge" aria-label="${t.name} power details" @click=${() => e.moreInfo(t.power)}>
-      ${ui(n === void 0 ? void 0 : n / r, 116, n !== void 0 && n > r * .8)}
-      <span class="ev"><b class="n">${Z(n)}</b></span>
+      ${xi(n === void 0 ? void 0 : n / r, 116, n !== void 0 && n > r * .8)}
+      <span class="ev"><b class="n">${X(n)}</b></span>
     </button>
     <div class="estats sm">
-      ${t.energy ? $(Q(B(e.hass, t.energy), 1, " kWh"), "Energy", a(t.energy)) : A}
-      ${t.current ? $(Q(B(e.hass, t.current), 2, " A"), "Current", a(t.current)) : A}
-      ${t.power_factor ? $(Q(ci(e, t.power_factor), 0, " %"), "PF", a(t.power_factor)) : A}
+      ${t.energy ? Q(Z(V(e.hass, t.energy), 1, " kWh"), "Energy", a(t.energy)) : M}
+      ${t.current ? Q(Z(V(e.hass, t.current), 2, " A"), "Current", a(t.current)) : M}
+      ${t.power_factor ? Q(Z(yi(e, t.power_factor), 0, " %"), "PF", a(t.power_factor)) : M}
     </div>
-    ${fi(e, t)}
-    ${o ? D`<span class="n t2 eextra">${o}</span>` : A}
+    ${Ci(e, t)}
+    ${o ? k`<span class="n t2 eextra">${o}</span>` : M}
   </div>`;
-}, _i = (e) => {
-	let t = g(e.config), n = t.find((e) => e.main), r = t.filter((e) => e !== n), i = r.filter((t) => pi(e, t, X(e, t.power)).cls === "on").length;
-	return D`
+}, Oi = (e) => {
+	let t = _(e.config), n = t.find((e) => e.main), r = t.filter((e) => e !== n), i = r.filter((t) => wi(e, t, Y(e, t.power)).cls === "on").length;
+	return k`
     <section class="hero" aria-label="Energy">
       <h1>Energy</h1>
       <p class="n">${r.length} circuit${r.length === 1 ? "" : "s"} metered <span style="opacity:.5">·</span> ${i} consuming now</p>
     </section>
-    ${t.length ? D`<div class="energy-top">${n ? mi(e, n) : A}${hi(e, n, r)}</div>
-          ${r.length ? D`<section class="glass card" style="gap:14px">
+    ${t.length ? k`<div class="energy-top">${n ? Ti(e, n) : M}${Ei(e, n, r)}</div>
+          ${r.length ? k`<section class="glass card" style="gap:14px">
                 <div class="row"><h2>Circuits</h2><span class="t2" style="font-size:12px">Tap a value for its history</span></div>
-                <div class="egrid">${r.map((t) => gi(e, t))}</div>
-              </section>` : A}` : D`<section class="glass card"><p class="empty">No energy meters configured. Add them in Edit dashboard > Energy.</p></section>`}
+                <div class="egrid">${r.map((t) => Di(e, t))}</div>
+              </section>` : M}` : k`<section class="glass card"><p class="empty">No energy meters configured. Add them in Edit dashboard > Energy.</p></section>`}
   `;
-}, vi = [
+}, ki = [
 	"brightness",
 	"color_temp",
 	"hs",
@@ -5250,15 +5526,15 @@ var tn = Zt(en), nn = {
 	"rgbw",
 	"rgbww",
 	"white"
-], yi = (e) => !!e && L(e.entity_id) === "light" && Array.isArray(e.attributes.supported_color_modes) && e.attributes.supported_color_modes.some((e) => vi.includes(e)), bi = (e) => {
+], Ai = (e) => !!e && R(e.entity_id) === "light" && Array.isArray(e.attributes.supported_color_modes) && e.attributes.supported_color_modes.some((e) => ki.includes(e)), ji = (e) => {
 	if (e?.state !== "on") return 0;
 	let t = e.attributes.brightness;
 	return typeof t == "number" ? Math.max(1, Math.round(t / 255 * 100)) : 100;
-}, xi = (e) => e ? e.state === "unavailable" ? "Unavailable" : e.state === "unknown" ? "Unknown" : e.state === "on" ? yi(e) ? `On · ${bi(e)} %` : "On" : "Off" : "Not found", Si = (e, t) => {
+}, Mi = (e) => e ? e.state === "unavailable" ? "Unavailable" : e.state === "unknown" ? "Unknown" : e.state === "on" ? Ai(e) ? `On · ${ji(e)} %` : "On" : "Off" : "Not found", Ni = (e, t) => {
 	let n = () => e.hass.states[t];
-	return Gr({
-		start: () => bi(n()),
-		canDrag: () => yi(n()) && !z(n()),
+	return ni({
+		start: () => ji(n()),
+		canDrag: () => Ai(n()) && !B(n()),
 		preview: (e, t) => {
 			e.style.setProperty("--pct", `${t}%`);
 			let n = e.querySelector(".lprev");
@@ -5270,8 +5546,8 @@ var tn = Zt(en), nn = {
 		}),
 		tap: () => {
 			let r = n();
-			if (!r || z(r)) return e.moreInfo(t);
-			let i = L(t);
+			if (!r || B(r)) return e.moreInfo(t);
+			let i = R(t);
 			e.call([
 				"light",
 				"switch",
@@ -5280,39 +5556,39 @@ var tn = Zt(en), nn = {
 		},
 		hold: () => e.moreInfo(t)
 	});
-}, Ci = (e, t, n) => {
-	let r = e.hass.states[n], i = r?.state === "on", a = !r || r.state === "unavailable", o = yi(r), s = Si(e, n), c = (t.devices ?? []).find((e) => e.entity === n)?.name ?? ae(e.config, n) ?? String(r?.attributes.friendly_name ?? n);
-	return D`<button class="ltile ${i ? "on" : ""} ${a ? "na" : ""} ${o ? "dim" : ""}" style="--pct:${bi(r)}%"
+}, Pi = (e, t, n) => {
+	let r = e.hass.states[n], i = r?.state === "on", a = !r || r.state === "unavailable", o = Ai(r), s = Ni(e, n), c = (t.devices ?? []).find((e) => e.entity === n)?.name ?? re(e.config, n) ?? String(r?.attributes.friendly_name ?? n);
+	return k`<button class="ltile ${i ? "on" : ""} ${a ? "na" : ""} ${o ? "dim" : ""}" style="--pct:${ji(r)}%"
     title=${o ? `${c}: tap to toggle, drag to dim, hold for details` : `${c}: tap to toggle, hold for details`}
     @pointerdown=${s.down} @pointermove=${s.move} @pointerup=${s.up} @pointercancel=${s.cancel} @contextmenu=${s.context}
     @keydown=${(t) => {
-		(t.key === "Enter" || t.key === " ") && (t.preventDefault(), e.call(L(n) === "light" ? "light" : "homeassistant", "toggle", { entity_id: n }));
+		(t.key === "Enter" || t.key === " ") && (t.preventDefault(), e.call(R(n) === "light" ? "light" : "homeassistant", "toggle", { entity_id: n }));
 	}}>
     <span class="lfill" aria-hidden="true"></span>
-    <span class="lic">${G(L(n) === "light" ? "bulb" : "power", 20)}</span>
-    <span class="ltxt"><b>${c}</b><span class="lstate">${xi(r)}</span><span class="lstate lprev"></span></span>
+    <span class="lic">${G(R(n) === "light" ? "bulb" : "power", 20)}</span>
+    <span class="ltxt"><b>${c}</b><span class="lstate">${Mi(r)}</span><span class="lstate lprev"></span></span>
   </button>`;
-}, wi = (e, t) => {
-	let n = S(e.config, t), r = n.filter((t) => e.hass.states[t]?.state === "on");
-	return D`<div class="lroom">
+}, Fi = (e, t) => {
+	let n = w(e.config, t), r = n.filter((t) => e.hass.states[t]?.state === "on");
+	return k`<div class="lroom">
     <div class="row">
       <button class="lrname" @click=${() => e.openRoom(t)}><b>${t.name}</b><small class="t2">${r.length ? `${r.length} of ${n.length} on` : "All off"}</small></button>
       <button class="tog ${r.length ? "on" : ""}" role="switch" aria-checked=${r.length ? "true" : "false"} aria-label="${t.name} lights"
         @click=${() => e.call("homeassistant", r.length ? "turn_off" : "turn_on", { entity_id: r.length ? r : n })}><i></i></button>
     </div>
-    <div class="ltiles">${n.map((n) => Ci(e, t, n))}</div>
+    <div class="ltiles">${n.map((n) => Pi(e, t, n))}</div>
   </div>`;
-}, Ti = (e) => {
-	let t = (t) => t.filter((t) => S(e.config, t).length), n = _(e.config).map((n) => ({
+}, Ii = (e) => {
+	let t = (t) => t.filter((t) => w(e.config, t).length), n = v(e.config).map((n) => ({
 		title: `${n.name}${n.level ? ` · level ${n.level}` : ""}`,
-		rooms: t(y(e.config, n.id))
-	})).filter((e) => e.rooms.length), r = t(h(e.config).filter((t) => !t.floor || !re(e.config, t.floor)));
+		rooms: t(x(e.config, n.id))
+	})).filter((e) => e.rooms.length), r = t(g(e.config).filter((t) => !t.floor || !b(e.config, t.floor)));
 	r.length && n.push({
 		title: "Other rooms",
 		rooms: r
 	});
-	let i = [...new Set(n.flatMap((t) => t.rooms.flatMap((t) => S(e.config, t))))], a = i.filter((t) => e.hass.states[t]?.state === "on");
-	return D`
+	let i = [...new Set(n.flatMap((t) => t.rooms.flatMap((t) => w(e.config, t))))], a = i.filter((t) => e.hass.states[t]?.state === "on");
+	return k`
     <section class="hero" aria-label="Lights">
       <h1 class="sm">Lights</h1>
       <p class="n">${a.length} of ${i.length} on <span style="opacity:.5">·</span> tap to toggle, drag to dim, hold for details</p>
@@ -5323,18 +5599,18 @@ var tn = Zt(en), nn = {
         ${G("power", 18)}All off
       </button>
     </div>
-    ${n.length ? n.map((t) => D`<section class="glass card lfloor"><h2>${t.title}</h2><div class="lrooms">${t.rooms.map((t) => wi(e, t))}</div></section>`) : D`<section class="glass card"><p class="empty">No room has lights yet. Add light devices to a room, or set its Light entities.</p></section>`}
+    ${n.length ? n.map((t) => k`<section class="glass card lfloor"><h2>${t.title}</h2><div class="lrooms">${t.rooms.map((t) => Fi(e, t))}</div></section>`) : k`<section class="glass card"><p class="empty">No room has lights yet. Add light devices to a room, or set its Light entities.</p></section>`}
   `;
-}, Ei = (e) => h(e.config).some((t) => S(e.config, t).length), Di = {
+}, Li = (e) => g(e.config).some((t) => w(e.config, t).length), Ri = {
 	critical: "Critical",
 	warning: "Warning",
 	minor: "Minor"
-}, Oi = [
+}, zi = [
 	["Settings", "/config/system"],
 	["Logs", "/config/logs"],
 	["Repairs", "/config/repairs"],
 	["Updates", "/config/updates"]
-], ki = (e, t) => {
+], Bi = (e, t) => {
 	let n = t ? Date.parse(t) : NaN;
 	if (!Number.isFinite(n)) return "";
 	let r = e.hass.locale?.language ?? e.hass.language ?? "en";
@@ -5344,99 +5620,99 @@ var tn = Zt(en), nn = {
 		hour: "2-digit",
 		minute: "2-digit"
 	});
-}, Ai = (e, t) => `${e} ${t}${e === 1 ? "" : "s"}`, ji = (e) => D`<div class="inc ${e.severity}">
+}, $ = (e, t) => `${e} ${t}${e === 1 ? "" : "s"}`, Vi = (e) => k`<div class="inc ${e.severity}">
   <div class="incmain">
-    <div class="inchead"><span class="itag ${e.severity}">${Di[e.severity]}</span><b>${e.title}</b>${e.count ? D`<span class="icount n">${e.count}×</span>` : A}</div>
-    ${e.detail ? D`<p>${e.detail}</p>` : A}
-    ${e.sources.length ? D`<small class="t2">Source: ${e.sources.join(", ")}</small>` : A}
+    <div class="inchead"><span class="itag ${e.severity}">${Ri[e.severity]}</span><b>${e.title}</b>${e.count ? k`<span class="icount n">${e.count}×</span>` : M}</div>
+    ${e.detail ? k`<p>${e.detail}</p>` : M}
+    ${e.sources.length ? k`<small class="t2">Source: ${e.sources.join(", ")}</small>` : M}
   </div>
-  ${e.recommendation ? D`<div class="increc"><small>Recommendation</small><p>${e.recommendation}</p></div>` : A}
-</div>`, Mi = (e) => {
+  ${e.recommendation ? k`<div class="increc"><small>Recommendation</small><p>${e.recommendation}</p></div>` : M}
+</div>`, Hi = (e) => {
 	let t = e.config.entities?.incidents;
-	if (!t) return A;
-	let n = Pt(R(e.hass, t)), r = n?.counts ?? {
+	if (!t) return M;
+	let n = Ft(z(e.hass, t)), r = n?.counts ?? {
 		critical: 0,
 		warning: 0,
 		minor: 0
-	}, i = r.critical + r.warning + r.minor, a = n ? r.critical ? "crit" : r.warning ? "warn" : i ? "info" : "ok" : "wait", o = n ? r.critical ? Ai(r.critical, "critical incident") : r.warning ? `${Ai(r.warning, "warning")} to check` : i ? Ai(r.minor, "minor issue") : "No incidents in the latest scan" : "No report yet", s = n ? i ? [
-		r.critical && Ai(r.critical, "critical"),
-		r.warning && Ai(r.warning, "warning"),
+	}, i = r.critical + r.warning + r.minor, a = n ? r.critical ? "crit" : r.warning ? "warn" : i ? "info" : "ok" : "wait", o = n ? r.critical ? $(r.critical, "critical incident") : r.warning ? `${$(r.warning, "warning")} to check` : i ? $(r.minor, "minor issue") : "No incidents in the latest scan" : "No report yet", s = n ? i ? [
+		r.critical && $(r.critical, "critical"),
+		r.warning && $(r.warning, "warning"),
 		r.minor && `${r.minor} minor`
 	].filter(Boolean).join(" · ") : "Home Assistant and add-on logs look clean." : `Waiting for ${t} to report. The analyzer publishes it after its next run.`;
-	return D`<section class="glass card report">
+	return k`<section class="glass card report">
     <div class="row">
       <h2>${W("system", 20)}Log report</h2>
-      <button class="t2 more" @click=${() => e.moreInfo(t)}>${n?.generated ? `Updated ${ki(e, n.generated)}` : "Details"} ${W("chevron", 14)}</button>
+      <button class="t2 more" @click=${() => e.moreInfo(t)}>${n?.generated ? `Updated ${Bi(e, n.generated)}` : "Details"} ${W("chevron", 14)}</button>
     </div>
     <div class="rbanner ${a}">
       <span class="rico">${a === "ok" ? G("shield", 22) : a === "wait" ? G("refresh", 22) : W("alert", 22)}</span>
       <span class="atxt"><b>${o}</b><small>${s}</small></span>
     </div>
-    ${n ? D`<div class="rstats">
+    ${n ? k`<div class="rstats">
           ${[
 		"critical",
 		"warning",
 		"minor"
-	].map((e) => D`<div class="rstat ${e} ${r[e] ? "has" : ""}"><b class="n">${r[e]}</b><small>${Di[e]}</small></div>`)}
+	].map((e) => k`<div class="rstat ${e} ${r[e] ? "has" : ""}"><b class="n">${r[e]}</b><small>${Ri[e]}</small></div>`)}
         </div>
-        ${n.incidents.length ? D`<div class="incs">${n.incidents.map(ji)}</div>` : i ? D`<p class="t2" style="margin:0;font-size:12px">The sensor reports counts but no incident list.</p>` : A}` : A}
+        ${n.incidents.length ? k`<div class="incs">${n.incidents.map(Vi)}</div>` : i ? k`<p class="t2" style="margin:0;font-size:12px">The sensor reports counts but no incident list.</p>` : M}` : M}
   </section>`;
-}, Ni = (e) => {
-	let t = Object.values(e.hass.states).filter((e) => L(e.entity_id) === "update");
-	if (!t.length) return A;
+}, Ui = (e) => {
+	let t = Object.values(e.hass.states).filter((e) => R(e.entity_id) === "update");
+	if (!t.length) return M;
 	let n = t.filter((e) => e.state === "on"), r = (e) => String(e.attributes.title ?? e.attributes.friendly_name ?? e.entity_id), i = (e) => {
 		let t = e.attributes;
 		return t.in_progress ? "Installing" : !t.installed_version && !t.latest_version ? "Update available" : `${t.installed_version ?? "-"} → ${t.latest_version ?? "-"}`;
 	};
-	return D`<section class="glass card">
+	return k`<section class="glass card">
     <div class="row">
       <h2>${G("refresh", 20)}Updates</h2>
       <button class="t2 more" @click=${() => e.href("/config/updates")}>All updates ${W("chevron", 14)}</button>
     </div>
-    ${n.length ? D`<div class="slist">
-          ${n.map((t) => D`<div class="srow open"><button class="smain" @click=${() => e.moreInfo(t.entity_id)}>
+    ${n.length ? k`<div class="slist">
+          ${n.map((t) => k`<div class="srow open"><button class="smain" @click=${() => e.moreInfo(t.entity_id)}>
               <span class="sic">${G("refresh", 18)}</span>
               <span class="atxt"><b>${r(t)}</b><small class="t2">${i(t)}</small></span>
             </button></div>`)}
-        </div>` : D`<p class="t2" style="margin:0;font-size:13px">Everything is up to date.</p>`}
+        </div>` : k`<p class="t2" style="margin:0;font-size:13px">Everything is up to date.</p>`}
   </section>`;
-}, Pi = (e) => {
-	let t = ue(e.config).filter((t) => {
+}, Wi = (e) => {
+	let t = ce(e.config).filter((t) => {
 		let n = e.hass.states[t];
 		return !n || n.state === "unavailable";
 	});
-	return D`<section class="glass card">
+	return k`<section class="glass card">
     <div class="row">
       <h2>${W("alert", 20)}Unavailable devices</h2>
-      <span class="n t2" style="font-size:12px">${t.length ? `${t.length} of ${ue(e.config).length}` : "None"}</span>
+      <span class="n t2" style="font-size:12px">${t.length ? `${t.length} of ${ce(e.config).length}` : "None"}</span>
     </div>
-    ${t.length ? D`<div class="slist">
+    ${t.length ? k`<div class="slist">
           ${t.map((t) => {
-		let n = e.hass.states[t], r = x(e.config, t), i = ae(e.config, t) ?? String(n?.attributes.friendly_name ?? t);
-		return D`<div class="srow na"><button class="smain" @click=${() => n ? e.moreInfo(t) : r ? e.openRoom(r) : void 0}>
+		let n = e.hass.states[t], r = C(e.config, t), i = re(e.config, t) ?? String(n?.attributes.friendly_name ?? t);
+		return k`<div class="srow na"><button class="smain" @click=${() => n ? e.moreInfo(t) : r ? e.openRoom(r) : void 0}>
               <span class="sic">${G(n ? "power" : "dot", 18)}</span>
               <span class="atxt"><b>${i}</b><small>${r ? `${r.name} · ` : ""}${n ? "Unavailable" : "Not found"} · ${t}</small></span>
             </button></div>`;
 	})}
-        </div>` : D`<p class="t2" style="margin:0;font-size:13px">Every entity in the dashboard config responds.</p>`}
+        </div>` : k`<p class="t2" style="margin:0;font-size:13px">Every entity in the dashboard config responds.</p>`}
   </section>`;
-}, Fi = (e) => {
-	let t = Pt(R(e.hass, e.config.entities?.incidents)), n = e.hass.config?.version, r = [n ? `Home Assistant ${n}` : "", e.config.entities?.incidents ? t ? `Log report: ${t.counts.critical} critical · ${Ai(t.counts.warning, "warning")} · ${t.counts.minor} minor` : "Log report: waiting" : ""].filter(Boolean);
-	return D`
+}, Gi = (e) => {
+	let t = Ft(z(e.hass, e.config.entities?.incidents)), n = e.hass.config?.version, r = [n ? `Home Assistant ${n}` : "", e.config.entities?.incidents ? t ? `Log report: ${t.counts.critical} critical · ${$(t.counts.warning, "warning")} · ${t.counts.minor} minor` : "Log report: waiting" : ""].filter(Boolean);
+	return k`
     <section class="hero" aria-label="System">
       <h1 class="sm">System</h1>
-      ${r.length ? D`<p class="n">${r.join(" · ")}</p>` : A}
+      ${r.length ? k`<p class="n">${r.join(" · ")}</p>` : M}
     </section>
     <div class="syslinks">
-      ${Oi.map(([t, n]) => D`<button class="ctl" @click=${() => e.href(n)}>${t} ${W("chevron", 14)}</button>`)}
+      ${zi.map(([t, n]) => k`<button class="ctl" @click=${() => e.href(n)}>${t} ${W("chevron", 14)}</button>`)}
     </div>
     <div class="sys-grid">
-      <div class="col">${Mi(e)}</div>
-      <div class="col">${Ni(e)}${Pi(e)}</div>
+      <div class="col">${Hi(e)}</div>
+      <div class="col">${Ui(e)}${Wi(e)}</div>
     </div>
-    ${zn(e, e.config.layout?.system_cards, "main")}
+    ${Xn(e, e.config.layout?.system_cards, "main")}
   `;
-}, Ii, Li = {
+}, Ki, qi = {
 	graphite: {
 		base: [
 			"#1A1D22",
@@ -5517,21 +5793,21 @@ var tn = Zt(en), nn = {
 		tile: "170,120,80",
 		dark: "20,18,16"
 	}
-}, Ri = "atlas-home.device", zi = () => {
+}, Ji = "atlas-home.device", Yi = () => {
 	try {
-		return JSON.parse(localStorage.getItem(Ri) ?? "{}");
+		return JSON.parse(localStorage.getItem(Ji) ?? "{}");
 	} catch {
 		return {};
 	}
-}, Bi = (e) => {
+}, Xi = (e) => {
 	try {
-		localStorage.setItem(Ri, JSON.stringify(e));
+		localStorage.setItem(Ji, JSON.stringify(e));
 	} catch {}
-}, Vi = (e) => [
+}, Zi = (e) => [
 	1,
 	3,
 	5
-].map((t) => parseInt(e.slice(t, t + 2), 16)).join(","), Hi = {}, Ui = {}, Wi = class extends bt {
+].map((t) => parseInt(e.slice(t, t + 2), 16)).join(","), Qi = {}, $i = {}, ea = class extends yt {
 	constructor() {
 		super(), this._fcSubs = /* @__PURE__ */ new Map(), this._onResize = () => this._side && this._fitSide(this._side), this._onMq = (e) => this._narrow = e.matches, this._call = async (e, t, n) => {
 			try {
@@ -5539,14 +5815,14 @@ var tn = Zt(en), nn = {
 			} catch (n) {
 				f(this, "hass-notification", { message: `ATLAS: ${e}.${t} failed: ${n?.message ?? n}` });
 			}
-		}, this._settings = !1, this._prefs = zi(), this._narrow = !1, this._tick = 0;
+		}, this._settings = !1, this._prefs = Yi(), this._narrow = !1, this._tick = 0;
 	}
 	setConfig(e) {
 		if (!e?.atlas) throw Error("atlas-view is generated by the ATLAS Home dashboard strategy");
 		this._config = e;
 		let t = e.atlas;
 		this._relevant = /* @__PURE__ */ new Set([
-			...ue(t),
+			...ce(t),
 			...(t.alerts?.temperature_rules ?? []).map((e) => e.entity),
 			...t.alerts?.exterior_doors ?? [],
 			...t.alerts?.interior_doors ?? [],
@@ -5556,8 +5832,8 @@ var tn = Zt(en), nn = {
 			...t.entities?.persons ?? [],
 			...t.alerts?.rain_windows ?? [],
 			...[t.alerts?.rain_weather].filter((e) => !!e),
-			...ne(t),
-			...h(t).flatMap((e) => [
+			...te(t),
+			...g(t).flatMap((e) => [
 				...(e.climate_extra ?? []).map((e) => e.entity),
 				...e.light_entities ?? [],
 				...e.automations ?? [],
@@ -5569,10 +5845,11 @@ var tn = Zt(en), nn = {
 				e.printer_chamber,
 				e.printer_light,
 				e.printer_picture,
-				...fn(e),
-				...Nn(e)
+				...pn(e),
+				...Fn(e),
+				...Wn(e)
 			]).filter((e) => !!e)
-		]), e.view === "room" && this._prepareCamera(b(v(t, e.room)));
+		]), e.view === "room" && this._prepareCamera(S(y(t, e.room)));
 		let n = this._floorCameras();
 		n.mode === "live" && this._prepareCamera(n.cameras[0]);
 	}
@@ -5582,13 +5859,13 @@ var tn = Zt(en), nn = {
 			mode: "off",
 			cameras: []
 		};
-		let t = re(e.atlas, e.floor) ?? _(e.atlas)[0], n = t?.cameras ?? "off";
+		let t = b(e.atlas, e.floor) ?? v(e.atlas)[0], n = t?.cameras ?? "off";
 		return n === "off" ? {
 			mode: n,
 			cameras: []
 		} : {
 			mode: n,
-			cameras: ie(e.atlas, t.id).map((e) => e.camera)
+			cameras: ne(e.atlas, t.id).map((e) => e.camera)
 		};
 	}
 	getCardSize() {
@@ -5609,21 +5886,21 @@ var tn = Zt(en), nn = {
 		if (!e || !this.hass) return [];
 		let t = [], n = e.entities?.weather;
 		if (n && this._config.view === "home") {
-			let e = Rt(this.hass.states[n]), r = Hi.wxType ?? e[0];
+			let e = zt(this.hass.states[n]), r = Qi.wxType ?? e[0];
 			r && e.includes(r) && t.push([n, r]);
 		}
 		let r = e.alerts?.rain_weather || n;
-		return r && e.alerts?.rain_windows?.length && Lt(this.hass.states[r]).includes("hourly") && t.push([r, "hourly"]), t;
+		return r && e.alerts?.rain_windows?.length && Rt(this.hass.states[r]).includes("hourly") && t.push([r, "hourly"]), t;
 	}
 	_syncForecasts() {
 		let e = this.hass?.connection;
 		if (!e || !this.isConnected) return;
-		let t = new Map(this._neededForecasts().map(([e, t]) => [Ft(e, t), [e, t]]));
+		let t = new Map(this._neededForecasts().map(([e, t]) => [It(e, t), [e, t]]));
 		for (let [e, n] of this._fcSubs) t.has(e) || (n.then((e) => e()).catch(() => void 0), this._fcSubs.delete(e));
 		for (let [n, [r, i]] of t) {
 			if (this._fcSubs.has(n)) continue;
 			let t = e.subscribeMessage((e) => {
-				Ui[n] = e.forecast ?? null, this.requestUpdate();
+				$i[n] = e.forecast ?? null, this.requestUpdate();
 			}, {
 				type: "weather/subscribe_forecast",
 				entity_id: r,
@@ -5698,7 +5975,7 @@ var tn = Zt(en), nn = {
 			hass: this.hass,
 			config: t.atlas,
 			alerts: e,
-			badges: Jt(e),
+			badges: Yt(e),
 			hot: n,
 			floorId: t.floor,
 			roomId: t.room,
@@ -5719,20 +5996,20 @@ var tn = Zt(en), nn = {
 				e.room ? d(`room-${e.room}`) : e.view ? d(e.view) : e.entity ? p(this, e.entity) : e.href ? l(e.href) : d("alerts");
 			},
 			refresh: () => this.requestUpdate(),
-			ui: Hi,
-			forecasts: Ui
+			ui: Qi,
+			forecasts: $i
 		};
 	}
 	render() {
-		if (!this._config || !this.hass) return A;
-		let e = this._config.atlas, t = e.appearance ?? {}, n = this._prefs.variant ?? t.variant ?? "warm_glass", r = this._prefs.accent && /^#[0-9a-fA-F]{6}$/.test(this._prefs.accent) ? this._prefs.accent : le(e), i = Li[t.ambience ?? "graphite"] ?? Li.graphite, a = Vi(r), o = `--atlas-accent:${r};--atlas-accent-soft:rgba(${a},0.16);--atlas-accent-glow:rgba(${a},0.45);--atlas-tile:${i.tile}`;
-		if (!h(e).length) return D`<div class="root v-quiet" style=${o}><div class="frame"><div class="main">
+		if (!this._config || !this.hass) return M;
+		let e = this._config.atlas, t = e.appearance ?? {}, n = this._prefs.variant ?? t.variant ?? "warm_glass", r = this._prefs.accent && /^#[0-9a-fA-F]{6}$/.test(this._prefs.accent) ? this._prefs.accent : se(e), i = qi[t.ambience ?? "graphite"] ?? qi.graphite, a = Zi(r), o = `--atlas-accent:${r};--atlas-accent-soft:rgba(${a},0.16);--atlas-accent-glow:rgba(${a},0.45);--atlas-tile:${i.tile}`;
+		if (!g(e).length) return k`<div class="root v-quiet" style=${o}><div class="frame"><div class="main">
         <section class="glass card" style="max-width:640px;margin:10vh auto;gap:14px">
           <h2 style="font-size:24px">${W("home", 28)}ATLAS Home</h2>
           <p class="t2">No rooms configured yet. Open the dashboard menu, choose <b>Edit dashboard</b>, then <b>Load demo house</b> or paste your own config in YAML mode, and save.</p>
         </section></div></div></div>`;
-		let s = qt(this.hass, e, Ui), c = this._ctx(s), l = this._config.view, u = l === "room" ? v(e, this._config.room) : void 0, d = n === "warm_glass" ? ce(e, u) ?? ce(e, v(e, t.background) ?? h(e)[0]) : void 0, f;
-		return f = l === "home" ? Ar(c) : l === "alerts" ? Mr(c) : l === "rooms" ? Fr(c) : l === "energy" ? _i(c) : l === "lights" ? Ti(c) : l === "security" ? yr(c) : l === "system" ? Fi(c) : ai(c), D`<div class="root v-${n}" style=${o}>
+		let s = Jt(this.hass, e, $i), c = this._ctx(s), l = this._config.view, u = l === "room" ? y(e, this._config.room) : void 0, d = n === "warm_glass" ? oe(e, u) ?? oe(e, y(e, t.background) ?? g(e)[0]) : void 0, f;
+		return f = l === "home" ? Vr(c) : l === "alerts" ? Ur(c) : l === "rooms" ? Kr(c) : l === "energy" ? Oi(c) : l === "lights" ? Ii(c) : l === "security" ? Ar(c) : l === "system" ? Gi(c) : gi(c), k`<div class="root v-${n}" style=${o}>
       ${this._background(n, i, d)}
       <div class="frame">
         ${this._sidebar(c)}
@@ -5742,17 +6019,17 @@ var tn = Zt(en), nn = {
         </div>
       </div>
       ${this._bottomNav(c)}
-      ${this._settings ? this._settingsPanel(n, r) : A}
-      ${this._confirm ? this._confirmDialog() : A}
+      ${this._settings ? this._settingsPanel(n, r) : M}
+      ${this._confirm ? this._confirmDialog() : M}
     </div>`;
 	}
 	_background(e, t, n) {
-		if (e === "quiet") return D`<div class="bg" style="background:var(--atlas-canvas)"></div>`;
-		let r = (e, t, n, r, i, a) => D`<div class="blob" style="left:${e}%;top:${t}%;width:${n}px;height:${r}px;background:${i};filter:blur(${a}px)"></div>`;
-		return D`<div class="bg" aria-hidden="true" style="background:linear-gradient(180deg,${t.base[0]} 0%,${t.base[1]} 60%,${t.base[2]} 100%)">
+		if (e === "quiet") return k`<div class="bg" style="background:var(--atlas-canvas)"></div>`;
+		let r = (e, t, n, r, i, a) => k`<div class="blob" style="left:${e}%;top:${t}%;width:${n}px;height:${r}px;background:${i};filter:blur(${a}px)"></div>`;
+		return k`<div class="bg" aria-hidden="true" style="background:linear-gradient(180deg,${t.base[0]} 0%,${t.base[1]} 60%,${t.base[2]} 100%)">
       ${r(4, 2, 520, 380, t.g[0], 90)}${r(62, -6, 640, 420, t.g[1], 100)}${r(78, 40, 300, 300, t.g[2], 70)}${r(30, 55, 700, 360, t.g[3], 80)}
       ${r(12, 18, 60, 60, t.light, 14)}${r(52, 10, 46, 46, t.light, 12)}${r(88, 22, 70, 70, t.light, 16)}${r(70, 78, 50, 50, t.light, 14)}
-      ${n ? D`<img class="photo" src=${n} alt="" /><div class="tint" style="background:linear-gradient(180deg,rgba(${t.dark},0.35) 0%,rgba(${t.dark},0.6) 100%)"></div>` : A}
+      ${n ? k`<img class="photo" src=${n} alt="" /><div class="tint" style="background:linear-gradient(180deg,rgba(${t.dark},0.35) 0%,rgba(${t.dark},0.6) 100%)"></div>` : M}
     </div>`;
 	}
 	_sidebar(e) {
@@ -5769,7 +6046,7 @@ var tn = Zt(en), nn = {
 				t === "rooms" || t === "room",
 				() => e.go("rooms")
 			],
-			...Ei(e) ? [[
+			...Li(e) ? [[
 				"Lights",
 				"light",
 				t === "lights",
@@ -5791,7 +6068,7 @@ var tn = Zt(en), nn = {
 				"Security",
 				"security",
 				t === "security",
-				() => fe(e.config) ? e.go("security") : n.alarm ? e.moreInfo(n.alarm) : void 0
+				() => ue(e.config) ? e.go("security") : n.alarm ? e.moreInfo(n.alarm) : void 0
 			],
 			[
 				"Automations",
@@ -5806,12 +6083,12 @@ var tn = Zt(en), nn = {
 				() => e.go("system")
 			]
 		], a = this.hass.user?.name ?? "";
-		return D`<aside class="glass">
+		return k`<aside class="glass">
       <button class="logo" @click=${() => e.go("home")}>${W("home", 34)}<span class="lt"><b>ATLAS</b><small>Smart Home</small></span></button>
       <nav class="nav" aria-label="Main">
-        ${i.map(([e, t, n, r]) => D`<button class=${n ? "on" : ""} aria-current=${n ? "page" : "false"} title=${e} @click=${r}>${W(t, 20)}<span class="lbl">${e}</span></button>`)}
+        ${i.map(([e, t, n, r]) => k`<button class=${n ? "on" : ""} aria-current=${n ? "page" : "false"} title=${e} @click=${r}>${W(t, 20)}<span class="lbl">${e}</span></button>`)}
       </nav>
-      ${a ? D`<div class="user"><span class="avatar">${a.charAt(0).toUpperCase()}</span><span class="lbl">${a}</span></div>` : A}
+      ${a ? k`<div class="user"><span class="avatar">${a.charAt(0).toUpperCase()}</span><span class="lbl">${a}</span></div>` : M}
     </aside>`;
 	}
 	_topbar(e) {
@@ -5821,7 +6098,7 @@ var tn = Zt(en), nn = {
 				"home",
 				t === "home" || t === "alerts"
 			],
-			...(e.config.layout?.top_tabs ?? []).map((t) => v(e.config, t)).filter((e) => !!e).map((e) => [
+			...(e.config.layout?.top_tabs ?? []).map((t) => y(e.config, t)).filter((e) => !!e).map((e) => [
 				e.name,
 				`room-${e.id}`,
 				t === "room" && this._config.room === e.id
@@ -5831,7 +6108,7 @@ var tn = Zt(en), nn = {
 				"rooms",
 				t === "rooms"
 			]
-		], i = R(this.hass, n.weather), a = B(this.hass, n.outdoor_temperature) ?? (z(i) ? void 0 : Number(i.attributes.temperature)), o = /* @__PURE__ */ new Date(), s = this.hass.locale?.language ?? this.hass.language ?? "en", c = o.toLocaleDateString(s, {
+		], i = z(this.hass, n.weather), a = V(this.hass, n.outdoor_temperature) ?? (B(i) ? void 0 : Number(i.attributes.temperature)), o = /* @__PURE__ */ new Date(), s = this.hass.locale?.language ?? this.hass.language ?? "en", c = o.toLocaleDateString(s, {
 			weekday: "short",
 			day: "numeric",
 			month: "short"
@@ -5840,28 +6117,28 @@ var tn = Zt(en), nn = {
 			minute: "2-digit",
 			hour12: !1
 		});
-		return D`<header class="glass top">
+		return k`<header class="glass top">
       <span class="mlogo">${W("home", 24)}<b>ATLAS</b></span>
       <div class="tabs" role="tablist" aria-label="Views">
-        ${r.map(([t, n, r]) => D`<button role="tab" aria-selected=${r ? "true" : "false"} class=${r ? "on" : ""} @click=${() => e.go(n)}>${t}</button>`)}
+        ${r.map(([t, n, r]) => k`<button role="tab" aria-selected=${r ? "true" : "false"} class=${r ? "on" : ""} @click=${() => e.go(n)}>${t}</button>`)}
       </div>
       <div class="tools">
-        ${n.weather || n.outdoor_temperature ? D`<button class="weather" @click=${() => n.weather && e.moreInfo(n.weather)}>
-              ${an(z(i) ? void 0 : i.state)}
+        ${n.weather || n.outdoor_temperature ? k`<button class="weather" @click=${() => n.weather && e.moreInfo(n.weather)}>
+              ${on(B(i) ? void 0 : i.state)}
               <span><span class="n" style="font-size:15px;font-weight:600">${a !== void 0 && Number.isFinite(a) ? `${a.toFixed(1)} °C` : "–"}</span>
-              <span class="t2 wtxt" style="font-size:11px">${i && !z(i) ? H(this.hass, i) : "Weather unavailable"} · ${c}</span></span>
-            </button>` : A}
+              <span class="t2 wtxt" style="font-size:11px">${i && !B(i) ? H(this.hass, i) : "Weather unavailable"} · ${c}</span></span>
+            </button>` : M}
         <span class="clock n">${l}</span>
         <button class="iconbtn" aria-label="Display settings" @click=${() => this._settings = !this._settings}>${W("settings", 22)}</button>
       </div>
     </header>`;
 	}
 	_energyNav(e) {
-		return () => g(e.config).length ? e.go("energy") : e.href("/energy");
+		return () => _(e.config).length ? e.go("energy") : e.href("/energy");
 	}
 	_bottomNav(e) {
 		let t = this._config.view, n = e.config.entities ?? {}, r = this._energyNav(e);
-		return D`<nav class="glass bnav" aria-label="Main">
+		return k`<nav class="glass bnav" aria-label="Main">
       ${[
 			[
 				"Home",
@@ -5875,7 +6152,7 @@ var tn = Zt(en), nn = {
 				t === "rooms" || t === "room",
 				() => e.go("rooms")
 			],
-			...Ei(e) ? [[
+			...Li(e) ? [[
 				"Lights",
 				"light",
 				t === "lights",
@@ -5898,7 +6175,7 @@ var tn = Zt(en), nn = {
 				t === "alerts",
 				() => e.go("alerts")
 			]
-		].map(([e, t, n, r]) => D`<button class=${n ? "on" : ""} @click=${r}>${W(t, 22)}${e}</button>`)}
+		].map(([e, t, n, r]) => k`<button class=${n ? "on" : ""} @click=${r}>${W(t, 22)}${e}</button>`)}
     </nav>`;
 	}
 	_settingsPanel(e, t) {
@@ -5906,27 +6183,27 @@ var tn = Zt(en), nn = {
 			this._prefs = {
 				...this._prefs,
 				...e
-			}, Bi(this._prefs);
+			}, Xi(this._prefs);
 		};
-		return D`<div class="settings" role="dialog" aria-label="Display settings">
+		return k`<div class="settings" role="dialog" aria-label="Display settings">
       <div class="row"><b>Display on this device</b><button class="iconbtn" aria-label="Close" @click=${() => this._settings = !1}>✕</button></div>
       <span class="t2" style="font-size:12px">Style</span>
       <div class="seg">${[
 			["warm_glass", "Warm glass"],
 			["glass", "Glass"],
 			["quiet", "Quiet"]
-		].map(([t, r]) => D`<button class=${e === t ? "on" : ""} @click=${() => n({ variant: t })}>${r}</button>`)}</div>
+		].map(([t, r]) => k`<button class=${e === t ? "on" : ""} @click=${() => n({ variant: t })}>${r}</button>`)}</div>
       <span class="t2" style="font-size:12px">Accent</span>
-      <div class="seg">${o.map((e) => D`<button class="sw ${t === e ? "on" : ""}" style="background:${e}" aria-label="Accent ${e}" @click=${() => n({ accent: e })}></button>`)}</div>
+      <div class="seg">${o.map((e) => k`<button class="sw ${t === e ? "on" : ""}" style="background:${e}" aria-label="Accent ${e}" @click=${() => n({ accent: e })}></button>`)}</div>
       <button class="ctl" @click=${() => {
-			this._prefs = {}, Bi({});
+			this._prefs = {}, Xi({});
 		}}>Use dashboard defaults</button>
       <span class="t2" style="font-size:11px">Stored in this browser only. Defaults and all entities are set in Edit dashboard.</span>
     </div>`;
 	}
 	_confirmDialog() {
 		let e = this._confirm, t = () => this._confirm = void 0;
-		return D`<div class="scrim" @click=${t}>
+		return k`<div class="scrim" @click=${t}>
       <div class="dialog" role="alertdialog" aria-modal="true" aria-label=${e.title} @click=${(e) => e.stopPropagation()}>
         <h2>${e.title}</h2>
         <p class="t2">${e.text}</p>
@@ -5940,7 +6217,7 @@ var tn = Zt(en), nn = {
     </div>`;
 	}
 };
-Ii = Wi, Ii.styles = Yt, Ii.properties = {
+Ki = ea, Ki.styles = Xt, Ki.properties = {
 	hass: { attribute: !1 },
 	_config: { state: !0 },
 	_confirm: { state: !0 },
@@ -5950,7 +6227,7 @@ Ii = Wi, Ii.styles = Yt, Ii.properties = {
 	_tick: { state: !0 }
 };
 // src/ui/embedded-card.ts
-var Gi = class extends HTMLElement {
+var ta = class extends HTMLElement {
 	constructor(...e) {
 		super(...e), this._key = "", this._onRebuild = (e) => {
 			e.stopPropagation(), this._build();
@@ -5991,9 +6268,9 @@ var Gi = class extends HTMLElement {
 		t.textContent = e, t.style.cssText = "margin:0;padding:12px;border-radius:12px;border:1px dashed #FFBF57;color:#FFBF57;font-size:13px", this.replaceChildren(t);
 	}
 };
-m(t, ge), m(n, Ot), m(r, Wi), m("atlas-hui-card", Gi);
-var Ki = window;
-Ki.customStrategies = Ki.customStrategies || [], Ki.customStrategies.some((e) => e.type === "atlas-home") || Ki.customStrategies.push({
+m(t, me), m(n, Ot), m(r, ea), m("atlas-hui-card", ta);
+var na = window;
+na.customStrategies = na.customStrategies || [], na.customStrategies.some((e) => e.type === "atlas-home") || na.customStrategies.push({
 	type: e,
 	strategyType: "dashboard",
 	name: "ATLAS Home",

@@ -5,6 +5,15 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Appliances card (porting plan step 9, from the owner's Kitchen Card). Room option `appliances` is a list; only the name is required. Edit dashboard > Rooms > Appliances. Each tile shows:
+  - a temperature arc (or an icon);
+  - an operation state pill and the door state;
+  - an On / Off badge (running: the main state is on, or the operation says run, active, heat or progress);
+  - a strip with setpoint, program, progress, finish time (the clock time and how long until then) and remote start;
+  - a progress bar;
+  - while running, the controls (switches toggle, buttons are pressed, scripts run) and Stop (asks first).
+
+  Works with any integration; the field names follow Home Connect. Demo house: oven and dishwasher in the kitchen, replacing their device tiles.
 - Fan tiles (porting plan step 7): a `fan.*` room device gets its own tile.
   - Tap toggles, or asks first with `confirm`.
   - Hold opens the details.

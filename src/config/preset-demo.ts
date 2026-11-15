@@ -130,8 +130,21 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
         { entity: "light.kitchen_cabinet_right", name: "Cabinet light right" },
         { entity: "binary_sensor.kitchen_presence", name: "Presence" },
         { entity: "binary_sensor.kitchen_window", name: "Window" },
-        { entity: "sensor.oven_temperature", name: "Oven" },
-        { entity: "select.dishwasher_program", name: "Dishwasher" },
+      ],
+      // Appliances card (fictional Home Connect style entities).
+      appliances: [
+        {
+          name: "Oven", entity: "switch.oven_power", temperature: "sensor.oven_temperature", temperature_max: 300,
+          setpoint: "number.oven_setpoint", operation: "sensor.oven_operation_state", program: "select.oven_program",
+          door: "binary_sensor.oven_door", progress: "sensor.oven_program_progress", finish: "sensor.oven_finish_time",
+          controls: ["switch.oven_fast_preheat", "button.oven_pause"], stop: "button.oven_stop",
+        },
+        {
+          name: "Dishwasher", icon: "mdi:dishwasher", entity: "switch.dishwasher_power", operation: "sensor.dishwasher_operation_state",
+          program: "select.dishwasher_program", door: "binary_sensor.dishwasher_door", progress: "sensor.dishwasher_program_progress",
+          finish: "sensor.dishwasher_finish_time", remote: "binary_sensor.dishwasher_remote_start", controls: ["switch.dishwasher_extra_dry"],
+          stop: "button.dishwasher_stop",
+        },
       ],
     },
     {

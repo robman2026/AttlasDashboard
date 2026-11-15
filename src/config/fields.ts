@@ -57,6 +57,24 @@ export const DEVICE_FIELDS: FieldDef[] = [
   { name: "confirm", label: "Ask before acting", type: "boolean", default: "false (true for covers with device class garage or gate)", help: "Asks for confirmation before the tap action, and before Open / Close on a cover (Stop never asks). Use it for plugs that power servers or network gear.", selector: bool },
 ];
 
+/** Fields of one appliance (room option appliances, porting plan step 9). */
+export const APPLIANCE_FIELDS: FieldDef[] = [
+  { name: "name", label: "Name", type: "text", required: true, selector: text },
+  { name: "entity", label: "Main state", type: "entity (switch, binary_sensor, sensor)", help: "On (or an operation state like Run) counts as running.", selector: ent(["switch", "binary_sensor", "sensor", "input_boolean"]) },
+  { name: "icon", label: "Icon", type: "icon", help: "Shown when no temperature sensor is set.", selector: { icon: {} } },
+  { name: "operation", label: "Operation state", type: "entity (sensor, select)", help: "e.g. Ready, Run, Finished (Home Connect operation state).", selector: ent(["sensor", "select"]) },
+  { name: "program", label: "Active program", type: "entity (sensor, select)", selector: ent(["sensor", "select"]) },
+  { name: "door", label: "Door", type: "entity (binary_sensor, sensor)", selector: ent(["binary_sensor", "sensor"]) },
+  { name: "temperature", label: "Temperature", type: "entity (sensor)", help: "Shows an arc gauge instead of the icon.", selector: ent("sensor") },
+  { name: "temperature_max", label: "Temperature full scale", type: "number", default: "300", selector: { number: { mode: "box", step: 10, min: 1 } } },
+  { name: "setpoint", label: "Setpoint", type: "entity (sensor, number)", selector: ent(["sensor", "number"]) },
+  { name: "progress", label: "Program progress (%)", type: "entity (sensor)", selector: ent("sensor") },
+  { name: "finish", label: "Finish time", type: "entity (sensor)", help: "Timestamp sensor (shows the time and how long until then) or a remaining time sensor.", selector: ent("sensor") },
+  { name: "remote", label: "Remote start allowed", type: "entity (binary_sensor, switch)", selector: ent(["binary_sensor", "switch"]) },
+  { name: "controls", label: "Controls while running", type: "list of entity (switch, button, script)", help: "Switches toggle, buttons are pressed, scripts run.", selector: ent(["switch", "input_boolean", "button", "input_button", "script"], true) },
+  { name: "stop", label: "Stop button", type: "entity (button, script)", help: "Shown while running; always asks first.", selector: ent(["button", "input_button", "script"]) },
+];
+
 export const SECTIONS: SectionDef[] = [
   {
     key: "appearance",
@@ -159,6 +177,7 @@ export const SECTIONS: SectionDef[] = [
       { name: "camera_private", label: "Private camera", type: "boolean", default: "false", help: "Stream hidden until the user taps Reveal. Off: the live stream starts (muted) as soon as the room opens.", selector: bool, group: "Camera" },
       { name: "light_entities", label: "Light entities", type: "list of entity (light, switch, input_boolean)", help: "What counts as this room's lights for the photo effect, the Lights chip and Lights off, e.g. Tasmota relays (switch.*) that power lamps. Empty: the room's light.* devices, minus the excluded status LEDs.", selector: ent(["light", "switch", "input_boolean"], true), group: "Lights" },
       { name: "climate_extra", label: "Extra climate values", type: "list", help: "More values in the Climate card, e.g. CO2, pressure, VOC. Each value opens its history.", selector: { object: {} }, fields: VALUE_FIELDS, group: "Climate and automations" },
+      { name: "appliances", label: "Appliances", type: "list", help: "Appliances card (oven, dishwasher, washer, dryer ...). Only the name is required; every other field adds its part of the tile. Controls and Stop appear while the appliance runs.", selector: { object: {} }, fields: APPLIANCE_FIELDS, group: "Appliances" },
       { name: "automations", label: "Automations", type: "list of entity (automation)", help: "Shows an Automations card with an on/off switch and the last run time for each.", selector: ent("automation", true), group: "Climate and automations" },
       { name: "printer_name", label: "Printer name", type: "text", help: "Title of the 3D printer card. The card appears when a status or progress sensor is set.", selector: text, group: "3D printer" },
       { name: "printer_status", label: "Print status", type: "entity (sensor)", help: "e.g. sensor.<printer>_print_status (Bambu Lab).", selector: ent("sensor"), group: "3D printer" },

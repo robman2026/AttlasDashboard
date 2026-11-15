@@ -464,6 +464,42 @@ export const styles = css`
   .salttank { position: relative; width: 44px; height: 84px; flex: none; border-radius: 10px 10px 14px 14px; border: 2px solid rgba(188, 200, 222, 0.3); overflow: hidden; display: flex; align-items: flex-end; background: rgba(0, 0, 0, 0.25); }
   .salttank > i { display: block; width: 100%; opacity: 0.85; transition: height 0.4s ease; }
 
+  /* ---------- appliances (step 9) ---------- */
+  .appls { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+  .appl { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 14px; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); min-width: 0; }
+  .appl.run { border-color: var(--atlas-accent-glow); background: rgba(86, 231, 192, 0.06); }
+  .appl.na { border-style: dashed; border-color: rgba(255, 191, 87, 0.35); }
+  .ahead { display: flex; align-items: center; gap: 12px; text-align: left; min-width: 0; }
+  .ahead .atxt { flex: 1; }
+  .ahead .atxt small { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .aarc { position: relative; width: 48px; height: 48px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .aarc svg { position: absolute; inset: 0; }
+  .aarc b { position: relative; font-size: 14px; font-weight: 700; }
+  .aico { width: 44px; height: 44px; flex: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; background: rgba(241, 245, 255, 0.08); color: var(--atlas-text2); }
+  .appl.run .aico { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .abadge { flex: none; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: rgba(241, 245, 255, 0.08); color: var(--atlas-text2); }
+  .abadge.on { background: var(--atlas-accent-soft); color: var(--atlas-accent); }
+  .apill { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px; border-radius: 999px; font-size: 11px; background: rgba(241, 245, 255, 0.08); }
+  .apill i { width: 6px; height: 6px; border-radius: 3px; background: var(--atlas-text2); }
+  .apill.active { color: var(--atlas-accent); background: var(--atlas-accent-soft); }
+  .apill.active i { background: var(--atlas-accent); }
+  .apill.ready { color: #5ec8ff; }
+  .apill.ready i { background: #5ec8ff; }
+  .adoor { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; }
+  .adoor.open { color: var(--atlas-warn); }
+  .astrip { display: grid; gap: 6px; padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.22); }
+  .astrip span { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .astrip small { font-size: 10px; color: var(--atlas-text2); text-transform: uppercase; letter-spacing: 0.04em; }
+  .astrip b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
+  .adot { display: inline-block; width: 7px; height: 7px; border-radius: 4px; background: rgba(241, 245, 255, 0.25); }
+  .adot.on { background: var(--atlas-accent); box-shadow: 0 0 4px var(--atlas-accent); }
+  .aprog { display: block; height: 5px; border-radius: 3px; background: rgba(241, 245, 255, 0.08); overflow: hidden; }
+  .aprog > i { display: block; height: 100%; background: var(--atlas-accent); border-radius: 3px; }
+  .actls { display: flex; flex-wrap: wrap; gap: 6px; }
+  .actl { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 10px; font-size: 12px; border: 1px solid rgba(188, 200, 222, 0.2); background: rgba(241, 245, 255, 0.06); }
+  .actl.on { border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
+  .actl.stop { color: var(--atlas-crit); border-color: rgba(255, 114, 125, 0.45); }
+
   /* ---------- weather strip (Home hero) ---------- */
   .hside { display: flex; align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; gap: 10px; min-width: 0; }
   .hside .presence { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 6px; }
@@ -637,6 +673,7 @@ export const styles = css`
     .hside .presence { flex-direction: row; flex-wrap: wrap; }
     .lrooms { grid-template-columns: minmax(0, 1fr); }
     .scams { grid-template-columns: minmax(0, 1fr); }
+    .appls { grid-template-columns: minmax(0, 1fr); }
     .inc { grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .increc { padding: 10px 0 0; border-left: 0; border-top: 1px solid rgba(188, 200, 222, 0.12); }
     .amodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
