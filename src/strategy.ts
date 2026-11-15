@@ -4,7 +4,7 @@
 //   home, alerts, rooms, energy (when energy_meters are set), floor-<id>, room-<id>
 import type { AtlasConfig, AtlasViewCardConfig } from "./config/types";
 import { EDITOR_TAG, VIEW_CARD_TAG } from "./config/constants";
-import { energyMeters, floors, rooms } from "./data/model";
+import { energyMeters, floors, roomLights, rooms } from "./data/model";
 
 const card = (atlas: AtlasConfig, view: AtlasViewCardConfig["view"], extra: Partial<AtlasViewCardConfig> = {}) => ({
   type: `custom:${VIEW_CARD_TAG}`,
@@ -36,6 +36,9 @@ export class AtlasHomeStrategy extends HTMLElement {
       { title: "Alerts", path: "alerts", type: "panel", ...sub, cards: [card(config, "alerts")] },
       { title: "Rooms", path: "rooms", type: "panel", ...sub, cards: [card(config, "rooms", { floor: firstFloor })] },
     ];
+    if (roomLights(config).length) {
+      views.push({ title: "Lights", path: "lights", type: "panel", ...sub, cards: [card(config, "lights")] });
+    }
     if (energyMeters(config).length) {
       views.push({ title: "Energy", path: "energy", type: "panel", ...sub, cards: [card(config, "energy")] });
     }

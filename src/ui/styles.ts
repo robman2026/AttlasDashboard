@@ -353,6 +353,31 @@ export const styles = css`
   .tog.on i { left: 23px; background: var(--atlas-accent); }
   .tog:disabled { opacity: 0.4; }
 
+  /* ---------- lights page ---------- */
+  .lfloor { gap: 14px; }
+  .lrooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .lroom { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 16px; background: rgba(241, 245, 255, 0.03); border: 1px solid rgba(188, 200, 222, 0.08); }
+  .lrname { display: flex; flex-direction: column; text-align: left; min-width: 0; }
+  .lrname b { font-size: 15px; }
+  .lrname small { font-size: 12px; }
+  .ltiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .ltile { position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 10px 12px; border-radius: 14px; text-align: left;
+    background: rgba(241, 245, 255, 0.05); border: 1px solid rgba(188, 200, 222, 0.12); touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .ltile .lfill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, rgba(255, 191, 87, 0.28), rgba(255, 191, 87, 0.14)); transition: width 0.25s ease; pointer-events: none; }
+  .ltile.on .lfill { width: var(--pct, 100%); }
+  .ltile.dragging .lfill { width: var(--pct, 0%); transition: none; }
+  .ltile > :not(.lfill) { position: relative; }
+  .ltile .lic { width: 36px; height: 36px; flex: none; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: rgba(241, 245, 255, 0.08); color: var(--atlas-text2); }
+  .ltile.on { border-color: rgba(255, 191, 87, 0.5); }
+  .ltile.on .lic { background: rgba(255, 191, 87, 0.22); color: var(--atlas-warn); }
+  .ltxt { display: flex; flex-direction: column; min-width: 0; }
+  .ltxt b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ltxt .lstate { font-size: 12px; color: var(--atlas-text2); }
+  .ltile.on .lstate { color: var(--atlas-warn); }
+  .ltile.na { border-style: dashed; border-color: rgba(255, 191, 87, 0.35); }
+  .ltile.na .lstate { color: var(--atlas-warn); }
+  .ltile.dim::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 5px; height: 2px; border-radius: 1px; background: rgba(241, 245, 255, 0.1); }
+
   /* ---------- vehicle card ---------- */
   .vehicle { gap: 14px; }
   .vehicle h2 { min-width: 0; }
@@ -461,6 +486,8 @@ export const styles = css`
     .room-grid.has-side { grid-template-areas: "left" "side" "main"; grid-template-rows: auto; }
   }
   @media (max-width: 760px) {
+    .lrooms { grid-template-columns: minmax(0, 1fr); }
+    .ltiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .vbody { grid-template-columns: minmax(0, 1fr); }
     .vact span { display: none; }
     .vact { width: 44px; padding: 0; }

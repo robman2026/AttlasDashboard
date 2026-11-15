@@ -18,6 +18,7 @@ import { renderAlerts } from "./views/alerts";
 import { renderRooms } from "./views/rooms";
 import { renderRoom } from "./views/room";
 import { renderEnergy } from "./views/energy";
+import { hasLights, renderLights } from "./views/lights";
 
 const MOODS: Record<string, { base: string[]; g: string[]; light: string; tile: string; dark: string }> = {
   graphite: { base: ["#1A1D22", "#14171C", "#0E1014"], g: ["rgba(150,160,180,0.14)", "rgba(130,140,160,0.12)", "rgba(170,180,200,0.16)", "rgba(50,54,62,0.5)"], light: "rgba(220,228,240,0.4)", tile: "120,130,150", dark: "20,23,28" },
@@ -319,6 +320,7 @@ export class AtlasView extends LitElement {
     else if (view === "alerts") body = renderAlerts(ctx);
     else if (view === "rooms") body = renderRooms(ctx);
     else if (view === "energy") body = renderEnergy(ctx);
+    else if (view === "lights") body = renderLights(ctx);
     else body = renderRoom(ctx);
 
     return html`<div class="root v-${variant}" style=${style}>
@@ -354,6 +356,7 @@ export class AtlasView extends LitElement {
     const items: [string, string, boolean, () => void][] = [
       ["Home", "home", v === "home" || v === "alerts", () => ctx.go("home")],
       ["Rooms", "rooms", v === "rooms" || v === "room", () => ctx.go("rooms")],
+      ...(hasLights(ctx) ? [["Lights", "light", v === "lights", () => ctx.go("lights")] as [string, string, boolean, () => void]] : []),
       ["Energy", "energy", v === "energy", energyNav],
       ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
       ["Security", "security", false, () => (e.alarm ? ctx.moreInfo(e.alarm) : undefined)],
@@ -418,8 +421,11 @@ export class AtlasView extends LitElement {
     const items: [string, string, boolean, () => void][] = [
       ["Home", "home", v === "home", () => ctx.go("home")],
       ["Rooms", "rooms", v === "rooms" || v === "room", () => ctx.go("rooms")],
+      // Five slots: Lights takes Climate's place when the house has lights (Climate stays on Home).
+      ...(hasLights(ctx)
+        ? [["Lights", "light", v === "lights", () => ctx.go("lights")] as [string, string, boolean, () => void]]
+        : [["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)] as [string, string, boolean, () => void]]),
       ["Energy", "energy", v === "energy", energyNav],
-      ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
       ["Alerts", "alert", v === "alerts", () => ctx.go("alerts")],
     ];
     return html`<nav class="glass bnav" aria-label="Main">
