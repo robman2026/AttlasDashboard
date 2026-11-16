@@ -275,6 +275,46 @@ export const DEMO_PRESET: Omit<AtlasConfig, "type"> = {
     home_cards: [{ type: "markdown", content: "**Own cards** appear here. Edit dashboard > Layout > Own cards on Home." }],
     system_cards: [{ type: "history-graph", title: "Server room temperature", hours_to_show: 24, entities: ["sensor.server_room_temperature"] }],
   },
+  // Solar view (fictional PV system). Live values fall back to entities.solar_power, house_load, grid_*.
+  solar: {
+    peak_power: 6, battery_soc: "sensor.home_battery_soc", battery_power: "sensor.home_battery_power",
+    production_today: "sensor.solar_production_today", consumption_today: "sensor.house_consumption_today",
+    export_today: "sensor.grid_export_today", import_today: "sensor.grid_import_today",
+    forecast_today: "sensor.solar_forecast_today", remaining_today: "sensor.solar_forecast_remaining",
+    strings: [
+      { name: "PV1 (south roof)", power: "sensor.pv1_power", voltage: "sensor.pv1_voltage", current: "sensor.pv1_current" },
+      { name: "PV2 (west roof)", power: "sensor.pv2_power", voltage: "sensor.pv2_voltage", current: "sensor.pv2_current" },
+    ],
+    inverter: [
+      { entity: "sensor.inverter_status", name: "Status" },
+      { entity: "sensor.inverter_temperature", name: "Temperature" },
+      { entity: "sensor.inverter_grid_frequency", name: "Grid frequency" },
+    ],
+  },
+  // Heat pump view (fictional). The climate entity falls back to entities.heat_pump.
+  heat_pump: {
+    status: "sensor.heat_pump_compressor", priority: "sensor.heat_pump_priority", mode: "select.heat_pump_mode",
+    connection: "sensor.heat_pump_connection", degree_minutes: "sensor.heat_pump_degree_minutes",
+    gauges: [
+      { entity: "sensor.heat_pump_supply_temperature", name: "Supply" },
+      { entity: "sensor.heat_pump_return_temperature", name: "Return" },
+      { entity: "sensor.heat_pump_outdoor_temperature", name: "Outdoor" },
+      { entity: "sensor.heat_pump_discharge_temperature", name: "Discharge" },
+    ],
+    energy_produced: "sensor.heat_pump_energy_produced", energy_consumed: "sensor.heat_pump_energy_consumed", power: "sensor.heat_pump_power",
+    energy: [{ entity: "sensor.heat_pump_hot_water_energy", name: "Hot water produced" }],
+    pressures: [{ entity: "sensor.heat_pump_high_pressure", name: "High pressure" }, { entity: "sensor.heat_pump_low_pressure", name: "Low pressure" }],
+    circuit: [
+      { entity: "sensor.heat_pump_evaporator", name: "Evaporator" },
+      { entity: "sensor.heat_pump_suction_gas", name: "Suction gas" },
+      { entity: "sensor.heat_pump_compressor_frequency", name: "Compressor frequency" },
+    ],
+    runtimes: [
+      { entity: "sensor.heat_pump_runtime_heating", name: "Compressor, heating" },
+      { entity: "sensor.heat_pump_runtime_hot_water", name: "Compressor, hot water" },
+      { entity: "sensor.heat_pump_compressor_starts", name: "Compressor starts" },
+    ],
+  },
   energy_meters: [
     {
       name: "Whole house", main: true, max_power: 11000,

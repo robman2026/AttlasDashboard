@@ -6,7 +6,7 @@ import { ACCENT_PRESETS } from "../config/constants";
 import type { HomeAssistant } from "../data/hass";
 import { isInvalid, num, stateObj, formatState } from "../data/hass";
 import { evaluateAlerts, roomBadges, type AtlasAlert } from "../data/alerts";
-import { accentOf, cameraOf, energyMeters, floorById, floorCameraGroups, floors, hasSecurity, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
+import { accentOf, cameraOf, energyMeters, floorById, floorCameraGroups, floors, hasHeatPump, hasSecurity, hasSolar, imageUrl, mappedEntities, meterEntities, roomById, rooms } from "../data/model";
 import { fireEvent, goView, moreInfo, navigate } from "../util/navigate";
 import { styles } from "./styles";
 import type { AtlasHuiCard } from "./embedded-card";
@@ -23,6 +23,9 @@ import { renderEnergy } from "./views/energy";
 import { hasLights, renderLights } from "./views/lights";
 import { renderSecurity } from "./views/security";
 import { renderSystem } from "./views/system";
+import { renderSolar, solarEntities } from "./views/solar";
+import { heatPumpEntities, renderHeatPump } from "./views/heatpump";
+import { type HourlyStats, fetchHourly, localDay } from "../data/stats";
 import { type ForecastMap, type ForecastType, fcKey, homeForecastTypes, supportedForecastTypes } from "../data/weather";
 
 const MOODS: Record<string, { base: string[]; g: string[]; light: string; tile: string; dark: string }> = {
@@ -54,6 +57,9 @@ const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 
 
 // Shared across view instances so camera reveal etc. survive view switches in one session.
 const UI_STATE: Record<string, unknown> = {};
+/** Today's hourly energy statistics for the Solar view chart (refreshed every 10 min). */
+let STATS: HourlyStats | undefined;
+let statsLoading = false;
 /** Latest weather forecasts ("entity|type"), shared by all atlas-view elements of the dashboard. */
 const FORECASTS: ForecastMap = {};
 
@@ -101,6 +107,8 @@ export class AtlasView extends LitElement {
       ...[c.alerts?.mailbox, c.alerts?.mailbox_ack].filter((x): x is string => !!x),
       ...(c.entities?.exclude_lights ?? []),
       ...(c.entities?.persons ?? []),
+      ...solarEntities({ config: c }),
+      ...heatPumpEntities(c),
       ...(c.alerts?.rain_windows ?? []),
       ...[c.alerts?.rain_weather].filter((x): x is string => !!x),
       ...meterEntities(c),
@@ -160,6 +168,25 @@ export class AtlasView extends LitElement {
     this._fcSubs.clear();
   }
 
+  /** Solar view: load today's hourly statistics, again every 10 minutes or after midnight. */
+  private _syncStats() {
+    const c = this._config;
+    if (!c || c.view !== "solar" || !this.hass || statsLoading) return;
+    const s = c.atlas.solar ?? {};
+    const ids = [s.production_today, s.consumption_today, s.export_today].filter((x): x is string => !!x);
+    if (!ids.length) return;
+    const fresh = STATS && STATS.day === localDay(new Date()) && Date.now() - STATS.fetched < 10 * 60_000 && ids.every((id) => id in STATS!.series);
+    if (fresh) return;
+    statsLoading = true;
+    fetchHourly(this.hass, ids)
+      .then((r) => (STATS = r))
+      .catch((e) => console.warn("ATLAS: statistics not available", e))
+      .finally(() => {
+        statsLoading = false;
+        this.requestUpdate();
+      });
+  }
+
   // ---- weather forecasts (websocket weather/subscribe_forecast, frontend src/data/weather.ts) ----
   private _fcSubs = new Map<string, Promise<() => void>>();
 
@@ -213,6 +240,7 @@ export class AtlasView extends LitElement {
 
   protected updated() {
     this._syncForecasts();
+    this._syncStats();
     this._watchSide();
     const wall = this.renderRoot.querySelector<HTMLElement>(".camwall.fitwall") ?? undefined;
     if (wall === this._wall) return;
@@ -349,6 +377,7 @@ export class AtlasView extends LitElement {
       refresh: () => this.requestUpdate(),
       ui: UI_STATE,
       forecasts: FORECASTS,
+      stats: STATS,
     };
   }
 
@@ -384,6 +413,8 @@ export class AtlasView extends LitElement {
     else if (view === "lights") body = renderLights(ctx);
     else if (view === "security") body = renderSecurity(ctx);
     else if (view === "system") body = renderSystem(ctx);
+    else if (view === "solar") body = renderSolar(ctx);
+    else if (view === "heatpump") body = renderHeatPump(ctx);
     else body = renderRoom(ctx);
 
     return html`<div class="root v-${variant}" style=${style}>
@@ -421,7 +452,8 @@ export class AtlasView extends LitElement {
       ["Rooms", "rooms", v === "rooms" || v === "room", () => ctx.go("rooms")],
       ...(hasLights(ctx) ? [["Lights", "light", v === "lights", () => ctx.go("lights")] as [string, string, boolean, () => void]] : []),
       ["Energy", "energy", v === "energy", energyNav],
-      ["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
+      ...(hasSolar(ctx.config) ? [[ctx.config.solar?.name || "Solar", "solar", v === "solar", () => ctx.go("solar")] as [string, string, boolean, () => void]] : []),
+      [hasHeatPump(ctx.config) ? ctx.config.heat_pump?.name || "Heat pump" : "Climate", "climate", v === "heatpump", () => (hasHeatPump(ctx.config) ? ctx.go("heatpump") : e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)],
       ["Security", "security", v === "security", () => (hasSecurity(ctx.config) ? ctx.go("security") : e.alarm ? ctx.moreInfo(e.alarm) : undefined)],
       ["Automations", "automations", false, () => ctx.href("/config/automation/dashboard")],
       ["System", "system", v === "system", () => ctx.go("system")],
@@ -487,7 +519,7 @@ export class AtlasView extends LitElement {
       // Five slots: Lights takes Climate's place when the house has lights (Climate stays on Home).
       ...(hasLights(ctx)
         ? [["Lights", "light", v === "lights", () => ctx.go("lights")] as [string, string, boolean, () => void]]
-        : [["Climate", "climate", false, () => (e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)] as [string, string, boolean, () => void]]),
+        : [["Climate", "climate", v === "heatpump", () => (hasHeatPump(ctx.config) ? ctx.go("heatpump") : e.heat_pump ? ctx.moreInfo(e.heat_pump) : undefined)] as [string, string, boolean, () => void]]),
       ["Energy", "energy", v === "energy", energyNav],
       ["Alerts", "alert", v === "alerts", () => ctx.go("alerts")],
     ];

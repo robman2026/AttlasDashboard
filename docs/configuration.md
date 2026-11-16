@@ -245,6 +245,111 @@ A list; each item has:
 | `voltage_b` | entity (sensor) |  | Phase B voltage |
 | `voltage_c` | entity (sensor) |  | Phase C voltage |
 
+## Solar view (`solar`)
+
+Editor tab: **Solar**. Solar view (porting plan step 10): live flow and gauges, today's energy with an hourly chart from long-term statistics, PV strings and inverter values. Live values fall back to Entities (solar power, house load, grid import / export). Every field is optional; parts without entities are hidden.
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | text | Solar | View title |
+| `power` | entity (sensor) | entities.solar_power | PV power now. W or kW. |
+| `peak_power` | number | 6 | Peak power (kW). Full scale of the PV gauge. |
+| `house_load` | entity (sensor) | entities.house_load | House load |
+| `grid_import` | entity (sensor) | entities.grid_import | Grid import |
+| `grid_export` | entity (sensor) | entities.grid_export | Grid export |
+| `battery_soc` | entity (sensor) |  | Battery charge (%). Adds a battery node and gauge. |
+| `battery_power` | entity (sensor) |  | Battery power. Positive = charging. |
+| `production_today` | entity (sensor) |  | Production today (kWh). Also draws the hourly chart from Home Assistant long-term statistics (the sensor needs a state class). |
+| `consumption_today` | entity (sensor) |  | House consumption today (kWh) |
+| `export_today` | entity (sensor) |  | Exported today (kWh) |
+| `import_today` | entity (sensor) |  | Imported today (kWh) |
+| `forecast_today` | entity (sensor) |  | Forecast today (kWh) |
+| `remaining_today` | entity (sensor) |  | Remaining forecast today (kWh) |
+| `self_consumption` | entity (sensor) | computed from production and export | Self-consumption (%) |
+| `strings` | list |  | PV strings. One row per string: power, voltage, current. |
+| `inverter` | list |  | Inverter values. Status, temperature, grid frequency, insulation resistance, .. |
+
+Items of `strings`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | text |  | Name |
+| `power` | entity (sensor) |  | Power |
+| `voltage` | entity (sensor) |  | Voltage |
+| `current` | entity (sensor) |  | Current |
+
+Items of `inverter`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
+## Heat pump view (`heat_pump`)
+
+Editor tab: **Heat pump**. Heat pump view (porting plan step 10): status, temperature gauges, energy with COP, pressures, refrigerant circuit and run times. Works with any heat pump (examples follow the Nibe integration). Every field is optional.
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | text | Heat pump | View title |
+| `climate` | entity (climate) | entities.heat_pump | Climate entity. Current and target temperature, HVAC action; tap for the thermostat. |
+| `status` | entity (sensor, binary_sensor) |  | Compressor / operation state |
+| `priority` | entity (sensor) |  | Priority. e.g. heating or hot water. |
+| `mode` | entity (select, sensor) |  | Mode. e.g. smart home mode; tap opens it. |
+| `connection` | entity (sensor, binary_sensor) |  | Connection state |
+| `degree_minutes` | entity (sensor) |  | Degree minutes |
+| `gauges` | list |  | Temperature gauges. Up to 4, e.g. supply, return, outdoor, discharge. |
+| `gauge_min` | number | -20 | Gauge minimum (°C) |
+| `gauge_max` | number | 80 | Gauge maximum (°C) |
+| `energy_produced` | entity (sensor) |  | Energy produced total (kWh) |
+| `energy_consumed` | entity (sensor) |  | Energy consumed total (kWh). With produced: COP = produced / consumed. |
+| `power` | entity (sensor) |  | Current power use |
+| `energy` | list |  | More energy values. Heating, hot water, demand at DOT, .. |
+| `pressures` | list |  | Pressures |
+| `circuit` | list |  | Refrigerant circuit. Evaporator, suction gas, liquid line, condenser, compressor frequency, pump speed, .. |
+| `runtimes` | list |  | Run times. Compressor run times, starts, additional heat, .. |
+
+Items of `gauges`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
+Items of `energy`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
+Items of `pressures`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
+Items of `circuit`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
+Items of `runtimes`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `entity` (required) | entity (any) |  | Entity |
+| `name` | text |  | Name. Label on the tile. Default: the entity's friendly name. |
+| `icon` | mdi icon |  | Icon override. Optional, e.g. mdi:lamp. Default: chosen from the entity's domain and device class. |
+
 ## Demo house
 
 Loaded by the editor's **Load demo house** button when the dashboard has no rooms. Fictional rooms and entity IDs: replace them with your own. Keep your real config out of the repo (e.g. `my-house.private.yaml`, git-ignored) and paste it in YAML mode.
@@ -720,6 +825,72 @@ strategy:
         hours_to_show: 24
         entities:
           - sensor.server_room_temperature
+  solar:
+    peak_power: 6
+    battery_soc: sensor.home_battery_soc
+    battery_power: sensor.home_battery_power
+    production_today: sensor.solar_production_today
+    consumption_today: sensor.house_consumption_today
+    export_today: sensor.grid_export_today
+    import_today: sensor.grid_import_today
+    forecast_today: sensor.solar_forecast_today
+    remaining_today: sensor.solar_forecast_remaining
+    strings:
+      - name: PV1 (south roof)
+        power: sensor.pv1_power
+        voltage: sensor.pv1_voltage
+        current: sensor.pv1_current
+      - name: PV2 (west roof)
+        power: sensor.pv2_power
+        voltage: sensor.pv2_voltage
+        current: sensor.pv2_current
+    inverter:
+      - entity: sensor.inverter_status
+        name: Status
+      - entity: sensor.inverter_temperature
+        name: Temperature
+      - entity: sensor.inverter_grid_frequency
+        name: Grid frequency
+  heat_pump:
+    status: sensor.heat_pump_compressor
+    priority: sensor.heat_pump_priority
+    mode: select.heat_pump_mode
+    connection: sensor.heat_pump_connection
+    degree_minutes: sensor.heat_pump_degree_minutes
+    gauges:
+      - entity: sensor.heat_pump_supply_temperature
+        name: Supply
+      - entity: sensor.heat_pump_return_temperature
+        name: Return
+      - entity: sensor.heat_pump_outdoor_temperature
+        name: Outdoor
+      - entity: sensor.heat_pump_discharge_temperature
+        name: Discharge
+    energy_produced: sensor.heat_pump_energy_produced
+    energy_consumed: sensor.heat_pump_energy_consumed
+    power: sensor.heat_pump_power
+    energy:
+      - entity: sensor.heat_pump_hot_water_energy
+        name: Hot water produced
+    pressures:
+      - entity: sensor.heat_pump_high_pressure
+        name: High pressure
+      - entity: sensor.heat_pump_low_pressure
+        name: Low pressure
+    circuit:
+      - entity: sensor.heat_pump_evaporator
+        name: Evaporator
+      - entity: sensor.heat_pump_suction_gas
+        name: Suction gas
+      - entity: sensor.heat_pump_compressor_frequency
+        name: Compressor frequency
+    runtimes:
+      - entity: sensor.heat_pump_runtime_heating
+        name: Compressor, heating
+      - entity: sensor.heat_pump_runtime_hot_water
+        name: Compressor, hot water
+      - entity: sensor.heat_pump_compressor_starts
+        name: Compressor starts
   energy_meters:
     - name: Whole house
       main: true

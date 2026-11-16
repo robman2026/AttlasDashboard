@@ -5,6 +5,20 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Solar view (porting plan step 10, from the owner's FusionSolar card; new Edit dashboard tab **Solar**, `solar`):
+  - live flow (Solar, House, Grid with direction) and gauges for solar (of `peak_power`), house, grid import / export and battery (charging / discharging);
+  - today: generated, house, exported, imported, forecast, still expected, plus self-consumption (the sensor, or production minus export);
+  - an hourly chart of today from Home Assistant long-term statistics (`recorder/statistics_during_period`, hourly change), drawn as SVG: production bars, house line, export line; refreshed every 10 minutes;
+  - a PV strings table and inverter values.
+
+  Live values fall back to the Entities tab. The view and its sidebar entry appear when a PV power sensor or production sensor is set. The Home energy flow's Solar node opens it.
+- Heat pump view (porting plan step 10, from the owner's Nibe SMO S40 card; new tab **Heat pump**, `heat_pump`):
+  - status chips: thermostat (current to target, action), compressor, priority, mode, connection (amber when disconnected), degree minutes;
+  - up to 4 temperature gauges coloured along `gauge_min` to `gauge_max`;
+  - energy with COP (produced / consumed) and power;
+  - pressures, refrigerant circuit and run times.
+
+  Works with any heat pump. The sidebar **Climate** entry becomes **Heat pump** and opens it; the Home Climate card title links to it.
 - Bundled cards (porting plan step 8, owner's decision "bundle as-is"): the Samsung SolarCell remote card (`custom:samsung-solar-remote-card`) and the washer / dryer card (`custom:samsung-laundry-card`, with its editor) now ship inside the ATLAS bundle with their own look, so one HACS install covers them. Place them in a room with `side_cards` or `cards`; the same YAML as before works.
   - They register only if the separately installed cards are not already loaded, so both can stay installed while you migrate.
   - The laundry card now takes Lit from the ATLAS bundle instead of HA's panel, which could throw while HA is still loading.
@@ -88,6 +102,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Demo house: fictional PV system with battery and a heat pump with the full set of values; the mock answers long-term statistics requests.
 - Demo house: the living room uses the bundled remote (left column) and the laundry uses the bundled washer / dryer card.
 - Test harness: custom cards that are defined on the page (the bundled ones) render for real instead of placeholder boxes.
 - Demo house: the garden's lawn mower status sensor is replaced by a `lawn_mower` entity with the mower card.

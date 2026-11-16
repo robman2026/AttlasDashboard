@@ -32,7 +32,28 @@ add("climate.heat_pump", "heat", { current_temperature: 18.2, temperature: 17, h
 add("sensor.heat_pump_outdoor_temperature", 9.3, { unit_of_measurement: "°C" });
 add("sensor.heat_pump_supply_temperature", 21.4, { unit_of_measurement: "°C" });
 add("sensor.heat_pump_return_temperature", 21.1, { unit_of_measurement: "°C" });
-add("sensor.solar_power", 0, { unit_of_measurement: "kW" });
+add("sensor.solar_power", 2.41, { unit_of_measurement: "kW" });
+// Solar view (fictional PV system with a battery)
+const KWH = { unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing" };
+add("sensor.solar_production_today", 14.2, KWH); add("sensor.house_consumption_today", 18.6, KWH); add("sensor.grid_export_today", 5.1, KWH);
+add("sensor.grid_import_today", 9.5, KWH); add("sensor.solar_forecast_today", 18.0, { unit_of_measurement: "kWh" }); add("sensor.solar_forecast_remaining", 3.8, { unit_of_measurement: "kWh" });
+add("sensor.home_battery_soc", 64, { unit_of_measurement: "%", device_class: "battery" }); add("sensor.home_battery_power", 0.42, { unit_of_measurement: "kW" });
+add("sensor.pv1_power", 1.32, { unit_of_measurement: "kW" }); add("sensor.pv1_voltage", 412, { unit_of_measurement: "V" }); add("sensor.pv1_current", 3.2, { unit_of_measurement: "A" });
+add("sensor.pv2_power", 1.09, { unit_of_measurement: "kW" }); add("sensor.pv2_voltage", 398, { unit_of_measurement: "V" }); add("sensor.pv2_current", 2.74, { unit_of_measurement: "A" });
+add("sensor.inverter_status", "on_grid", { friendly_name: "Inverter status" }); add("sensor.inverter_temperature", 41.2, { unit_of_measurement: "°C", device_class: "temperature", friendly_name: "Inverter temperature" });
+add("sensor.inverter_grid_frequency", 50.01, { unit_of_measurement: "Hz", friendly_name: "Grid frequency" });
+// Heat pump view (fictional, Nibe style)
+add("sensor.heat_pump_discharge_temperature", 64.5, { unit_of_measurement: "°C", device_class: "temperature" });
+add("sensor.heat_pump_compressor", "running", { friendly_name: "Compressor" }); add("sensor.heat_pump_priority", "heating", { friendly_name: "Priority" });
+add("select.heat_pump_mode", "default", { friendly_name: "Smart home mode", options: ["default", "away", "vacation"] }); add("sensor.heat_pump_connection", "connected");
+add("sensor.heat_pump_degree_minutes", -132, { unit_of_measurement: "DM" });
+add("sensor.heat_pump_energy_produced", 18456, { unit_of_measurement: "kWh" }); add("sensor.heat_pump_energy_consumed", 5021, { unit_of_measurement: "kWh" });
+add("sensor.heat_pump_power", 1.24, { unit_of_measurement: "kW" }); add("sensor.heat_pump_hot_water_energy", 2310, { unit_of_measurement: "kWh", friendly_name: "Hot water produced" });
+add("sensor.heat_pump_high_pressure", 24.1, { unit_of_measurement: "bar" }); add("sensor.heat_pump_low_pressure", 6.3, { unit_of_measurement: "bar" });
+add("sensor.heat_pump_evaporator", -3.2, { unit_of_measurement: "°C", device_class: "temperature" }); add("sensor.heat_pump_suction_gas", 1.4, { unit_of_measurement: "°C", device_class: "temperature" });
+add("sensor.heat_pump_compressor_frequency", 48, { unit_of_measurement: "Hz" });
+add("sensor.heat_pump_runtime_heating", 8421, { unit_of_measurement: "h" }); add("sensor.heat_pump_runtime_hot_water", 1312, { unit_of_measurement: "h" });
+add("sensor.heat_pump_compressor_starts", 4512, { friendly_name: "Compressor starts" });
 add("sensor.house_power", 0.42, { unit_of_measurement: "kW" });
 add("sensor.grid_import_power", 0.42, { unit_of_measurement: "kW" });
 add("sensor.grid_export_power", 0, { unit_of_measurement: "kW" });
@@ -181,7 +202,23 @@ export const mockHass = {
   language: "en",
   formatEntityState: fmt,
   callService: async (d, s, data) => console.log("callService", d, s, JSON.stringify(data)),
-  callWS: async () => ({}),
+  // recorder/statistics_during_period: fictional hourly energy for today (production follows the sun).
+  callWS: async (msg) => {
+    if (msg.type !== "recorder/statistics_during_period") return {};
+    const start = Date.parse(msg.start_time);
+    const nowH = new Date().getHours();
+    const shape = { "sensor.solar_production_today": (h) => Math.max(0, Math.sin(((h - 6) / 13) * Math.PI)) * 2.1,
+      "sensor.house_consumption_today": (h) => 0.45 + (h >= 6 && h <= 8 ? 0.9 : 0) + (h >= 17 && h <= 21 ? 1.2 : 0),
+      "sensor.grid_export_today": (h) => Math.max(0, Math.sin(((h - 6) / 13) * Math.PI) * 2.1 - 1.1) };
+    const out = {};
+    for (const id of msg.statistic_ids) {
+      const f = shape[id];
+      if (!f) continue;
+      out[id] = [];
+      for (let h = 0; h <= nowH; h++) out[id].push({ start: start + h * 3600000, end: start + (h + 1) * 3600000, change: Math.round(f(h) * 100) / 100 });
+    }
+    return out;
+  },
   // Minimal websocket stand-in: weather/subscribe_forecast answers with fictional forecasts.
   // Tests can push new ones with mockForecast(type, list).
   connection: {

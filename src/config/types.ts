@@ -202,6 +202,56 @@ export interface EnergyMeter {
   voltage_c?: string;
 }
 
+/** One PV string of the inverter (Solar view). */
+export interface SolarString {
+  name: string;
+  power?: string;
+  voltage?: string;
+  current?: string;
+}
+
+/** Solar view (porting plan step 10, from the owner's FusionSolar card). Live values fall back to `entities`. */
+export interface SolarConfig {
+  name?: string; // view title, default "Solar"
+  power?: string; // PV power now (default entities.solar_power)
+  peak_power?: number; // kW at a full gauge (default 6)
+  house_load?: string; // default entities.house_load
+  grid_import?: string; // default entities.grid_import
+  grid_export?: string; // default entities.grid_export
+  battery_soc?: string; // %
+  battery_power?: string; // W or kW, positive = charging
+  production_today?: string; // kWh, also the hourly chart (long-term statistics)
+  consumption_today?: string; // kWh
+  export_today?: string; // kWh
+  import_today?: string; // kWh
+  forecast_today?: string; // kWh
+  remaining_today?: string; // kWh still expected today
+  self_consumption?: string; // % of production used in the house
+  strings?: SolarString[];
+  inverter?: DeviceConfig[]; // inverter values: status, temperature, frequency, ...
+}
+
+/** Heat pump view (porting plan step 10, from the owner's Nibe SMO S40 card). Works with any heat pump. */
+export interface HeatPumpConfig {
+  name?: string; // view title, default "Heat pump"
+  climate?: string; // climate entity (default entities.heat_pump)
+  status?: string; // compressor or operation state
+  priority?: string; // e.g. heating / hot water
+  mode?: string; // select (e.g. smart home mode): tap opens it
+  connection?: string;
+  degree_minutes?: string;
+  gauges?: DeviceConfig[]; // up to 4 temperature gauges
+  gauge_min?: number; // default -20
+  gauge_max?: number; // default 80
+  energy_produced?: string; // kWh total (COP = produced / consumed)
+  energy_consumed?: string; // kWh total
+  power?: string; // current power use
+  energy?: DeviceConfig[]; // more energy values (heating, hot water, demand at DOT)
+  pressures?: DeviceConfig[];
+  circuit?: DeviceConfig[]; // refrigerant circuit values
+  runtimes?: DeviceConfig[]; // run times, compressor starts
+}
+
 export interface AtlasConfig {
   type: string;
   appearance?: AppearanceConfig;
@@ -211,12 +261,14 @@ export interface AtlasConfig {
   rooms?: RoomConfig[];
   layout?: LayoutConfig;
   energy_meters?: EnergyMeter[];
+  solar?: SolarConfig;
+  heat_pump?: HeatPumpConfig;
 }
 
 /** Config passed to every generated custom:atlas-view card. */
 export interface AtlasViewCardConfig {
   type: string;
-  view: "home" | "alerts" | "rooms" | "room" | "energy" | "lights" | "security" | "system";
+  view: "home" | "alerts" | "rooms" | "room" | "energy" | "lights" | "security" | "system" | "solar" | "heatpump";
   room?: string;
   floor?: string;
   atlas: AtlasConfig;

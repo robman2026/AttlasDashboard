@@ -155,3 +155,12 @@ export const roomLightLevel = (hass: HomeAssistant, ids: string[]) => {
   }
   return { on, total: ids.length, level: ids.length ? sum / ids.length : 0, brightness: on ? Math.round((sum / on) * 100) : 0 };
 };
+
+/** Solar view exists when the solar section or entities.solar_power names a PV power sensor. */
+export const solarPowerEntity = (c: AtlasConfig) => c.solar?.power || c.entities?.solar_power;
+export const hasSolar = (c: AtlasConfig) => !!solarPowerEntity(c) || !!c.solar?.production_today;
+
+/** Heat pump view exists when the heat_pump section or entities.heat_pump is set. */
+export const heatPumpClimate = (c: AtlasConfig) => c.heat_pump?.climate || c.entities?.heat_pump;
+export const hasHeatPump = (c: AtlasConfig) =>
+  !!heatPumpClimate(c) || !!c.heat_pump?.status || !!c.heat_pump?.gauges?.length || !!c.heat_pump?.energy_produced;

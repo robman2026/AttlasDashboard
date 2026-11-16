@@ -31,6 +31,10 @@ Public, anonymised summary of the approved ATLAS design. House-specific details 
 
 **Room extras (step 7):** fan tile: accent fill showing the speed, spinning icon while on, small Fwd / Rev button at the right edge. Left column: Power card (270 degree gauge with watts inside, state and energy / current at the right) and Salt card (small tank filled to the level, big %, "Buy salt" badge). Main column below Devices: Mower card (name, state badge, "since" line, battery bar, two buttons). Each adds a chip to the room status strip.
 
+**Solar (step 10):** two columns: Live (flow row and four 270 degree gauges: accent solar, amber house, red import or blue export, lavender battery) and Today (six value tiles, self-consumption bar); full-width hourly chart (accent bars, amber house line, blue dashed export line, 00h-23h axis); PV strings table and inverter value chips. Phone: one column, gauges 2 per row.
+
+**Heat pump (step 10):** status chip row (thermostat chip in accent while heating, connection chip amber when disconnected); four temperature gauges coloured blue, accent, amber, red along the range; Energy tiles with COP in accent; Pressures, Refrigerant circuit and Run times as value chips.
+
 **Bundled cards (step 8):** the owner's remote and washer / dryer cards keep their own look (owner's decision); they sit in the room view like any own card (remote in the third column, laundry below Devices).
 
 **Appliances (step 9):** card below Devices with tiles (2 per row on desktop, 1 on the phone): temperature arc or icon, name, operation pill and door state, On / Off badge; a dark strip with up to 4 values (uppercase labels); thin progress bar; control chips and a red Stop while running. A running tile gets an accent border.

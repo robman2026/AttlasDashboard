@@ -20,6 +20,8 @@ All `customElements.define` calls are guarded against double registration (`src/
 | `alerts` | Alerts | `subview`, `back_path: home` |
 | `lights` | Lights page (only when some room has lights) | subview |
 | `system` | System page (always) | subview |
+| `solar` | Solar view (when a PV power or production sensor is set) | subview |
+| `heatpump` | Heat pump view (when `heat_pump` or `entities.heat_pump` is set) | subview |
 | `security` | Security page (only with an alarm, door lists, a camera, or a binary sensor, cover or lock in a room) | subview |
 | `rooms` | Rooms, first floor selected | subview |
 | `floor-<floor id>` | Rooms, that floor selected | subview |
@@ -63,6 +65,9 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/views/room-more.ts` | Room power, lawn mower and salt level cards (room options `power_*`, `mower_*`, `salt_*`) |
 | `src/ui/views/appliances.ts` | Appliances card (room option `appliances`) |
 | `src/bundled/samsung-solar-remote.js`, `src/bundled/laundry-card.js` | Owner's cards bundled as-is (step 8): source commit and the only changes in the file header (guarded registration; Lit from the bundle for the laundry card) |
+| `src/ui/views/solar.ts` | Solar view: flow, gauges, today, hourly SVG chart, strings, inverter |
+| `src/ui/views/heatpump.ts` | Heat pump view: status chips, gauges, energy and COP, pressures, circuit, run times |
+| `src/data/stats.ts` | Today's hourly energy from long-term statistics (Solar chart) |
 | `src/data/incidents.ts` | Reads the log analyzer sensor (counts from `summary`, top-level attributes or the incident list) |
 | `src/ui/views/vehicle.ts` | Vehicle card (room option `car_*`) and the car chip data for the status strip |
 | `src/ui/views/room-extras.ts` | Optional room sections: status strip, extra climate values, 3D printer card, automations card |
@@ -128,6 +133,8 @@ Glass falls back to the solid card colour when `backdrop-filter` is not supporte
 | Salt level as % (0-100 or 0-1), thresholds 30 / 60 %, "buy salt" below 30 % | Salt card and alert | owner's Multi-panel-dashboard-card `multi-panel-dashboard-card.js` (`calcSaltPct`, `DEFAULT_THRESHOLDS.salt`), read 2026-11-15 |
 | Appliance tile rules: running = main state on (`on`, `true`, `home`, `open`) or operation containing run / active / heat / progress; controls and Stop only while running; finish as a timestamp | Appliances card | owner's Kitchen-Card `kitchen-card.js` (`_applTileHTML`, `_controlsRowHTML`, `fmtFinish`), read 2026-11-15; button state `unknown` before the first press (core `button/entity.py`, see above) |
 | `customElements.get` before `define` | Bundled cards coexist with the separately installed cards (a second `define` of the same name throws) | HTML Living Standard, CustomElementRegistry `define()` (throws "NotSupportedError" for a name already defined) |
+| `recorder/statistics_during_period` (`start_time`, `end_time`, `statistic_ids`, `period: "hour"`, `types: ["change"]`) returning `{ id: [{ start, end, change }] }` with `start` / `end` in ms; `change` = energy added in that hour | Solar view hourly chart (production, house, export), from local midnight, refreshed every 10 minutes | frontend `src/data/recorder.ts` (`fetchStatistics`, `StatisticValue`, dev branch 2026-11-16); chart layout from the owner's FusionSolar card `fusionsolar-card.js` (`_fetchStats`, read 2026-11-16) |
+| Heat pump gauges, COP (produced / consumed), status set | Heat pump view | owner's Nibe SMO S40 card README and `nibe-smo-s40-card.js` (read 2026-11-16) |
 | CSS `zoom` | Scale the room view own-cards column to fit the window (wide screens) | MDN `zoom` (standardized; Chromium, Safari, Firefox 126+) |
 | HACS plugin layout (`dist/`, `hacs.json` `filename`) | Install | hacs/documentation `docs/publish/plugin.md`, `start.md` |
 
