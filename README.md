@@ -19,6 +19,7 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 - **Security:** alarm with the arm modes the panel supports and Disarm (asks first, code panels use the HA dialog), doors and windows (open first), locks, motion, all cameras as stills.
 - **System:** log analyzer report (severity, detail, recommendation), available updates, unavailable devices, links to Settings, Logs, Repairs and Updates, your own cards.
 - **Own cards on Home:** any Lovelace cards below the Home grid (`layout.home_cards`).
+- **Bundled cards:** the Samsung SolarCell remote and the washer / dryer card, with their own look.
 - **Appliances:** oven, dishwasher, washer, dryer with temperature, program, progress, finish time and controls while running.
 - **Room extras:** fan tiles (drag for speed, direction), room power gauge, lawn mower card, water softener salt level, each only in the rooms that set them.
 - **Weather:** forecast strip on Home (days or hours), warnings for severe weather and for open windows while it rains (checked against the hourly forecast).
@@ -49,6 +50,25 @@ Screenshots show the fictional demo house (`src/config/preset-demo.ts`) with moc
 5. The editor opens. Either click **Load demo house** and replace the demo entities with yours, or switch to YAML (three dots > Edit in YAML) and paste your own config. **Save**.
 
 Existing dashboards are not changed.
+
+## Bundled cards
+
+Two of the owner's cards ship inside ATLAS with their own look (no separate install needed). Put them in a room under **Own cards** (`cards`, or `side_cards` for the left column):
+
+```yaml
+side_cards:
+  - type: custom:samsung-solar-remote-card
+    media_player: media_player.living_room_tv
+    remote: remote.living_room_tv
+cards:
+  - type: custom:samsung-laundry-card
+    brand: generic   # samsung, lg, bosch, siemens, miele
+    washer_machine_state: sensor.washer_state
+    washer_completion_time: sensor.washer_completion_time
+    dryer_machine_state: sensor.dryer_state
+```
+
+All options are the same as in the original repositories ([remote](https://github.com/robman2026/Samsung-SolarCell-Remote-HA-Card), [laundry](https://github.com/robman2026/Laundry-Room-Card)). If those cards are still installed separately, they are used instead, so nothing breaks while you switch. Both cards load brand logos from Wikimedia Commons.
 
 ## Keep your house private
 

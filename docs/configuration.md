@@ -436,8 +436,15 @@ strategy:
       humidity: sensor.living_room_humidity
       camera: camera.living_room
       side_cards:
-        - type: media-control
-          entity: media_player.living_room_tv
+        - type: custom:samsung-solar-remote-card
+          media_player: media_player.living_room_tv
+          remote: remote.living_room_tv
+          spotify: true
+          apps:
+            netflix: true
+            youtube: true
+            prime: true
+            disney: true
       devices:
         - entity: binary_sensor.living_room_window_left
           name: Window left
@@ -665,12 +672,20 @@ strategy:
       image: laundry.jpg
       camera: camera.workshop
       cards:
-        - type: tile
-          entity: sensor.washer_power
-          name: Washer
-        - type: tile
-          entity: sensor.dryer_power
-          name: Dryer
+        - type: custom:samsung-laundry-card
+          brand: generic
+          show_washer: true
+          show_dryer: true
+          washer_label: Washer
+          dryer_label: Dryer
+          washer_machine_state: sensor.washer_state
+          washer_completion_time: sensor.washer_completion_time
+          washer_current_course: sensor.washer_program
+          washer_power: sensor.washer_power
+          dryer_machine_state: sensor.dryer_state
+          dryer_completion_time: sensor.dryer_completion_time
+          dryer_current_course: sensor.dryer_program
+          dryer_power: sensor.dryer_power
       devices:
         - entity: sensor.washer_power
           name: Washer

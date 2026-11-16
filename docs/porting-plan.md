@@ -73,12 +73,12 @@ Applies to every step, in addition to [development.md](development.md).
 | 5 | System page, `layout.home_cards` | Page | Done (PR #20) |
 | 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Done (PR #21) |
 | 7 | Fans, mower, salt level, room power | Device and room | Done (PR #22) |
-| 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Decision needed |
-| 9 | Appliances | Room | Done, in review |
-| 10 | Solar and heat pump views | Page | Decision needed |
+| 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Done, in review |
+| 9 | Appliances | Room | Done (PR #23) |
+| 10 | Solar and heat pump views | Page | Planned |
 | 11 | Retire the old repositories and dashboards | - | After all steps, owner's go per item |
 
 ## Decisions
 
-1. Remote and washer / dryer: keep their own look as bundled elements, or rebuild them in ATLAS style.
-2. Second house: move it to a second ATLAS dashboard (a strategy dashboard can be added several times with its own config). Step 10 is only needed if yes.
+1. Remote and washer / dryer: keep their own look as bundled elements, or rebuild them in ATLAS style. **Decided (2026-11-16): bundle as-is** (`src/bundled/`).
+2. Second house: move it to a second ATLAS dashboard (a strategy dashboard can be added several times with its own config). Step 10 is only needed if yes. **Decided (2026-11-16): yes**, build Solar and Heat pump views.
