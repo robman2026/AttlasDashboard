@@ -13,6 +13,9 @@
   // Stand-in for HA's window.loadCardHelpers: renders own cards as simple boxes.
   window.loadCardHelpers = async () => ({
     createCardElement: async (cfg) => {
+      // Custom cards defined on the page (e.g. the ones bundled with ATLAS) render for real.
+      const tag = String(cfg.type).startsWith("custom:") ? cfg.type.slice(7) : "";
+      if (tag && customElements.get(tag)) { const real = document.createElement(tag); real.setConfig(cfg); return real; }
       const el = document.createElement("div");
       el.style.cssText = `padding:16px;border-radius:16px;background:#e9ecef;color:#14171c;font:14px system-ui;min-height:${cfg.min_height ?? 120}px`;
       Object.defineProperty(el, "hass", { set(h) { const s = h.states[cfg.entity]; el.innerHTML = `<b>${cfg.name ?? cfg.type}</b><br><small>${cfg.type} · ${cfg.entity ?? ""}</small><div style="font-size:28px;margin-top:12px">${s ? s.state + " " + (s.attributes.unit_of_measurement ?? "") : "-"}</div>`; } });

@@ -5,6 +5,11 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 ## Unreleased
 
 ### Added
+- Bundled cards (porting plan step 8, owner's decision "bundle as-is"): the Samsung SolarCell remote card (`custom:samsung-solar-remote-card`) and the washer / dryer card (`custom:samsung-laundry-card`, with its editor) now ship inside the ATLAS bundle with their own look, so one HACS install covers them. Place them in a room with `side_cards` or `cards`; the same YAML as before works.
+  - They register only if the separately installed cards are not already loaded, so both can stay installed while you migrate.
+  - The laundry card now takes Lit from the ATLAS bundle instead of HA's panel, which could throw while HA is still loading.
+  - Both still load the brand logos from Wikimedia Commons.
+  - The only other change: "–" instead of the em dash for missing values (project rule).
 - Appliances card (porting plan step 9, from the owner's Kitchen Card). Room option `appliances` is a list; only the name is required. Edit dashboard > Rooms > Appliances. Each tile shows:
   - a temperature arc (or an icon);
   - an operation state pill and the door state;
@@ -83,6 +88,8 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Demo house: the living room uses the bundled remote (left column) and the laundry uses the bundled washer / dryer card.
+- Test harness: custom cards that are defined on the page (the bundled ones) render for real instead of placeholder boxes.
 - Demo house: the garden's lawn mower status sensor is replaced by a `lawn_mower` entity with the mower card.
 - The "Log report" alert opens the System page and lists the first incident titles.
 - Home Security card: the open count uses the same list as the Security page (alert door lists included, mailbox left out).

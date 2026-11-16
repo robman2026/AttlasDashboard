@@ -10,7 +10,7 @@ Requirements: Node.js 22.18 or newer (the docs generator imports TypeScript dire
 | `npm run build` | Icons, docs (`docs/configuration.md`), typecheck, bundle to `dist/` |
 | `npm run docs` | Regenerate `docs/configuration.md` only |
 | `npm run typecheck` | TypeScript check |
-| `npm run harness` | Local preview of `dist/` with the demo house: `/dev/harness.html?view=home` (also `alerts`, `rooms`, `floor-first`, `room-office`, ...) |
+| `npm run harness` | Local preview of `dist/` with the demo house: `/dev/harness.html?view=home` (also `alerts`, `rooms`, `floor-first`, `room-office`, ...). Own cards render as placeholder boxes, except custom cards defined on the page (the bundled remote and laundry card), which render for real |
 | `npm run screenshots` | Regenerate `docs/screenshots/*.jpg` (needs Playwright + Chromium) |
 
 `dist/` is committed on purpose: HACS installs from it. CI fails if `dist/`, generated icons or `docs/configuration.md` are out of date.

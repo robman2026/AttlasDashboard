@@ -8,6 +8,9 @@ import { AtlasHomeStrategy } from "./strategy";
 import { AtlasStrategyEditor } from "./editor/strategy-editor";
 import { AtlasView } from "./ui/atlas-view";
 import { AtlasHuiCard } from "./ui/embedded-card";
+// Owner's cards bundled as-is (porting plan step 8): custom:samsung-solar-remote-card, custom:samsung-laundry-card.
+import "./bundled/samsung-solar-remote.js";
+import "./bundled/laundry-card.js";
 
 define(STRATEGY_TAG, AtlasHomeStrategy);
 define(EDITOR_TAG, AtlasStrategyEditor);

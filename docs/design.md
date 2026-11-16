@@ -31,6 +31,8 @@ Public, anonymised summary of the approved ATLAS design. House-specific details 
 
 **Room extras (step 7):** fan tile: accent fill showing the speed, spinning icon while on, small Fwd / Rev button at the right edge. Left column: Power card (270 degree gauge with watts inside, state and energy / current at the right) and Salt card (small tank filled to the level, big %, "Buy salt" badge). Main column below Devices: Mower card (name, state badge, "since" line, battery bar, two buttons). Each adds a chip to the room status strip.
 
+**Bundled cards (step 8):** the owner's remote and washer / dryer cards keep their own look (owner's decision); they sit in the room view like any own card (remote in the third column, laundry below Devices).
+
 **Appliances (step 9):** card below Devices with tiles (2 per row on desktop, 1 on the phone): temperature arc or icon, name, operation pill and door state, On / Off badge; a dark strip with up to 4 values (uppercase labels); thin progress bar; control chips and a red Stop while running. A running tile gets an accent border.
 
 **Weather (Home):** compact forecast strip right of the greeting, beside the presence chips: Days / Hours toggle, then 5 day pills (or 6 hour pills) with label, icon, high and low, rain chance in blue; the first pill is highlighted. Tap opens the HA weather dialog. Below 1100 px it sits under the greeting and fills the width. Keeps the Home page within 1600 x 1000.

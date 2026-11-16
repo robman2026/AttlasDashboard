@@ -121,7 +121,11 @@ add("automation.print_complete_notify", "on", { friendly_name: "3D print complet
 add("automation.workshop_door_alarm", "on", { friendly_name: "Workshop door alarm", last_triggered: null });
 add("light.3d_printer_chamber", "on", { supported_color_modes: ["onoff"] }); // on / off only, no dimming motion("binary_sensor.workshop_presence", false, "presence");
 contact("binary_sensor.utility_room_door", false); add("sensor.water_softener_salt", 42, { unit_of_measurement: "%" }); add("sensor.water_softener_salt_distance", 31.5, { unit_of_measurement: "cm", device_class: "distance" }); cam("camera.utility_room", "Utility room camera", "utility.jpg");
-add("sensor.washer_power", 0, { unit_of_measurement: "W" }); add("sensor.dryer_power", 0, { unit_of_measurement: "W" });
+add("sensor.washer_power", 412, { unit_of_measurement: "W" }); add("sensor.dryer_power", 0, { unit_of_measurement: "W" });
+// Laundry card (bundled): washer running, dryer finished; remote for the living room TV
+add("sensor.washer_state", "run"); add("sensor.washer_completion_time", new Date(NOW + 52 * 60000).toISOString(), { device_class: "timestamp" }); add("sensor.washer_program", "cotton");
+add("sensor.dryer_state", "stop"); add("sensor.dryer_completion_time", new Date(NOW - 3 * 3600000).toISOString(), { device_class: "timestamp" }); add("sensor.dryer_program", "eco_dry");
+add("remote.living_room_tv", "on", { friendly_name: "Living room TV remote" });
 
 // Energy meters (fictional three-phase house meter and circuits)
 const W = { unit_of_measurement: "W", device_class: "power" };
