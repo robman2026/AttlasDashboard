@@ -24,7 +24,7 @@ export interface FieldDef {
 }
 
 export interface SectionDef {
-  key: "appearance" | "entities" | "alerts" | "floors" | "rooms" | "layout" | "energy_meters";
+  key: "appearance" | "entities" | "alerts" | "floors" | "rooms" | "layout" | "energy_meters" | "solar" | "heat_pump";
   tab: string;
   title: string;
   intro: string;
@@ -263,6 +263,63 @@ export const SECTIONS: SectionDef[] = [
       { name: "voltage_a", label: "Phase A voltage", type: "entity (sensor)", selector: ent("sensor") },
       { name: "voltage_b", label: "Phase B voltage", type: "entity (sensor)", selector: ent("sensor") },
       { name: "voltage_c", label: "Phase C voltage", type: "entity (sensor)", selector: ent("sensor") },
+    ],
+  },
+  {
+    key: "solar",
+    tab: "Solar",
+    title: "Solar view (`solar`)",
+    intro: "Solar view (porting plan step 10): live flow and gauges, today's energy with an hourly chart from long-term statistics, PV strings and inverter values. Live values fall back to Entities (solar power, house load, grid import / export). Every field is optional; parts without entities are hidden.",
+    shape: "object",
+    fields: [
+      { name: "name", label: "View title", type: "text", default: "Solar", selector: text },
+      { name: "power", label: "PV power now", type: "entity (sensor)", default: "entities.solar_power", help: "W or kW.", selector: ent("sensor"), group: "Live" },
+      { name: "peak_power", label: "Peak power (kW)", type: "number", default: "6", help: "Full scale of the PV gauge.", selector: { number: { mode: "box", step: 0.5, min: 0.5 } }, group: "Live" },
+      { name: "house_load", label: "House load", type: "entity (sensor)", default: "entities.house_load", selector: ent("sensor"), group: "Live" },
+      { name: "grid_import", label: "Grid import", type: "entity (sensor)", default: "entities.grid_import", selector: ent("sensor"), group: "Live" },
+      { name: "grid_export", label: "Grid export", type: "entity (sensor)", default: "entities.grid_export", selector: ent("sensor"), group: "Live" },
+      { name: "battery_soc", label: "Battery charge (%)", type: "entity (sensor)", help: "Adds a battery node and gauge.", selector: ent("sensor"), group: "Live" },
+      { name: "battery_power", label: "Battery power", type: "entity (sensor)", help: "Positive = charging.", selector: ent("sensor"), group: "Live" },
+      { name: "production_today", label: "Production today (kWh)", type: "entity (sensor)", help: "Also draws the hourly chart from Home Assistant long-term statistics (the sensor needs a state class).", selector: ent("sensor"), group: "Today" },
+      { name: "consumption_today", label: "House consumption today (kWh)", type: "entity (sensor)", selector: ent("sensor"), group: "Today" },
+      { name: "export_today", label: "Exported today (kWh)", type: "entity (sensor)", selector: ent("sensor"), group: "Today" },
+      { name: "import_today", label: "Imported today (kWh)", type: "entity (sensor)", selector: ent("sensor"), group: "Today" },
+      { name: "forecast_today", label: "Forecast today (kWh)", type: "entity (sensor)", selector: ent("sensor"), group: "Today" },
+      { name: "remaining_today", label: "Remaining forecast today (kWh)", type: "entity (sensor)", selector: ent("sensor"), group: "Today" },
+      { name: "self_consumption", label: "Self-consumption (%)", type: "entity (sensor)", default: "computed from production and export", selector: ent("sensor"), group: "Today" },
+      { name: "strings", label: "PV strings", type: "list", help: "One row per string: power, voltage, current.", selector: { object: {} }, fields: [
+        { name: "name", label: "Name", type: "text", required: true, selector: text },
+        { name: "power", label: "Power", type: "entity (sensor)", selector: ent("sensor") },
+        { name: "voltage", label: "Voltage", type: "entity (sensor)", selector: ent("sensor") },
+        { name: "current", label: "Current", type: "entity (sensor)", selector: ent("sensor") },
+      ] },
+      { name: "inverter", label: "Inverter values", type: "list", help: "Status, temperature, grid frequency, insulation resistance, ...", selector: { object: {} }, fields: VALUE_FIELDS },
+    ],
+  },
+  {
+    key: "heat_pump",
+    tab: "Heat pump",
+    title: "Heat pump view (`heat_pump`)",
+    intro: "Heat pump view (porting plan step 10): status, temperature gauges, energy with COP, pressures, refrigerant circuit and run times. Works with any heat pump (examples follow the Nibe integration). Every field is optional.",
+    shape: "object",
+    fields: [
+      { name: "name", label: "View title", type: "text", default: "Heat pump", selector: text },
+      { name: "climate", label: "Climate entity", type: "entity (climate)", default: "entities.heat_pump", help: "Current and target temperature, HVAC action; tap for the thermostat.", selector: ent("climate"), group: "Status" },
+      { name: "status", label: "Compressor / operation state", type: "entity (sensor, binary_sensor)", selector: ent(["sensor", "binary_sensor"]), group: "Status" },
+      { name: "priority", label: "Priority", type: "entity (sensor)", help: "e.g. heating or hot water.", selector: ent("sensor"), group: "Status" },
+      { name: "mode", label: "Mode", type: "entity (select, sensor)", help: "e.g. smart home mode; tap opens it.", selector: ent(["select", "sensor"]), group: "Status" },
+      { name: "connection", label: "Connection state", type: "entity (sensor, binary_sensor)", selector: ent(["sensor", "binary_sensor"]), group: "Status" },
+      { name: "degree_minutes", label: "Degree minutes", type: "entity (sensor)", selector: ent("sensor"), group: "Status" },
+      { name: "gauges", label: "Temperature gauges", type: "list", help: "Up to 4, e.g. supply, return, outdoor, discharge.", selector: { object: {} }, fields: VALUE_FIELDS },
+      { name: "gauge_min", label: "Gauge minimum (°C)", type: "number", default: "-20", selector: { number: { mode: "box", step: 5 } }, group: "_grid" },
+      { name: "gauge_max", label: "Gauge maximum (°C)", type: "number", default: "80", selector: { number: { mode: "box", step: 5 } }, group: "_grid" },
+      { name: "energy_produced", label: "Energy produced total (kWh)", type: "entity (sensor)", selector: ent("sensor"), group: "Energy" },
+      { name: "energy_consumed", label: "Energy consumed total (kWh)", type: "entity (sensor)", help: "With produced: COP = produced / consumed.", selector: ent("sensor"), group: "Energy" },
+      { name: "power", label: "Current power use", type: "entity (sensor)", selector: ent("sensor"), group: "Energy" },
+      { name: "energy", label: "More energy values", type: "list", help: "Heating, hot water, demand at DOT, ...", selector: { object: {} }, fields: VALUE_FIELDS },
+      { name: "pressures", label: "Pressures", type: "list", selector: { object: {} }, fields: VALUE_FIELDS },
+      { name: "circuit", label: "Refrigerant circuit", type: "list", help: "Evaporator, suction gas, liquid line, condenser, compressor frequency, pump speed, ...", selector: { object: {} }, fields: VALUE_FIELDS },
+      { name: "runtimes", label: "Run times", type: "list", help: "Compressor run times, starts, additional heat, ...", selector: { object: {} }, fields: VALUE_FIELDS },
     ],
   },
 ];

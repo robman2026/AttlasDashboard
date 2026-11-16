@@ -2,6 +2,7 @@ import type { AtlasConfig, RoomConfig } from "../config/types";
 import type { HomeAssistant } from "../data/hass";
 import type { AtlasAlert, Severity } from "../data/alerts";
 import type { ForecastMap } from "../data/weather";
+import type { HourlyStats } from "../data/stats";
 
 /** Everything a view renderer needs, built once per render by <atlas-view>. */
 export interface Ctx {
@@ -26,6 +27,8 @@ export interface Ctx {
   /** Re-render the host element (for local UI state like camera reveal). */
   refresh(): void;
   ui: Record<string, unknown>;
+  /** Today's hourly energy for the Solar view chart (see data/stats.ts). */
+  stats?: HourlyStats;
   /** Weather forecasts by "entity|type" (see data/weather.ts). */
   forecasts: ForecastMap;
 }

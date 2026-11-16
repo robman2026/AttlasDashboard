@@ -500,6 +500,28 @@ export const styles = css`
   .actl.on { border-color: var(--atlas-accent-glow); color: var(--atlas-accent); }
   .actl.stop { color: var(--atlas-crit); border-color: rgba(255, 114, 125, 0.45); }
 
+  /* ---------- solar and heat pump views (step 10) ---------- */
+  .solar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; align-items: start; }
+  .sflow { margin: 4px 0 6px; }
+  .sgauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+  .sgauge { position: relative; display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+  .sgauge svg { width: 104px; height: 104px; }
+  .sgauge b { position: absolute; top: 40px; font-size: 15px; font-weight: 700; }
+  .sgauge small { margin-top: -14px; font-size: 12px; color: var(--atlas-text2); }
+  .sgauge:disabled { cursor: default; }
+  .schart { width: 100%; height: auto; display: block; }
+  .slegend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; }
+  .slegend span { display: inline-flex; align-items: center; gap: 6px; }
+  .slegend i { width: 12px; height: 4px; border-radius: 2px; display: inline-block; }
+  .scbar { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+  .scbar b { font-size: 16px; }
+  .scbar .mbar { flex: none; width: 100%; }
+  .stable { display: flex; flex-direction: column; }
+  .strow { display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid rgba(188, 200, 222, 0.08); font-size: 13px; }
+  .strow.head { border-top: 0; font-size: 11px; color: var(--atlas-text2); text-transform: uppercase; letter-spacing: 0.04em; }
+  .strow button { text-align: left; }
+  .strow button:disabled { opacity: 0.4; }
+
   /* ---------- weather strip (Home hero) ---------- */
   .hside { display: flex; align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; gap: 10px; min-width: 0; }
   .hside .presence { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 6px; }
@@ -674,6 +696,8 @@ export const styles = css`
     .lrooms { grid-template-columns: minmax(0, 1fr); }
     .scams { grid-template-columns: minmax(0, 1fr); }
     .appls { grid-template-columns: minmax(0, 1fr); }
+    .solar-grid { grid-template-columns: minmax(0, 1fr); }
+    .sgauges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .inc { grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .increc { padding: 10px 0 0; border-left: 0; border-top: 1px solid rgba(188, 200, 222, 0.12); }
     .amodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }

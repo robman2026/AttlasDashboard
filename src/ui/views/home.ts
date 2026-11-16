@@ -1,7 +1,7 @@
 import { html, nothing, svg } from "lit";
 import type { Ctx } from "../context";
 import { formatState, isInvalid, isOpen, num, powerKw, stateObj, domainOf } from "../../data/hass";
-import { cameraOf, energyMeters, hasSecurity, roomById, roomLights, rooms } from "../../data/model";
+import { cameraOf, energyMeters, hasHeatPump, hasSecurity, hasSolar, roomById, roomLights, rooms } from "../../data/model";
 import { icon } from "../icons";
 import { fmtTemp, ownCards, roomTile } from "./common";
 import { cameraStill, securityContacts } from "./security";
@@ -63,7 +63,9 @@ const climateCard = (ctx: Ctx) => {
   const sup = num(ctx.hass, e.heat_pump_supply);
   const ret = num(ctx.hass, e.heat_pump_return);
   return html`<section class="glass card">
-    <h2 style="font-size:18px"><span style="color:var(--atlas-accent)">${icon("climate", 22)}</span>Climate</h2>
+    ${hasHeatPump(ctx.config)
+      ? html`<button class="h2btn" @click=${() => ctx.go("heatpump")}><h2 style="font-size:18px"><span style="color:var(--atlas-accent)">${icon("climate", 22)}</span>Climate${icon("chevron", 14)}</h2></button>`
+      : html`<h2 style="font-size:18px"><span style="color:var(--atlas-accent)">${icon("climate", 22)}</span>Climate</h2>`}
     <div class="clim">
       <svg role="img" aria-label="Heat pump ${valid ? cur : "unavailable"} degrees" width="136" height="136" viewBox="0 0 140 140" style="flex:none">
         <circle cx="70" cy="70" r="60" fill="rgba(0,0,0,0.35)"></circle>
@@ -104,7 +106,7 @@ const energyCard = (ctx: Ctx) => {
       ${atlasEnergy ? html`<button class="t2 more" @click=${() => ctx.go("energy")}>Circuits ${icon("chevron", 14)}</button>` : nothing}
     </div>
     <div class="flow">
-      <button class="node" @click=${() => e.solar_power && ctx.moreInfo(e.solar_power)}><span class="c">${icon("solar", 22)}</span><b class="n">${kw(solar)}</b><span>Solar</span></button>
+      <button class="node" @click=${() => (hasSolar(ctx.config) ? ctx.go("solar") : e.solar_power && ctx.moreInfo(e.solar_power))}><span class="c">${icon("solar", 22)}</span><b class="n">${kw(solar)}</b><span>Solar</span></button>
       <span class="link ${(solar ?? 0) > 0.01 ? "act r" : ""}"></span>
       <button class="node house" @click=${() => e.house_load && ctx.moreInfo(e.house_load)}><span class="c">${icon("home", 24)}</span><b class="n">${kw(house)}</b><span>House</span></button>
       <span class="link ${(gridVal ?? 0) > 0.01 ? `act ${exporting ? "r" : "l"}` : ""}"></span>

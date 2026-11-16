@@ -73,9 +73,9 @@ Applies to every step, in addition to [development.md](development.md).
 | 5 | System page, `layout.home_cards` | Page | Done (PR #20) |
 | 6 | Weather forecast, warnings, open window while it rains | Page and alerts | Done (PR #21) |
 | 7 | Fans, mower, salt level, room power | Device and room | Done (PR #22) |
-| 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Done, in review |
+| 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Done (PR #24) |
 | 9 | Appliances | Room | Done (PR #23) |
-| 10 | Solar and heat pump views | Page | Planned |
+| 10 | Solar and heat pump views | Page | Done, in review |
 | 11 | Retire the old repositories and dashboards | - | After all steps, owner's go per item |
 
 ## Decisions
