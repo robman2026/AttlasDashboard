@@ -102,6 +102,7 @@ All notable changes. Every change to `src/` adds a line under **Unreleased** (en
 - Floor camera wall: floor option `cameras` (`off` default, `live`, `stills`). Shows the cameras of all rooms on that floor side by side on its Rooms page, stacked on the phone. Skips rooms with the camera section off; private cameras stay hidden. Demo house: Basement with four live cameras.
 
 ### Changed
+- Appliances now sit inside the room's Devices card, below the device tiles, instead of in a separate card below it. The Devices card stretches to the column height, so its free space holds them and the kitchen fits the window again (owner's feedback). On a room photo the appliance tiles get the same frosted background as device tiles.
 - Demo house: fictional PV system with battery and a heat pump with the full set of values; the mock answers long-term statistics requests.
 - Demo house: the living room uses the bundled remote (left column) and the laundry uses the bundled washer / dryer card.
 - Test harness: custom cards that are defined on the page (the bundled ones) render for real instead of placeholder boxes.

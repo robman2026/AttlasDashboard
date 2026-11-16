@@ -465,6 +465,10 @@ export const styles = css`
   .salttank > i { display: block; width: 100%; opacity: 0.85; transition: height 0.4s ease; }
 
   /* ---------- appliances (step 9) ---------- */
+  .appblock { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .appblock h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 15px; font-weight: 600; }
+  .devcard.has-img .appl:not(.run):not(.na) { background: rgba(14, 16, 20, 0.58); border-color: rgba(188, 200, 222, 0.16); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .devcard.has-img .appl.run { background: rgba(14, 30, 26, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
   .appls { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
   .appl { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 14px; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); min-width: 0; }
   .appl.run { border-color: var(--atlas-accent-glow); background: rgba(86, 231, 192, 0.06); }

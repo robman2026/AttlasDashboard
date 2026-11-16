@@ -75,7 +75,7 @@ Applies to every step, in addition to [development.md](development.md).
 | 7 | Fans, mower, salt level, room power | Device and room | Done (PR #22) |
 | 8 | Remote and washer / dryer as bundled elements | Room (`cards`, `side_cards`) | Done (PR #24) |
 | 9 | Appliances | Room | Done (PR #23) |
-| 10 | Solar and heat pump views | Page | Done, in review |
+| 10 | Solar and heat pump views | Page | Done (PR #25) |
 | 11 | Retire the old repositories and dashboards | - | After all steps, owner's go per item |
 
 ## Decisions
