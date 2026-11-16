@@ -4261,6 +4261,10 @@ var R = (e) => e.split(".")[0], z = (e, t) => t && e ? e.states[t] : void 0, B =
   .salttank > i { display: block; width: 100%; opacity: 0.85; transition: height 0.4s ease; }
 
   /* ---------- appliances (step 9) ---------- */
+  .appblock { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .appblock h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 15px; font-weight: 600; }
+  .devcard.has-img .appl:not(.run):not(.na) { background: rgba(14, 16, 20, 0.58); border-color: rgba(188, 200, 222, 0.16); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .devcard.has-img .appl.run { background: rgba(14, 30, 26, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
   .appls { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
   .appl { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 14px; background: rgba(241, 245, 255, 0.04); border: 1px solid rgba(188, 200, 222, 0.1); min-width: 0; }
   .appl.run { border-color: var(--atlas-accent-glow); background: rgba(86, 231, 192, 0.06); }
@@ -4975,10 +4979,10 @@ var sn = nn(on), cn = {
 	let n = (t.appliances ?? []).filter((e) => e && e.name);
 	if (!n.length) return j;
 	let r = n.filter((t) => Hn(e, t)).length;
-	return k`<section class="glass card appliances">
-    <div class="row"><h2>${G("oven", 20)}Appliances</h2><span class="n t2" style="font-size:12px">${r ? `${r} running` : "All idle"}</span></div>
+	return k`<div class="appblock" role="group" aria-label="Appliances">
+    <div class="row"><h3>${G("oven", 18)}Appliances</h3><span class="n t2" style="font-size:12px">${r ? `${r} running` : "All idle"}</span></div>
     <div class="appls">${n.map((t) => Kn(e, t))}</div>
-  </section>`;
+  </div>`;
 }, Jn = (e) => (e.appliances ?? []).flatMap((e) => [
 	e.entity,
 	e.operation,
@@ -5841,11 +5845,11 @@ var sn = nn(on), cn = {
         <section class="glass card devcard ${d ? "has-img" : ""} ${f ? `mood ${f.state}` : ""}" style="flex:1;padding:18px;${f?.vars ?? ""}">
           ${d ? k`<img class="devbg" src=${d} alt="" />${f ? k`<span class="devglow" aria-hidden="true"></span>` : j}<span class="devshade" aria-hidden="true"></span>` : j}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${u.length} device${u.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
-          ${u.length ? k`<div class="devs">${u.map((t) => vi(e, t, f?.ids ?? []))}</div>` : k`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${u.length ? k`<div class="devs">${u.map((t) => vi(e, t, f?.ids ?? []))}</div>` : t.appliances?.length ? j : k`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${qn(e, t)}
         </section>
         ${wn(e, t)}
         ${Pn(e, t)}
-        ${qn(e, t)}
         ${ri(e, t)}
         ${er(e, t.cards, "main")}
         ${r.length > 1 ? k`<section class="glass card" style="padding:14px 16px;gap:10px">

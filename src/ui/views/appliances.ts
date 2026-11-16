@@ -122,14 +122,18 @@ const applianceTile = (ctx: Ctx, a: ApplianceConfig) => {
   </div>`;
 };
 
-export const appliancesCard = (ctx: Ctx, r: RoomConfig) => {
+/**
+ * Appliances inside the room's Devices card, below the device tiles: the Devices card
+ * stretches to the column height, so its free space holds them (owner's feedback).
+ */
+export const appliancesBlock = (ctx: Ctx, r: RoomConfig) => {
   const list = (r.appliances ?? []).filter((a) => a && a.name);
   if (!list.length) return nothing;
   const running = list.filter((a) => applianceRunning(ctx, a)).length;
-  return html`<section class="glass card appliances">
-    <div class="row"><h2>${glyph("oven", 20)}Appliances</h2><span class="n t2" style="font-size:12px">${running ? `${running} running` : "All idle"}</span></div>
+  return html`<div class="appblock" role="group" aria-label="Appliances">
+    <div class="row"><h3>${glyph("oven", 18)}Appliances</h3><span class="n t2" style="font-size:12px">${running ? `${running} running` : "All idle"}</span></div>
     <div class="appls">${list.map((a) => applianceTile(ctx, a))}</div>
-  </section>`;
+  </div>`;
 };
 
 /** Every entity of a room's appliances (re-render list in atlas-view). */

@@ -11,7 +11,7 @@ import { automationsCard, climateExtras, printerCard, statusStrip } from "./room
 import { vehicleCard } from "./vehicle";
 import { fanTile } from "./fan";
 import { mowerCard, powerCard, saltCard } from "./room-more";
-import { appliancesCard } from "./appliances";
+import { appliancesBlock } from "./appliances";
 
 const LONG_PRESS_MS = 500;
 
@@ -252,11 +252,11 @@ export const renderRoom = (ctx: Ctx) => {
         <section class="glass card devcard ${img ? "has-img" : ""} ${mood ? `mood ${mood.state}` : ""}" style="flex:1;padding:18px;${mood?.vars ?? ""}">
           ${img ? html`<img class="devbg" src=${img} alt="" />${mood ? html`<span class="devglow" aria-hidden="true"></span>` : nothing}<span class="devshade" aria-hidden="true"></span>` : nothing}
           <div class="row"><h2>Devices</h2><span class="n t2" style="font-size:12px">${devs.length} device${devs.length === 1 ? "" : "s"} · tap to toggle, hold for details</span></div>
-          ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d, mood?.ids ?? []))}</div>` : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${devs.length ? html`<div class="devs">${devs.map((d) => deviceTile(ctx, d, mood?.ids ?? []))}</div>` : r.appliances?.length ? nothing : html`<span class="t2" style="font-size:14px">No devices mapped to this room.</span>`}
+          ${appliancesBlock(ctx, r)}
         </section>
         ${vehicleCard(ctx, r)}
         ${mowerCard(ctx, r)}
-        ${appliancesCard(ctx, r)}
         ${automationsCard(ctx, r)}
         ${ownCards(ctx, r.cards, "main")}
         ${peers.length > 1

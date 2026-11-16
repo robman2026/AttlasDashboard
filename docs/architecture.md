@@ -63,7 +63,7 @@ Each screen is a real HA view, so the browser back button and deep links work (e
 | `src/ui/drag.ts` | Shared tap / hold / horizontal drag handling (Lights page tiles, fan tiles) |
 | `src/ui/views/fan.ts` | Fan tile: speed by drag, direction button |
 | `src/ui/views/room-more.ts` | Room power, lawn mower and salt level cards (room options `power_*`, `mower_*`, `salt_*`) |
-| `src/ui/views/appliances.ts` | Appliances card (room option `appliances`) |
+| `src/ui/views/appliances.ts` | Appliances block inside the Devices card (room option `appliances`) |
 | `src/bundled/samsung-solar-remote.js`, `src/bundled/laundry-card.js` | Owner's cards bundled as-is (step 8): source commit and the only changes in the file header (guarded registration; Lit from the bundle for the laundry card) |
 | `src/ui/views/solar.ts` | Solar view: flow, gauges, today, hourly SVG chart, strings, inverter |
 | `src/ui/views/heatpump.ts` | Heat pump view: status chips, gauges, energy and COP, pressures, circuit, run times |
